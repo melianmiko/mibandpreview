@@ -1,9 +1,12 @@
-import os, PreviewDrawer, json
+import sys, os, json
+sys.path.append(os.path.dirname(__file__))
+
+import PreviewDrawer
 from PIL import Image
 
-def from_path(path):
+def from_path(path, fixmissing=False):
 	l = Loader_MiBand4()
-	l.loadFromDir(path)
+	l.loadFromDir(path ,fixmissing=fixmissing)
 	return l
 
 class Loader_MiBand4:
@@ -13,20 +16,26 @@ class Loader_MiBand4:
 	def setSettings(self, config):
 		self.data = config
 
-	def loadFromDir(self, path):
+	def loadFromDir(self, path, fixmissing=False):
 		self.images = {}
 		self.config = {}
+
+		placeholder = Image.new("RGBA", (1,1))
+
 		for f in os.listdir(path):
 			if os.path.splitext(path+"/"+f)[1] == ".json":
 				with open(path+"/"+f, "r") as jsf:
 					self.config = json.load(jsf)
 					break
+
 		for a in range(9000):
 			fn = path+"/"+str(a).zfill(4)+".png"
 			if os.path.isfile(fn):
 				img = Image.open(fn)
 				img = img.convert("RGBA")
 				self.images[a] = img
+			elif fixmissing:
+				self.images[a] = placeholder
 
 	def getAviableProps(self):
 		return ["H0", "H1", "M0", "M1", "S0", "S1", "STEPS", "STEPS_TARGET",
