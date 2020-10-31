@@ -36,8 +36,8 @@ class PreviewDrawer:
 		pch = y2-y1
 		rp = x2-size[0] if x2-size[0] >= x1 else x1
 		bp = y2-size[1] if y2-size[1] >= y1 else y1
-		cx = x1+(x2-x1-size[0])/2 if x2 != 0 else x1
-		cy = y1+(y2-y1-size[1])/2 if y2 != 0 else y1
+		cx = x1+(x2-x1-size[0])/2 if x2 != 0 and x2-x1-size[0] > x1 else x1
+		cy = y1+(y2-y1-size[1])/2 if y2 != 0 and y2-y1-size[1] > y1 else y1
 
 		align = data["Alignment"]
 		if align == "TopLeft" or align == "Top" or align == "Left":
