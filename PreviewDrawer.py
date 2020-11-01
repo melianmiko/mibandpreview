@@ -2,8 +2,8 @@
 import os, json, math
 from PIL import Image, ImageDraw
 
-def new():
-	return PreviewDrawer()
+def new(size=(120,240)):
+	return PreviewDrawer(size)
 
 def radsin(angle):
 	return math.sin(math.radians(angle))
@@ -12,8 +12,8 @@ def radcos(angle):
 	return math.cos(math.radians(angle))
 
 class PreviewDrawer:
-	def __init__(self):
-		self.canvas = Image.new("RGBA", (120, 240))
+	def __init__(self, size):
+		self.canvas = Image.new("RGBA", size)
 
 	def save(self, fn):
 		self.canvas.save(fn)
@@ -22,7 +22,7 @@ class PreviewDrawer:
 		return self.canvas
 
 	def getRGBCanvas(self):
-		c = Image.new("RGB", (120, 240))
+		c = Image.new("RGB", self.canvas.size)
 		c.paste(self.canvas, (0,0), self.canvas)
 		return c
 
@@ -62,21 +62,27 @@ class PreviewDrawer:
 			print("Align mode unsupported!!!!!")
 			return [x1, y1]
 
-	def buildHybridLine(self, data, a, dotIndex=-1, posixIndex=-1):
+	def buildHybridLine(self, data, a, dotIndex=-1, posixIndex=-1,
+			digits_before_dot=0, digits_after_dot=0):
 		isFloat = len(str(a).split(".")) > 1
 		imgs = []
 		if isFloat:
 			a0 = int(str(a).split(".")[0])
 			a1 = int(str(a).split(".")[1])
-			imgs.append(self.buildNumberImg(data, a0))
-			if dotIndex > 0:
+			imgs.append(self.buildNumberImg(data, a0, digits=digits_before_dot))
+			if dotIndex > -1:
 				imgs.append(self.images[dotIndex])
-			imgs.append(self.buildNumberImg(data, a1))
+			imgs.append(self.buildNumberImg(data, a1, digits=digits_after_dot))
 		else:
-			imgs.append(self.buildNumberImg(data, a))
+			imgs.append(self.buildNumberImg(data, a, digits=digits_before_dot))
 
-		imgs.append(self.images[posixIndex])
-		spacing = data["Spacing"]
+		if posixIndex > -1:
+			imgs.append(self.images[posixIndex])
+		spacing = 0
+		if "Spacing" in data:
+			spacing = data["Spacing"]
+		elif "SpacingX" in data:
+			spacing = data["SpacingX"]
 
 		fullWidth = 0
 		fullHeight = 0
@@ -104,7 +110,11 @@ class PreviewDrawer:
 		else:
 			imgs.append(self.buildNumberImg(data, date[1]))
 
-		spacing = data["Spacing"]
+		spacing = 0
+		if "Spacing" in data:
+			spacing = data["Spacing"]
+		elif "SpacingX" in data:
+			spacing = data["SpacingX"]
 
 		fullWidth = 0
 		fullHeight = 0
@@ -127,8 +137,13 @@ class PreviewDrawer:
 	def buildNumberImg(self, data, a, digits=0):
 		startIndex = data["ImageIndex"]
 		numimgs = self.getImgSet(data)
-		spacing = data["Spacing"]
 		spn = []
+
+		spacing = 0
+		if "Spacing" in data:
+			spacing = data["Spacing"]
+		elif "SpacingX" in data:
+			spacing = data["SpacingX"]
 
 		if a == 0:
 			spn.append(0)

@@ -7,7 +7,7 @@ from watchdog.observers import Observer
 from pathlib import Path
 from PIL import Image
 import os, io, array, json
-import Loader_MiBand4
+import Loader_MiBand4, Loader_MiBand5
 
 WEEKDAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
@@ -19,7 +19,7 @@ PV_DATA = {
     "STEPS": 4000, "STEPS_TARGET": 8000,
     "PULSE": 120, "CALORIES": 420, "DISTANCE": 3.5,
     "BATTERY": 80, "LOCK": True, "MUTE": True,
-    "BLUETOOTH": False, "ANIMATION_FRAME": 2
+    "BLUETOOTH": False, "ANIMATION_FRAME": 2, "ALARM_ON": True
 }
 
 def img2buf(im):
@@ -33,6 +33,7 @@ class AppWindow(Gtk.Window):
         data = {}
         data["path"] = self.path
         data["pv_data"] = PV_DATA
+        data["device_id"] = self.device_id
         with open(str(Path.home())+"/.mibandpreview.json", "w") as f:
             json.dump(data, f)
 
@@ -42,6 +43,7 @@ class AppWindow(Gtk.Window):
             with open(str(Path.home())+"/.mibandpreview.json", "r") as f:
                 o = json.load(f)
                 self.path = o["path"]
+                self.device_id = o["device_id"]
                 PV_DATA = o["pv_data"]
                 print(o)
         except Exception as e:
@@ -56,6 +58,7 @@ class AppWindow(Gtk.Window):
 
         self.is_watcher_added = False
         self.reclock = False
+        self.device_id = ""
         self.path = ""
 
         self.load_settings()
@@ -88,7 +91,7 @@ class AppWindow(Gtk.Window):
 
         # Settings
         self.root_box.add(self.get_settings_box())
-        self.set_device("mb4")
+        self.set_device(self.device_id)
 
         self.set_resizable(False)
         self.rebuild()
@@ -116,7 +119,8 @@ class AppWindow(Gtk.Window):
         for a in self.device_buttons:
             self.device_buttons[a].set_active(a == value)
 
-        self.deviceId = value
+        self.device_id = value
+        self.save_settings()
         self.reclock = False
 
         self.rebuild()
@@ -130,7 +134,7 @@ class AppWindow(Gtk.Window):
         # Device select button
         devices = {
             "mb4": "Mi Band 4",
-            # "mb5": "Mi Band 5"
+            "mb5": "Mi Band 5"
         }
 
         switchroot = Gtk.Box()
@@ -346,6 +350,11 @@ class AppWindow(Gtk.Window):
         btn.connect("toggled", self.bt_changed, "LOCK")
         box.add(btn)
 
+        btn = Gtk.ToggleButton(label="ALARM")
+        btn.set_active(PV_DATA["ALARM_ON"])
+        btn.connect("toggled", self.bt_changed, "ALARM_ON")
+        box.add(btn)
+
         return settings_box
 
     def bt_changed(self, widget, tag):
@@ -493,7 +502,10 @@ class AppWindow(Gtk.Window):
     def rebuild(self):
         if self.path == "": return
         try:
-            loader = Loader_MiBand4.from_path(self.path)
+            if self.device_id == "mb4":
+                loader = Loader_MiBand4.from_path(self.path)
+            elif self.device_id == "mb5":
+                loader = Loader_MiBand5.from_path(self.path)
             loader.setSettings(PV_DATA)
             img = loader.render()
             img = img.resize((img.size[0]*2, img.size[1]*2), resample=Image.BOX)
