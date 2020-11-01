@@ -170,6 +170,8 @@ class Loader_MiBand4:
 					pvd.drawRectNumberObject(config["Status"]["Battery"]["Text"], value=data["BATTERY"])
 				if "Icon" in config["Status"]["Battery"]:
 					value = int(config["Status"]["Battery"]["Icon"]["ImagesCount"]*(data["BATTERY"]/100))
+					if value >= config["Status"]["Battery"]["Icon"]["ImagesCount"]:
+						value=config["Status"]["Battery"]["Icon"]["ImagesCount"]-1
 					pvd.drawObject(config["Status"]["Battery"]["Icon"], value=value)
 
 		# Analog clock
