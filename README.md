@@ -8,6 +8,9 @@ Features:
 - Preview updates automaticly when some file inside project dir is changed
 - Opened path and current settings saves automaticly
 
+## Instalation (Ubuntu)
+Download .deb package from [releases page](https://github.com/melianmiko/MiBandPreview4Linux/releases).
+
 ## Requirements
 - Linux (windows is not supported, hah!)
 - Python3, pip3
