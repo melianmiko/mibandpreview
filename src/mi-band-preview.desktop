@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.1
+Type=Application
+Name=Mi Band Preview
+Comment=Tool to preview Mi Band watchfaces
+Icon=/opt/mibandpreview/res/icon.png
+Exec=/opt/mibandpreview/GtkUI.py
+Path=/opt/mibandpreview
+Actions=
+Categories=Development;

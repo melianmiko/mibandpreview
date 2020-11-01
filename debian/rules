@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+
+override_dh_install:
+	mkdir debian/mibandpreview
+	touch debian/mibandpreview/dummy
+	rm -f debian/mibandpreview/*
+	rm -rf src/__pycache__
+	mkdir -p debian/mibandpreview/opt/mibandpreview
+	mkdir -p debian/mibandpreview/usr/share/applications
+	cp -r src/* debian/mibandpreview/opt/mibandpreview
+	ln -s /opt/mibandpreview/mi-band-preview.desktop debian/mibandpreview/usr/share/applications/
+
+%:
+	dh $@
+

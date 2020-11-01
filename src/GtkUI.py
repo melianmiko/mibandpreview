@@ -65,7 +65,7 @@ class AppWindow(Gtk.Window):
 
         self.set_wmclass("mi-band-preview", "Mi Band Preview")
         # self.set_keep_above(True)
-        self.set_icon_from_file(ROOT_DIR+"/docs/icon48.png")
+        self.set_icon_from_file(ROOT_DIR+"/res/icon48.png")
 
         self.header = Gtk.HeaderBar(show_close_button=True)
         self.header.set_title("Mi Band Preview")
@@ -86,7 +86,7 @@ class AppWindow(Gtk.Window):
         self.root_box = Gtk.Box(spacing=2)
         self.add(self.root_box)
 
-        self.image = Gtk.Image.new_from_file(ROOT_DIR+"/docs/no_file.png")
+        self.image = Gtk.Image.new_from_file(ROOT_DIR+"/res/no_file.png")
         self.root_box.add(self.image)
 
         # Settings
@@ -99,7 +99,7 @@ class AppWindow(Gtk.Window):
     def show_about(self,a):
         dialog = Gtk.AboutDialog(
             transient_for=self,
-            logo=GdkPixbuf.Pixbuf.new_from_file(ROOT_DIR+"/docs/icon96.png")
+            logo=GdkPixbuf.Pixbuf.new_from_file(ROOT_DIR+"/res/icon96.png")
         )
         dialog.set_program_name("Mi Band Preview")
         dialog.set_version('0.2')
@@ -514,7 +514,7 @@ class AppWindow(Gtk.Window):
             self.save_settings()
         except Exception as e:
             print(e)
-            self.image.set_from_file(ROOT_DIR+"/docs/error.png")
+            self.image.set_from_file(ROOT_DIR+"/res/error.png")
 
 win = AppWindow()
 win.connect("destroy", Gtk.main_quit)
