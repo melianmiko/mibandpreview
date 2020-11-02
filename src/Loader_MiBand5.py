@@ -168,8 +168,10 @@ class Loader_MiBand5:
 		if "Battery" in config:
 			if "BatteryText" in config["Battery"]:
 				batt = config["Battery"]["BatteryText"]
+				posix = -1
+				if "SuffixImageIndex" in batt: posix = batt["SuffixImageIndex"]
 				img = pvd.buildHybridLine(batt["Coordinates"], data["BATTERY"],
-					posixIndex=batt["SuffixImageIndex"])
+					posixIndex=posix)
 				x, y = pvd.calculateXYPos(batt["Coordinates"], img.size)
 				pvd.addToCanvas(img, (int(x),int(y)))
 			if "BatteryIcon" in config["Battery"]:
