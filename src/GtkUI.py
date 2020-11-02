@@ -152,7 +152,7 @@ class AppWindow(Gtk.Window):
 
         hours = Gtk.SpinButton(adjustment=Gtk.Adjustment(
             value=(PV_DATA['H0']*10+PV_DATA["H1"]),
-            lower=0, upper=24
+            lower=0, upper=23
         ))
         hours.set_increments(1.00, 5.00)
         hours.set_numeric(True)
