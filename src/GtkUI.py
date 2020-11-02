@@ -58,15 +58,19 @@ class AppWindow(Gtk.Window):
 
         self.is_watcher_added = False
         self.reclock = False
-        self.device_id = ""
+        self.device_id = "mb4"
         self.path = ""
+
+        self.mb5_oly = []
 
         self.load_settings()
 
+        # Window properties
         self.set_wmclass("mi-band-preview", "Mi Band Preview")
-        # self.set_keep_above(True)
+        self.set_resizable(False)
         self.set_icon_from_file(ROOT_DIR+"/res/icon48.png")
 
+        # Headerbar
         self.header = Gtk.HeaderBar(show_close_button=True)
         self.header.set_title("Mi Band Preview")
         self.set_titlebar(self.header)
@@ -90,46 +94,11 @@ class AppWindow(Gtk.Window):
         self.root_box.add(self.image)
 
         # Settings
-        self.root_box.add(self.get_settings_box())
-        self.set_device(self.device_id)
-
-        self.set_resizable(False)
-        self.rebuild()
-
-    def show_about(self,a):
-        dialog = Gtk.AboutDialog(
-            transient_for=self,
-            logo=GdkPixbuf.Pixbuf.new_from_file(ROOT_DIR+"/res/icon96.png")
-        )
-        dialog.set_program_name("Mi Band Preview")
-        dialog.set_version('0.2')
-        dialog.set_website('https://github.com/melianmiko/MiBandPreview4Linux')
-        dialog.set_authors(['MelianMiko'])
-        dialog.set_license("Licensed under Apache 2.0")
-        dialog.run()
-        dialog.destroy()
-
-    def on_device_switch(self, widget, value):
-        self.set_device(value)
-
-    def set_device(self, value):
-        if self.reclock: return
-        self.reclock = True
-
-        for a in self.device_buttons:
-            self.device_buttons[a].set_active(a == value)
-
-        self.device_id = value
-        self.save_settings()
-        self.reclock = False
-
-        self.rebuild()
-
-    def get_settings_box(self):
         settings_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         settings_box.set_size_request(540, 480)
         settings_box.set_margin_right(10)
         settings_box.set_margin_left(10)
+        self.root_box.add(settings_box)
 
         # Device select button
         devices = {
@@ -340,22 +309,62 @@ class AppWindow(Gtk.Window):
         btn.connect("toggled", self.bt_changed, "BLUETOOTH")
         box.add(btn)
 
-        btn = Gtk.ToggleButton(label="MUTE")
+        btn = Gtk.ToggleButton(label="Mute")
         btn.set_active(PV_DATA["MUTE"])
         btn.connect("toggled", self.bt_changed, "MUTE")
         box.add(btn)
 
-        btn = Gtk.ToggleButton(label="LOCK")
+        btn = Gtk.ToggleButton(label="Lock")
         btn.set_active(PV_DATA["LOCK"])
         btn.connect("toggled", self.bt_changed, "LOCK")
         box.add(btn)
 
-        btn = Gtk.ToggleButton(label="ALARM")
+        btn = Gtk.ToggleButton(label="Alarm")
         btn.set_active(PV_DATA["ALARM_ON"])
         btn.connect("toggled", self.bt_changed, "ALARM_ON")
+        self.mb5_oly.append(btn)
         box.add(btn)
 
-        return settings_box
+        self.set_device(self.device_id)
+        self.rebuild()
+
+    def show_about(self,a):
+        dialog = Gtk.AboutDialog(
+            transient_for=self,
+            logo=GdkPixbuf.Pixbuf.new_from_file(ROOT_DIR+"/res/icon96.png")
+        )
+        dialog.set_program_name("Mi Band Preview")
+        dialog.set_version('0.2')
+        dialog.set_website('https://github.com/melianmiko/MiBandPreview4Linux')
+        dialog.set_authors(['MelianMiko'])
+        dialog.set_license("Licensed under Apache 2.0")
+        dialog.run()
+        dialog.destroy()
+
+    def on_device_switch(self, widget, value):
+        self.set_device(value)
+
+    def hide_all_in(self, array):
+        for a in array: a.hide()
+
+    def show_all_in(self, array):
+        for a in array: a.show()
+
+    def set_device(self, value):
+        if self.reclock: return
+        self.reclock = True # Prevent recursion
+
+        if value == "mb5": self.show_all_in(self.mb5_oly)
+        else: self.hide_all_in(self.mb5_oly)
+
+        for a in self.device_buttons:
+            self.device_buttons[a].set_active(a == value)
+
+        self.device_id = value
+        self.save_settings()
+
+        self.reclock = False
+        self.rebuild()
 
     def bt_changed(self, widget, tag):
         PV_DATA[tag] = widget.get_active()
