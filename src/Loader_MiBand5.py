@@ -210,6 +210,7 @@ class Loader_MiBand5:
 		if "Alarm" in config:
 			if "Text" in config["Alarm"] and data["ALARM_ON"]:
 				value = data["H0"]*10+data["H1"]+data["M0"]*0.1+data["M1"]*0.01
+				value = round(value, 2)
 				alarm = config["Alarm"]
 				img = pvd.buildHybridLine(alarm["Text"], value,
 					dotIndex=alarm["DelimiterImageIndex"],
