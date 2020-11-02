@@ -58,15 +58,21 @@ class AppWindow(Gtk.Window):
         self.main_menu.show_all()
         self.main_menu.popup()
 
+    def toggle_compact(self, btn):
+        self.compact_ui = not self.compact_ui
+        self.spawn()
+
     def __init__(self):
         Gtk.Window.__init__(self, title="Mi Band Preview")
 
         self.is_watcher_added = False
         self.reclock = False
+        self.compact_ui = False
         self.device_id = "mb4"
         self.path = ""
 
         self.mb5_oly = []
+        self.hide_in_compact_mode = []
 
         self.load_settings()
 
@@ -77,7 +83,6 @@ class AppWindow(Gtk.Window):
 
         # Headerbar
         self.header = Gtk.HeaderBar(show_close_button=True)
-        self.header.set_title("Mi Band Preview")
         self.set_titlebar(self.header)
 
         # Open menu
@@ -89,6 +94,7 @@ class AppWindow(Gtk.Window):
         open_button = Gtk.Button(label="Open")
         open_button.connect("clicked", self.open_file)
         self.header.pack_end(open_button)
+        self.hide_in_compact_mode.append(open_button)
 
         # Main Menu
         self.main_menu = Gtk.Popover()
@@ -96,6 +102,16 @@ class AppWindow(Gtk.Window):
         menubox.set_size_request(240, 0)
         self.main_menu.add(menubox)
         self.main_menu.set_position(Gtk.PositionType.BOTTOM)
+
+        openbtn = Gtk.ModelButton(label="Open folder")
+        openbtn.set_alignment(0,0)
+        openbtn.connect("clicked", self.open_file)
+        menubox.pack_start(openbtn, False, True, 0)
+
+        compactuibtn = Gtk.ModelButton(label="Toggle compact UI")
+        compactuibtn.set_alignment(0,0)
+        compactuibtn.connect("clicked", self.toggle_compact)
+        menubox.pack_start(compactuibtn, False, True, 0)
 
         resetbtn = Gtk.ModelButton(label="Reset settings")
         resetbtn.set_alignment(0,0)
@@ -119,6 +135,7 @@ class AppWindow(Gtk.Window):
         settings_box.set_margin_right(10)
         settings_box.set_margin_left(10)
         self.root_box.add(settings_box)
+        self.hide_in_compact_mode.append(settings_box)
 
         # Device select button
         devices = {
@@ -348,6 +365,14 @@ class AppWindow(Gtk.Window):
     def spawn(self):
         self.show_all()
         self.set_device(self.device_id)
+
+        if self.compact_ui:
+            self.hide_all_in(self.hide_in_compact_mode)
+            self.header.set_title("")
+        else:
+            self.header.set_title("Mi Band Preview")
+            self.show_all_in(self.hide_in_compact_mode)
+
         self.rebuild()
 
     def show_about(self,a):
@@ -525,9 +550,6 @@ class AppWindow(Gtk.Window):
         self.path = path
         self.rebuild()
 
-    def dispatch(self, event):
-        self.rebuild()
-
     def rebuild(self):
         if self.path == "": return
         try:
@@ -544,6 +566,9 @@ class AppWindow(Gtk.Window):
         except Exception as e:
             print(e)
             self.image.set_from_file(ROOT_DIR+"/res/error.png")
+
+    def dispatch(self, event):
+        self.rebuild()
 
 win = AppWindow()
 win.connect("destroy", Gtk.main_quit)
