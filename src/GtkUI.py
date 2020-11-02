@@ -53,6 +53,11 @@ class AppWindow(Gtk.Window):
         os.remove(str(Path.home())+"/.mibandpreview.json")
         raise SystemExit
 
+    def open_menu(self, widget):
+        self.main_menu.set_relative_to(widget)
+        self.main_menu.show_all()
+        self.main_menu.popup()
+
     def __init__(self):
         Gtk.Window.__init__(self, title="Mi Band Preview")
 
@@ -75,17 +80,32 @@ class AppWindow(Gtk.Window):
         self.header.set_title("Mi Band Preview")
         self.set_titlebar(self.header)
 
-        self.openButton = Gtk.Button(label="Open folder")
-        self.openButton.connect("clicked", self.open_file)
-        self.header.pack_start(self.openButton)
+        # Open menu
+        menu_buttom = Gtk.ToolButton(icon_name="open-menu-symbolic")
+        menu_buttom.connect("clicked", self.open_menu)
+        self.header.pack_end(menu_buttom)
 
-        self.about_btn = Gtk.Button(label="About")
-        self.about_btn.connect("clicked", self.show_about)
-        self.header.pack_end(self.about_btn)
+        # Open folder
+        open_button = Gtk.Button(label="Open")
+        open_button.connect("clicked", self.open_file)
+        self.header.pack_end(open_button)
 
-        self.reset = Gtk.Button(label="Reset settings")
-        self.reset.connect("clicked", self.reset_settings)
-        self.header.pack_end(self.reset)
+        # Main Menu
+        self.main_menu = Gtk.Popover()
+        menubox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        menubox.set_size_request(240, 0)
+        self.main_menu.add(menubox)
+        self.main_menu.set_position(Gtk.PositionType.BOTTOM)
+
+        resetbtn = Gtk.ModelButton(label="Reset settings")
+        resetbtn.set_alignment(0,0)
+        resetbtn.connect("clicked", self.reset_settings)
+        menubox.pack_start(resetbtn, False, True, 0)
+
+        about_btn = Gtk.ModelButton(label="About")
+        about_btn.set_alignment(0,0)
+        about_btn.connect("clicked", self.show_about)
+        menubox.pack_start(about_btn, False, True, 0)
 
         self.root_box = Gtk.Box(spacing=2)
         self.add(self.root_box)
@@ -325,6 +345,8 @@ class AppWindow(Gtk.Window):
         self.mb5_oly.append(btn)
         box.add(btn)
 
+    def spawn(self):
+        self.show_all()
         self.set_device(self.device_id)
         self.rebuild()
 
@@ -342,7 +364,10 @@ class AppWindow(Gtk.Window):
         dialog.destroy()
 
     def on_device_switch(self, widget, value):
+        if self.reclock: return
+        self.reclock = True
         self.set_device(value)
+        self.reclock = False
 
     def hide_all_in(self, array):
         for a in array: a.hide()
@@ -351,9 +376,6 @@ class AppWindow(Gtk.Window):
         for a in array: a.show()
 
     def set_device(self, value):
-        if self.reclock: return
-        self.reclock = True # Prevent recursion
-
         if value == "mb5": self.show_all_in(self.mb5_oly)
         else: self.hide_all_in(self.mb5_oly)
 
@@ -362,8 +384,6 @@ class AppWindow(Gtk.Window):
 
         self.device_id = value
         self.save_settings()
-
-        self.reclock = False
         self.rebuild()
 
     def bt_changed(self, widget, tag):
@@ -527,5 +547,5 @@ class AppWindow(Gtk.Window):
 
 win = AppWindow()
 win.connect("destroy", Gtk.main_quit)
-win.show_all()
+win.spawn()
 Gtk.main()
