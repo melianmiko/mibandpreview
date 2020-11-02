@@ -83,11 +83,17 @@ class Loader_MiBand5:
 
 		# Date and weekday
 		twoDDay = False
+		twoDMonth = False
 		if "Date" in config:
 			if "MonthAndDayAndYear" in config["Date"]:
 				if "TwoDigitsDay" in config["Date"]["MonthAndDayAndYear"]:
 					twoDDay = config["Date"]["MonthAndDayAndYear"]["TwoDigitsDay"]
+				if "TwoDigitsMonth" in config["Date"]["MonthAndDayAndYear"]:
+					twoDMonth = config["Date"]["MonthAndDayAndYear"]["TwoDigitsMonth"]
 				if "Separate" in config["Date"]["MonthAndDayAndYear"]:
+					if "Month" in config["Date"]["MonthAndDayAndYear"]["Separate"]:
+						pvd.drawRectNumberObject(config["Date"]["MonthAndDayAndYear"]["Separate"]["Month"],
+							value=data["MONTH"], digits=(2 if twoDMonth else 1))
 					if "MonthsEN" in config["Date"]["MonthAndDayAndYear"]["Separate"]:
 						pvd.drawObject(config["Date"]["MonthAndDayAndYear"]["Separate"]["MonthsEN"],
 							value=data["MONTH"]-1)

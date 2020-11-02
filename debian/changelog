@@ -4,7 +4,7 @@ mibandpreview (0.3-1) unstable; urgency=medium
   * Python3 path fixed
   * Alarm button hidden in Mi Band 4 settings
   * Fixed KeyError in some Mi Band 5 watchfaces
-  * Fixed graphics for light UI
+  * Fixed graphics for light UI theme
   * Some UI improvements
 
  -- MelianMiko <melianmiko@gmail.com>  Sun, 01 Nov 2020 18:49:00 +0700
