@@ -31,8 +31,9 @@ def img2buf(im):
 class AppWindow(Gtk.Window):
     def save_settings(self):
         data = {}
-        data["path"] = self.path
         data["pv_data"] = PV_DATA
+        data["path"] = self.path
+        data["compact_ui"] = self.compact_ui
         data["device_id"] = self.device_id
         with open(str(Path.home())+"/.mibandpreview.json", "w") as f:
             json.dump(data, f)
@@ -43,6 +44,7 @@ class AppWindow(Gtk.Window):
             with open(str(Path.home())+"/.mibandpreview.json", "r") as f:
                 o = json.load(f)
                 self.path = o["path"]
+                self.compact_ui = o["compact_ui"]
                 self.device_id = o["device_id"]
                 PV_DATA = o["pv_data"]
                 print(o)
@@ -61,6 +63,7 @@ class AppWindow(Gtk.Window):
     def toggle_compact(self, btn):
         self.compact_ui = not self.compact_ui
         self.spawn()
+        self.save_settings()
 
     def __init__(self):
         Gtk.Window.__init__(self, title="Mi Band Preview")
@@ -173,7 +176,7 @@ class AppWindow(Gtk.Window):
         ))
         hours.set_increments(1.00, 5.00)
         hours.set_numeric(True)
-        hours.connect("value-changed", self.hours_changed)
+        hours.connect("value-changed", self.set_splitnumber_var, "H")
         timeroot.add(hours)
 
         minues = Gtk.SpinButton(adjustment=Gtk.Adjustment(
@@ -182,7 +185,7 @@ class AppWindow(Gtk.Window):
         ))
         minues.set_increments(1.00, 5.00)
         minues.set_numeric(True)
-        minues.connect("value-changed", self.minues_changed)
+        minues.connect("value-changed", self.set_splitnumber_var, "M")
         timeroot.add(minues)
 
         seconds = Gtk.SpinButton(adjustment=Gtk.Adjustment(
@@ -191,7 +194,7 @@ class AppWindow(Gtk.Window):
         ))
         seconds.set_increments(1.00, 5.00)
         seconds.set_numeric(True)
-        seconds.connect("value-changed", self.seconds_changed)
+        seconds.connect("value-changed", self.set_splitnumber_var, "S")
         timeroot.add(seconds)
 
         apm_values = Gtk.ListStore(str)
@@ -219,7 +222,7 @@ class AppWindow(Gtk.Window):
         ))
         day.set_increments(1.00, 5.00)
         day.set_numeric(True)
-        day.connect("value-changed", self.day_changed)
+        day.connect("value-changed", self.set_int_prop, "DAY")
         dateroot.add(day)
 
         month = Gtk.SpinButton(adjustment=Gtk.Adjustment(
@@ -228,7 +231,7 @@ class AppWindow(Gtk.Window):
         ))
         month.set_increments(1.00, 5.00)
         month.set_numeric(True)
-        month.connect("value-changed", self.month_changed)
+        month.connect("value-changed", self.set_int_prop, "MONTH")
         dateroot.add(month)
 
         weekdays = Gtk.ListStore(str)
@@ -267,7 +270,7 @@ class AppWindow(Gtk.Window):
         ))
         steps.set_increments(1, 15)
         steps.set_numeric(True)
-        steps.connect("value-changed", self.steps_changed)
+        steps.connect("value-changed", self.set_int_prop, "STEPS")
         stepsroot.add(steps)
 
         stepstarget = Gtk.SpinButton(adjustment=Gtk.Adjustment(
@@ -276,7 +279,7 @@ class AppWindow(Gtk.Window):
         ))
         stepstarget.set_increments(1.00, 15.00)
         stepstarget.set_numeric(True)
-        stepstarget.connect("value-changed", self.stepstarget_changed)
+        stepstarget.connect("value-changed", self.set_int_prop, "STEPS_TARGET")
         stepsroot.add(stepstarget)
 
         distance = Gtk.SpinButton(adjustment=Gtk.Adjustment(
@@ -303,7 +306,7 @@ class AppWindow(Gtk.Window):
         ))
         pulse.set_increments(1, 5)
         pulse.set_numeric(True)
-        pulse.connect("value-changed", self.pulse_change)
+        pulse.connect("value-changed", self.set_int_prop, "PULSE")
         box.add(pulse)
 
         calories = Gtk.SpinButton(adjustment=Gtk.Adjustment(
@@ -312,7 +315,7 @@ class AppWindow(Gtk.Window):
         ))
         calories.set_increments(1, 10)
         calories.set_numeric(True)
-        calories.connect("value-changed", self.calories_change)
+        calories.connect("value-changed", self.set_int_prop, "CALORIES")
         box.add(calories)
 
         frame = Gtk.SpinButton(adjustment=Gtk.Adjustment(
@@ -321,7 +324,7 @@ class AppWindow(Gtk.Window):
         ))
         frame.set_increments(1, 10)
         frame.set_numeric(True)
-        frame.connect("value-changed", self.frame_changed)
+        frame.connect("value-changed", self.set_int_prop, "ANIMATION_FRAME")
         box.add(frame)
 
         # Status
@@ -338,27 +341,27 @@ class AppWindow(Gtk.Window):
         ))
         battery.set_increments(1, 10)
         battery.set_numeric(True)
-        battery.connect("value-changed", self.battery_changed)
+        battery.connect("value-changed", self.set_int_prop, "BATTERY")
         box.add(battery)
 
         btn = Gtk.ToggleButton(label="BT")
         btn.set_active(PV_DATA["BLUETOOTH"])
-        btn.connect("toggled", self.bt_changed, "BLUETOOTH")
+        btn.connect("toggled", self.set_bool_prop, "BLUETOOTH")
         box.add(btn)
 
         btn = Gtk.ToggleButton(label="Mute")
         btn.set_active(PV_DATA["MUTE"])
-        btn.connect("toggled", self.bt_changed, "MUTE")
+        btn.connect("toggled", self.set_bool_prop, "MUTE")
         box.add(btn)
 
         btn = Gtk.ToggleButton(label="Lock")
         btn.set_active(PV_DATA["LOCK"])
-        btn.connect("toggled", self.bt_changed, "LOCK")
+        btn.connect("toggled", self.set_bool_prop, "LOCK")
         box.add(btn)
 
         btn = Gtk.ToggleButton(label="Alarm")
         btn.set_active(PV_DATA["ALARM_ON"])
-        btn.connect("toggled", self.bt_changed, "ALARM_ON")
+        btn.connect("toggled", self.set_bool_prop, "ALARM_ON")
         self.mb5_oly.append(btn)
         box.add(btn)
 
@@ -411,44 +414,14 @@ class AppWindow(Gtk.Window):
         self.save_settings()
         self.rebuild()
 
-    def bt_changed(self, widget, tag):
+    def set_bool_prop(self, widget, tag):
         PV_DATA[tag] = widget.get_active()
-        self.rebuild()
-
-    def battery_changed(self, adj):
-        v = adj.get_value_as_int()
-        PV_DATA["BATTERY"] = v
-        self.rebuild()
-
-    def frame_changed(self, adj):
-        v = adj.get_value_as_int()
-        PV_DATA["ANIMATION_FRAME"] = v
-        self.rebuild()
-
-    def calories_change(self, adj):
-        v = adj.get_value_as_int()
-        PV_DATA["CALORIES"] = v
-        self.rebuild()
-
-    def pulse_change(self, adj):
-        v = adj.get_value_as_int()
-        PV_DATA["PULSE"] = v
         self.rebuild()
 
     def distance_changed(self, adj):
         v = adj.get_value();
         v = round(v, 3)
         PV_DATA["DISTANCE"] = v
-        self.rebuild()
-
-    def stepstarget_changed(self, adj):
-        v = adj.get_value_as_int()
-        PV_DATA["STEPS_TARGET"] = v
-        self.rebuild()
-
-    def steps_changed(self, adj):
-        v = adj.get_value_as_int()
-        PV_DATA["STEPS"] = v
         self.rebuild()
 
     def get_apm_value(self):
@@ -486,38 +459,17 @@ class AppWindow(Gtk.Window):
             PV_DATA["WEEKDAY"] = id
             self.rebuild()
 
-    def day_changed(self, adj):
+    def set_int_prop(self, adj, key):
         v = adj.get_value_as_int()
-        PV_DATA["DAY"] = v
+        PV_DATA[key] = v
         self.rebuild()
 
-    def month_changed(self, adj):
-        v = adj.get_value_as_int()
-        PV_DATA["MONTH"] = v
-        self.rebuild()
-
-    def hours_changed(self, adj):
+    def set_splitnumber_var(self, adj, prefix):
         v = adj.get_value_as_int()
         h0 = v // 10
         h1 = v-(h0*10)
-        PV_DATA["H0"] = h0
-        PV_DATA["H1"] = h1
-        self.rebuild()
-
-    def minues_changed(self, adj):
-        v = adj.get_value_as_int()
-        h0 = v // 10
-        h1 = v-(h0*10)
-        PV_DATA["M0"] = h0
-        PV_DATA["M1"] = h1
-        self.rebuild()
-
-    def seconds_changed(self, adj):
-        v = adj.get_value_as_int()
-        h0 = v // 10
-        h1 = v-(h0*10)
-        PV_DATA["S0"] = h0
-        PV_DATA["S1"] = h1
+        PV_DATA[prefix+"0"] = h0
+        PV_DATA[prefix+"1"] = h1
         self.rebuild()
 
     def open_file(self, widget):

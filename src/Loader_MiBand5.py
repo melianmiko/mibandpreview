@@ -90,7 +90,7 @@ class Loader_MiBand5:
 				if "Separate" in config["Date"]["MonthAndDayAndYear"]:
 					if "MonthsEN" in config["Date"]["MonthAndDayAndYear"]["Separate"]:
 						pvd.drawObject(config["Date"]["MonthAndDayAndYear"]["Separate"]["MonthsEN"],
-							value=data["MONTH"])
+							value=data["MONTH"]-1)
 					if "Day" in self.config["Date"]["MonthAndDayAndYear"]["Separate"]:
 						pvd.drawRectNumberObject(config["Date"]["MonthAndDayAndYear"]["Separate"]["Day"],
 							value=data["DAY"], digits=(2 if twoDDay else 1))
