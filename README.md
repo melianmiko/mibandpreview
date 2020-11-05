@@ -17,28 +17,19 @@ Download .deb package from [releases page](https://github.com/melianmiko/MiBandP
 - GTK+ 3
 - Pillow, watchdog
 
-## Instalation
+## Launch from source
 First of all, install python3 and pip with your package manager. For ubuntu: `sudo
 apt install python3 python3-pip`. Then, clone this repository to some directory
 in your home, eg. `.local/app/mibandpreview`. Open a terminal in this directory and run:
 ```bash
 # Do not use sudo!
 pip3 install Pillow watchdog
+```
+Now, you can launch app with `./src/GtkUi.py` command.
+Optionally, create a launcher icon:
+```bash
 ./create-shortcut.sh
 ```
-Now, application shortcut will appear in your applications menu.
-
-## Usage (GTK)
-Run `./GtkUI.py` to start, or use application launcher icon (see Instalation).
-
-## Usage (Cli)
-Run `./cli.py` inside a directory with your watchface files.
-Preview will appear in parent directory.
-
-## API
-You can use our preview generator as part of your python3 project.
-Simply import `Loader_MiBand4` (or 5) and do what you want.
-See `cli.py` as example.
 
 ## License
 Apache 2.0
