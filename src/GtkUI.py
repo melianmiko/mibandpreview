@@ -41,6 +41,7 @@ class AppWindow(Gtk.Window):
         data = {}
         data["pv_data"] = PV_DATA
         data["path"] = self.path
+        data["force_lang"] = self.force_lang
         data["compact_ui"] = self.compact_ui
         data["device_id"] = self.device_id
         with open(str(Path.home())+"/.mibandpreview.json", "w") as f:
@@ -53,6 +54,7 @@ class AppWindow(Gtk.Window):
                 o = json.load(f)
                 self.compact_ui = o["compact_ui"]
                 self.device_id = o["device_id"]
+                self.force_lang = o["force_lang"]
                 PV_DATA = o["pv_data"]
                 self.bind_path(o["path"])
         except Exception as e:
@@ -60,6 +62,10 @@ class AppWindow(Gtk.Window):
 
     def load_locale(self):
         lang = locale.getdefaultlocale()[0][0:2]
+        if self.force_lang:
+            lang = self.force_lang
+
+        print(lang)
         if not os.path.isfile(ROOT_DIR+"/lang/"+lang+".json"):
             print("Language ("+lang+") not supported. Failback to en...")
             lang = "en"
@@ -76,15 +82,26 @@ class AppWindow(Gtk.Window):
         self.main_menu.show_all()
         self.main_menu.popup()
 
+    def open_langmenu(self, widget, aw):
+        self.lang_menu.set_relative_to(aw)
+        self.lang_menu.show_all()
+        self.lang_menu.popup()
+
     def toggle_compact(self, btn):
         self.compact_ui = not self.compact_ui
         self.spawn()
         self.save_settings()
 
+    def set_lang(self, widget, value):
+        self.force_lang = value
+        self.save_settings()
+        self.destroy()
+
     def __init__(self):
         Gtk.Window.__init__(self, title="Mi Band Preview")
 
         self.is_watcher_added = False
+        self.force_lang = False
         self.reclock = False
         self.compact_ui = False
         self.device_id = "mb4"
@@ -93,8 +110,8 @@ class AppWindow(Gtk.Window):
         self.mb5_oly = []
         self.hide_in_compact_mode = []
 
-        self.load_locale()
         self.load_settings()
+        self.load_locale()
 
         # Window properties
         self.set_wmclass("mi-band-preview", "Mi Band Preview")
@@ -116,6 +133,20 @@ class AppWindow(Gtk.Window):
         open_button.connect("clicked", self.open_file)
         self.header.pack_end(open_button)
         self.hide_in_compact_mode.append(open_button)
+
+        # Language menu
+        self.lang_menu = Gtk.Popover()
+        langbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        langbox.set_size_request(240, 0)
+        self.lang_menu.add(langbox)
+        self.lang_menu.set_position(Gtk.PositionType.BOTTOM)
+
+        for a in os.listdir(ROOT_DIR+"/lang"):
+            lang = a.split(".")[0]
+            btn = Gtk.ModelButton(label=lang)
+            btn.set_alignment(0,0)
+            btn.connect("clicked", self.set_lang, lang)
+            langbox.pack_start(btn, False, True, 0)
 
         # Main Menu
         self.main_menu = Gtk.Popover()
@@ -139,6 +170,11 @@ class AppWindow(Gtk.Window):
         resetbtn.connect("clicked", self.reset_settings)
         menubox.pack_start(resetbtn, False, True, 0)
 
+        resetbtn = Gtk.ModelButton(label=self.locale["header"]["language"])
+        resetbtn.set_alignment(0,0)
+        resetbtn.connect("clicked", self.open_langmenu, menu_buttom)
+        menubox.pack_start(resetbtn, False, True, 0)
+
         about_btn = Gtk.ModelButton(label=self.locale["header"]["about_app"])
         about_btn.set_alignment(0,0)
         about_btn.connect("clicked", self.show_about)
@@ -154,7 +190,7 @@ class AppWindow(Gtk.Window):
 
         # Settings box
         settings_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        settings_box.set_size_request(540, 480)
+        settings_box.set_size_request(720, 480)
         settings_box.set_margin_end(10)
         settings_box.set_margin_start(10)
         self.root_box.add(settings_box)

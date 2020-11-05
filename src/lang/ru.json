@@ -4,7 +4,7 @@
     "open_folder": "Open folder",
     "toggle_compact": "Toggle compact UI",
     "reset_settings": "Reset settings",
-    "language": "Language...",
+    "language": "Выбрать язык...",
     "about_app": "About..."
   },
   "device_names": {
@@ -12,18 +12,18 @@
     "mb5": "Mi Band 5"
   },
   "settings_groups": {
-    "device": "Device:",
-    "time": "Time:",
-    "date": "Date:",
-    "steps": "Steps, target, distance:",
-    "misc": "Pulse, calories, GIF-frame:",
-    "status": "Battery, status:"
+    "device": "Устройство:",
+    "time": "Время:",
+    "date": "Дата:",
+    "steps": "Шаги, цель, км:",
+    "misc": "Пульс, калории, кадр:",
+    "status": "Батарея, статус:"
   },
   "status_checkboxes": {
     "bt": "Bluetooth",
-    "mute": "Mute",
-    "lock": "Lock",
-    "alarm": "Alarm"
+    "mute": "Звук",
+    "lock": "Болк",
+    "alarm": "Будильник"
   },
   "weekdays": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 }
