@@ -3,15 +3,14 @@ import gi
 gi.require_version("Gtk", "3.0")
 
 from gi.repository import Gtk, GdkPixbuf, GLib
-from watchdog.observers import Observer
 from pathlib import Path
 from PIL import Image
-import os, io, array, json
-import Loader_MiBand4, Loader_MiBand5
-
-WEEKDAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+import os, io, array, json, locale
+import Loader_MiBand4, Loader_MiBand5, DirObserver
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+APP_VERSION = "0.4"
 PV_DATA = {
     "H0": 1, "H1": 2, "M0": 3, "M1": 0, "S0": 3, "S1": 0,
     "DAY": 30, "MONTH": 2, "WEEKDAY": 6, "WEEKDAY_LANG": 2,
@@ -28,6 +27,15 @@ def img2buf(im):
     return GdkPixbuf.Pixbuf.new_from_data(arr, GdkPixbuf.Colorspace.RGB,
                                           True, 8, width, height, width * 4)
 
+def create_box(label):
+    box = Gtk.Box()
+    box.set_margin_top(10)
+    label = Gtk.Label(label=label)
+    label.set_halign(Gtk.Align.START)
+    label.set_justify(Gtk.Justification.LEFT)
+    box.pack_start(label, True, True, 0)
+    return box
+
 class AppWindow(Gtk.Window):
     def save_settings(self):
         data = {}
@@ -43,13 +51,21 @@ class AppWindow(Gtk.Window):
         try:
             with open(str(Path.home())+"/.mibandpreview.json", "r") as f:
                 o = json.load(f)
-                self.path = o["path"]
                 self.compact_ui = o["compact_ui"]
                 self.device_id = o["device_id"]
                 PV_DATA = o["pv_data"]
-                print(o)
+                self.bind_path(o["path"])
         except Exception as e:
             print(e)
+
+    def load_locale(self):
+        lang = locale.getdefaultlocale()[0][0:2]
+        if not os.path.isfile(ROOT_DIR+"/lang/"+lang+".json"):
+            print("Language ("+lang+") not supported. Failback to en...")
+            lang = "en"
+
+        with open(ROOT_DIR+"/lang/"+lang+".json") as f:
+            self.locale = json.load(f)
 
     def reset_settings(self, a):
         os.remove(str(Path.home())+"/.mibandpreview.json")
@@ -77,10 +93,12 @@ class AppWindow(Gtk.Window):
         self.mb5_oly = []
         self.hide_in_compact_mode = []
 
+        self.load_locale()
         self.load_settings()
 
         # Window properties
         self.set_wmclass("mi-band-preview", "Mi Band Preview")
+        self.set_role("mi-band-preview")
         self.set_resizable(False)
         self.set_icon_from_file(ROOT_DIR+"/res/icon48.png")
 
@@ -94,7 +112,7 @@ class AppWindow(Gtk.Window):
         self.header.pack_end(menu_buttom)
 
         # Open folder
-        open_button = Gtk.Button(label="Open")
+        open_button = Gtk.Button(label=self.locale["header"]["open_button"])
         open_button.connect("clicked", self.open_file)
         self.header.pack_end(open_button)
         self.hide_in_compact_mode.append(open_button)
@@ -106,52 +124,46 @@ class AppWindow(Gtk.Window):
         self.main_menu.add(menubox)
         self.main_menu.set_position(Gtk.PositionType.BOTTOM)
 
-        openbtn = Gtk.ModelButton(label="Open folder")
+        openbtn = Gtk.ModelButton(label=self.locale["header"]["open_folder"])
         openbtn.set_alignment(0,0)
         openbtn.connect("clicked", self.open_file)
         menubox.pack_start(openbtn, False, True, 0)
 
-        compactuibtn = Gtk.ModelButton(label="Toggle compact UI")
+        compactuibtn = Gtk.ModelButton(label=self.locale["header"]["toggle_compact"])
         compactuibtn.set_alignment(0,0)
         compactuibtn.connect("clicked", self.toggle_compact)
         menubox.pack_start(compactuibtn, False, True, 0)
 
-        resetbtn = Gtk.ModelButton(label="Reset settings")
+        resetbtn = Gtk.ModelButton(label=self.locale["header"]["reset_settings"])
         resetbtn.set_alignment(0,0)
         resetbtn.connect("clicked", self.reset_settings)
         menubox.pack_start(resetbtn, False, True, 0)
 
-        about_btn = Gtk.ModelButton(label="About")
+        about_btn = Gtk.ModelButton(label=self.locale["header"]["about_app"])
         about_btn.set_alignment(0,0)
         about_btn.connect("clicked", self.show_about)
         menubox.pack_start(about_btn, False, True, 0)
 
+        # Root box
         self.root_box = Gtk.Box(spacing=2)
         self.add(self.root_box)
 
+        # Image view
         self.image = Gtk.Image.new_from_file(ROOT_DIR+"/res/no_file.png")
         self.root_box.add(self.image)
 
-        # Settings
+        # Settings box
         settings_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         settings_box.set_size_request(540, 480)
-        settings_box.set_margin_right(10)
-        settings_box.set_margin_left(10)
+        settings_box.set_margin_end(10)
+        settings_box.set_margin_start(10)
         self.root_box.add(settings_box)
         self.hide_in_compact_mode.append(settings_box)
 
         # Device select button
-        devices = {
-            "mb4": "Mi Band 4",
-            "mb5": "Mi Band 5"
-        }
-
-        switchroot = Gtk.Box()
-        switchroot.set_margin_top(10)
-        switchlabel = Gtk.Label(label="Device:")
-        switchlabel.set_alignment(0,0)
+        devices = self.locale["device_names"]
+        switchroot = create_box(self.locale["settings_groups"]["device"])
         switchbox = Gtk.Box(spacing=5)
-        switchroot.pack_start(switchlabel, True, True, 0)
         switchroot.add(switchbox)
         settings_box.add(switchroot)
 
@@ -163,11 +175,7 @@ class AppWindow(Gtk.Window):
             self.device_buttons[a] = btn
 
         # Time input
-        timeroot = Gtk.Box()
-        timeroot.set_margin_top(10)
-        timelabel = Gtk.Label(label="Time:")
-        timelabel.set_alignment(0,0)
-        timeroot.pack_start(timelabel, True, True, 0)
+        timeroot = create_box(self.locale["settings_groups"]["time"])
         settings_box.add(timeroot)
 
         hours = Gtk.SpinButton(adjustment=Gtk.Adjustment(
@@ -209,11 +217,7 @@ class AppWindow(Gtk.Window):
         timeroot.add(apm)
 
         # Date input
-        dateroot = Gtk.Box()
-        dateroot.set_margin_top(10)
-        datelabel = Gtk.Label(label="Date:")
-        datelabel.set_alignment(0,0)
-        dateroot.pack_start(datelabel, True, True, 0)
+        dateroot = create_box(self.locale["settings_groups"]["date"])
         settings_box.add(dateroot)
 
         day = Gtk.SpinButton(adjustment=Gtk.Adjustment(
@@ -235,7 +239,7 @@ class AppWindow(Gtk.Window):
         dateroot.add(month)
 
         weekdays = Gtk.ListStore(str)
-        for a in WEEKDAY_NAMES:
+        for a in self.locale["weekdays"]:
             weekdays.append([a])
         weekday = Gtk.ComboBox.new_with_model(weekdays)
         weekday.set_active(PV_DATA["WEEKDAY"])
@@ -257,11 +261,7 @@ class AppWindow(Gtk.Window):
         dateroot.add(wdlang)
 
         # Steps input
-        stepsroot = Gtk.Box()
-        stepsroot.set_margin_top(10)
-        stepslabel = Gtk.Label(label="Steps, target, km:")
-        stepslabel.set_alignment(0,0)
-        stepsroot.pack_start(stepslabel, True, True, 0)
+        stepsroot = create_box(self.locale["settings_groups"]["steps"])
         settings_box.add(stepsroot)
 
         steps = Gtk.SpinButton(adjustment=Gtk.Adjustment(
@@ -292,12 +292,8 @@ class AppWindow(Gtk.Window):
         distance.connect("value-changed", self.distance_changed)
         stepsroot.add(distance)
 
-        # Pulse, calories, GIF frame
-        box = Gtk.Box()
-        box.set_margin_top(10)
-        label = Gtk.Label(label="Pulse, kcal, frame: ")
-        label.set_alignment(0,0)
-        box.pack_start(label, True, True, 0)
+        # Misc
+        box = create_box(self.locale["settings_groups"]["misc"])
         settings_box.add(box)
 
         pulse = Gtk.SpinButton(adjustment=Gtk.Adjustment(
@@ -328,11 +324,7 @@ class AppWindow(Gtk.Window):
         box.add(frame)
 
         # Status
-        box = Gtk.Box()
-        box.set_margin_top(10)
-        label = Gtk.Label(label="Status: ")
-        label.set_alignment(0,0)
-        box.pack_start(label, True, True, 0)
+        box = create_box(self.locale["settings_groups"]["status"])
         settings_box.add(box)
 
         battery = Gtk.SpinButton(adjustment=Gtk.Adjustment(
@@ -344,22 +336,22 @@ class AppWindow(Gtk.Window):
         battery.connect("value-changed", self.set_int_prop, "BATTERY")
         box.add(battery)
 
-        btn = Gtk.ToggleButton(label="BT")
+        btn = Gtk.ToggleButton(label=self.locale["status_checkboxes"]["bt"])
         btn.set_active(PV_DATA["BLUETOOTH"])
         btn.connect("toggled", self.set_bool_prop, "BLUETOOTH")
         box.add(btn)
 
-        btn = Gtk.ToggleButton(label="Mute")
+        btn = Gtk.ToggleButton(label=self.locale["status_checkboxes"]["mute"])
         btn.set_active(PV_DATA["MUTE"])
         btn.connect("toggled", self.set_bool_prop, "MUTE")
         box.add(btn)
 
-        btn = Gtk.ToggleButton(label="Lock")
+        btn = Gtk.ToggleButton(label=self.locale["status_checkboxes"]["lock"])
         btn.set_active(PV_DATA["LOCK"])
         btn.connect("toggled", self.set_bool_prop, "LOCK")
         box.add(btn)
 
-        btn = Gtk.ToggleButton(label="Alarm")
+        btn = Gtk.ToggleButton(label=self.locale["status_checkboxes"]["alarm"])
         btn.set_active(PV_DATA["ALARM_ON"])
         btn.connect("toggled", self.set_bool_prop, "ALARM_ON")
         self.mb5_oly.append(btn)
@@ -384,7 +376,7 @@ class AppWindow(Gtk.Window):
             logo=GdkPixbuf.Pixbuf.new_from_file(ROOT_DIR+"/res/icon96.png")
         )
         dialog.set_program_name("Mi Band Preview")
-        dialog.set_version('0.2')
+        dialog.set_version(APP_VERSION)
         dialog.set_website('https://github.com/melianmiko/MiBandPreview4Linux')
         dialog.set_authors(['MelianMiko'])
         dialog.set_license("Licensed under Apache 2.0")
@@ -455,7 +447,7 @@ class AppWindow(Gtk.Window):
         if tree_iter is not None:
             model = combo.get_model()
             weekday = model[tree_iter][0]
-            id = WEEKDAY_NAMES.index(weekday)
+            id = self.locale["weekdays"].index(weekday)
             PV_DATA["WEEKDAY"] = id
             self.rebuild()
 
@@ -491,19 +483,16 @@ class AppWindow(Gtk.Window):
 
     def bind_path(self, path):
         if self.is_watcher_added:
-            print("Stopping previouse watcher...")
+            print("Stopping previous watcher...")
             self.watcher.stop()
 
-        self.watcher = Observer()
-        self.watcher.schedule(self, path, recursive=True)
-        self.watcher.start()
+        self.watcher = DirObserver.new(path, self)
         self.is_watcher_added = True
 
         self.path = path
         self.rebuild()
 
     def rebuild(self):
-        if self.path == "": return
         try:
             if self.device_id == "mb4":
                 loader = Loader_MiBand4.from_path(self.path)
@@ -519,10 +508,16 @@ class AppWindow(Gtk.Window):
             print(e)
             self.image.set_from_file(ROOT_DIR+"/res/error.png")
 
-    def dispatch(self, event):
+    def on_change(self):
+        print("Refreshing preview...")
         self.rebuild()
 
 win = AppWindow()
 win.connect("destroy", Gtk.main_quit)
 win.spawn()
+
 Gtk.main()
+
+print("Finishing...")
+if win.is_watcher_added:
+    win.watcher.stop()

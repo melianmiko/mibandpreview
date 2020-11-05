@@ -10,5 +10,5 @@ Homepage: https://github.com/melianmiko/MiBandPreview4Linux
 
 Package: mibandpreview
 Architecture: any
-Depends: ${misc:Depends}, python3, python3-pil, python3-watchdog, python3-gi, libgtk-3-0
+Depends: ${misc:Depends}, python3, python3-pil, inotify-tools, python3-gi, libgtk-3-0
 Description: Mi Band 4/5 watchface preview tool

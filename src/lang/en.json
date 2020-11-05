@@ -1,0 +1,28 @@
+{
+  "header": {
+    "open_button": "Open",
+    "open_folder": "Open folder",
+    "toggle_compact": "Toggle compact UI",
+    "reset_settings": "Reset settings",
+    "about_app": "About..."
+  },
+  "device_names": {
+    "mb4": "Mi Band 4",
+    "mb5": "Mi Band 5"
+  },
+  "settings_groups": {
+    "device": "Device:",
+    "time": "Time:",
+    "date": "Date:",
+    "steps": "Steps, target, distance:",
+    "misc": "Pulse, calories, GIF-frame:",
+    "status": "Battery, status:"
+  },
+  "status_checkboxes": {
+    "bt": "Bluetooth",
+    "mute": "Mute",
+    "lock": "Lock",
+    "alarm": "Alarm"
+  },
+  "weekdays": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+}
