@@ -1,4 +1,4 @@
-mibandpreview (0.3.1-1) unstable; urgency=medium
+mibandpreview (0.4-1) unstable; urgency=medium
 
   * Using notify-tools instead of python3-watchdog
   * Mi Band 5 weather preview
