@@ -11,6 +11,7 @@ import Loader_MiBand4, Loader_MiBand5, DirObserver
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 APP_VERSION = "0.4"
+SETTINGS_VERSION = 1
 PV_DATA = {
     "H0": 1, "H1": 2, "M0": 3, "M1": 0, "S0": 3, "S1": 0,
     "DAY": 30, "MONTH": 2, "WEEKDAY": 6, "WEEKDAY_LANG": 2,
@@ -19,7 +20,7 @@ PV_DATA = {
     "PULSE": 120, "CALORIES": 420, "DISTANCE": 3.5,
     "BATTERY": 80, "LOCK": True, "MUTE": True,
     "BLUETOOTH": False, "ANIMATION_FRAME": 2, "ALARM_ON": True,
-    "TEMP_CURRENT": -10, "TEMP_DAY": 15, "TEMP_NIGHT": -2
+    "WEATHER_ICON": 0, "TEMP_CURRENT": -10, "TEMP_DAY": 15, "TEMP_NIGHT": -2
 }
 
 def img2buf(im):
@@ -40,6 +41,7 @@ def create_box(label):
 class AppWindow(Gtk.Window):
     def save_settings(self):
         data = {}
+        data["version"] = SETTINGS_VERSION
         data["pv_data"] = PV_DATA
         data["path"] = self.path
         data["force_lang"] = self.force_lang
@@ -52,6 +54,7 @@ class AppWindow(Gtk.Window):
         global PV_DATA
         try:
             with open(str(Path.home())+"/.mibandpreview.json", "r") as f:
+                if o["version"] != SETTINGS_VERSION: return
                 o = json.load(f)
                 self.compact_ui = o["compact_ui"]
                 self.device_id = o["device_id"]
