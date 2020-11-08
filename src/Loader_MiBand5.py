@@ -41,7 +41,8 @@ class Loader_MiBand5:
 		return ["H0", "H1", "M0", "M1", "S0", "S1", "STEPS", "STEPS_TARGET",
 			"PULSE", "DISTANCE", "CALORIES", "MONTH", "DAY", "WEEKDAY_LANG",
 			"WEEKDAY", "24H", "APM_CN", "APM_PM", "BATTERY", "BLUETOOTH",
-			"MUTE", "LOCK", "ANIMATION_FRAME", "ALARM_ON"]
+			"MUTE", "LOCK", "ANIMATION_FRAME", "ALARM_ON", "WEATHER_ICON",
+			"TEMP_CURRENT", "TEMP_DAY", "TEMP_NIGHT"]
 
 	def render(self):
 		pvd = PreviewDrawer.new(size=(126,294))
@@ -229,6 +230,38 @@ class Loader_MiBand5:
 				pvd.drawObject(config["Alarm"]["ImageOff"])
 			if "ImageNoAlarm" in config["Alarm"] and not data["ALARM_ON"]:
 				pvd.drawObject(config["Alarm"]["ImageNoAlarm"])
+
+		# Weather
+		if "Weather" in config:
+			if "Icon" in config["Weather"]:
+				if "CustomIcon" in config["Weather"]["Icon"]:
+					pvd.drawObject(config["Weather"]["Icon"]["CustomIcon"], value=data["WEATHER_ICON"])
+			if "Temperature" in config["Weather"]:
+				if "Current" in config["Weather"]["Temperature"]:
+					c = config["Weather"]["Temperature"]["Current"]
+					i = pvd.buildHybridLine(c["Number"], data["TEMP_CURRENT"],
+						minusIndex=c["MinusImageIndex"], posixIndex=c["DegreesImageIndex"])
+					x, y = pvd.calculateXYPos(c["Number"], i.size)
+					pvd.addToCanvas(i, (int(x),int(y)))
+				if "Today" in config["Weather"]["Temperature"]:
+					if "OneLine" in config["Weather"]["Temperature"]["Today"]:
+						c = config["Weather"]["Temperature"]["Today"]["OneLine"]
+						imgs = []
+						v = data["TEMP_DAY"]
+						if v < 0: imgs.append(pvd.images[c["MinusSignImageIndex"]])
+						if v < 0: v = -v
+						imgs.append(pvd.buildNumberImg(c["Number"], v))
+						if "DelimiterImageIndex" in c:
+							imgs.append(pvd.images[c["DelimiterImageIndex"]])
+						v = data["TEMP_NIGHT"]
+						if v < 0: imgs.append(pvd.images[c["MinusSignImageIndex"]])
+						if v < 0: v = -v
+						imgs.append(pvd.buildNumberImg(c["Number"], v))
+						if "DelimiterImageIndex" in c and c["AppendDegreesForBoth"]:
+							imgs.append(pvd.images[c["DelimiterImageIndex"]])
+						o = pvd.concatImgArray(imgs)
+						x, y = pvd.calculateXYPos(c["Number"], o.size)
+						pvd.addToCanvas(o, (int(x), int(y)))
 
 		# Other
 		if "Other" in config:

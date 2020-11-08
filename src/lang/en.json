@@ -17,7 +17,8 @@
     "date": "Date:",
     "steps": "Steps, target, distance:",
     "misc": "Pulse, calories, GIF-frame:",
-    "status": "Battery, status:"
+    "status": "Battery, status:",
+    "weather": "Weather:"
   },
   "status_checkboxes": {
     "bt": "Bluetooth",

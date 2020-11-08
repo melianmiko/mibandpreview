@@ -18,7 +18,8 @@ PV_DATA = {
     "STEPS": 4000, "STEPS_TARGET": 8000,
     "PULSE": 120, "CALORIES": 420, "DISTANCE": 3.5,
     "BATTERY": 80, "LOCK": True, "MUTE": True,
-    "BLUETOOTH": False, "ANIMATION_FRAME": 2, "ALARM_ON": True
+    "BLUETOOTH": False, "ANIMATION_FRAME": 2, "ALARM_ON": True,
+    "TEMP_CURRENT": -10, "TEMP_DAY": 15, "TEMP_NIGHT": -2
 }
 
 def img2buf(im):
@@ -393,6 +394,47 @@ class AppWindow(Gtk.Window):
         self.mb5_oly.append(btn)
         box.add(btn)
 
+        # Weather
+        box = create_box(self.locale["settings_groups"]["weather"])
+        self.mb5_oly.append(box)
+        settings_box.add(box)
+
+        prop = Gtk.SpinButton(adjustment=Gtk.Adjustment(
+            value=PV_DATA["WEATHER_ICON"],
+            lower=0, upper=25
+        ))
+        prop.set_increments(1, 2)
+        prop.set_numeric(True)
+        prop.connect("value-changed", self.set_int_prop, "WEATHER_ICON")
+        box.add(prop)
+
+        prop = Gtk.SpinButton(adjustment=Gtk.Adjustment(
+            value=PV_DATA["TEMP_CURRENT"],
+            lower=-50, upper=40
+        ))
+        prop.set_increments(1, 10)
+        prop.set_numeric(True)
+        prop.connect("value-changed", self.set_int_prop, "TEMP_CURRENT")
+        box.add(prop)
+
+        prop = Gtk.SpinButton(adjustment=Gtk.Adjustment(
+            value=PV_DATA["TEMP_DAY"],
+            lower=-50, upper=40
+        ))
+        prop.set_increments(1, 10)
+        prop.set_numeric(True)
+        prop.connect("value-changed", self.set_int_prop, "TEMP_DAY")
+        box.add(prop)
+
+        prop = Gtk.SpinButton(adjustment=Gtk.Adjustment(
+            value=PV_DATA["TEMP_NIGHT"],
+            lower=-50, upper=40
+        ))
+        prop.set_increments(1, 10)
+        prop.set_numeric(True)
+        prop.connect("value-changed", self.set_int_prop, "TEMP_NIGHT")
+        box.add(prop)
+
     def spawn(self):
         self.show_all()
         self.set_device(self.device_id)
@@ -529,6 +571,7 @@ class AppWindow(Gtk.Window):
         self.rebuild()
 
     def rebuild(self):
+        if self.path == "": return
         try:
             if self.device_id == "mb4":
                 loader = Loader_MiBand4.from_path(self.path)

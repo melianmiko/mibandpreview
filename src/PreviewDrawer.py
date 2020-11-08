@@ -36,8 +36,8 @@ class PreviewDrawer:
 		pch = y2-y1
 		rp = x2-size[0] if x2-size[0] >= x1 else x1
 		bp = y2-size[1] if y2-size[1] >= y1 else y1
-		cx = x1+(x2-x1-size[0])/2 if x2 != 0 and x2-x1-size[0] > x1 else x1
-		cy = y1+(y2-y1-size[1])/2 if y2 != 0 and y2-y1-size[1] > y1 else y1
+		cx = max(x1+(x2-x1-size[0])/2, x1)
+		cy = max(y1+(y2-y1-size[1])/2, y1)
 
 		align = data["Alignment"]
 		if align == "TopLeft" or align == "Top" or align == "Left":
@@ -62,10 +62,16 @@ class PreviewDrawer:
 			print("Align mode unsupported!!!!!")
 			return [x1, y1]
 
-	def buildHybridLine(self, data, a, dotIndex=-1, posixIndex=-1,
+	def buildHybridLine(self, data, a, dotIndex=-1, posixIndex=-1, minusIndex=-1,
 			digits_before_dot=0, digits_after_dot=0):
-		isFloat = len(str(a).split(".")) > 1
+
 		imgs = []
+
+		if a < 0 and minusIndex >= 0:
+			imgs.append(self.images[minusIndex])
+			a = -a
+
+		isFloat = len(str(a).split(".")) > 1
 		if isFloat:
 			a0 = int(str(a).split(".")[0])
 			a1 = int(str(a).split(".")[1])
@@ -84,6 +90,9 @@ class PreviewDrawer:
 		elif "SpacingX" in data:
 			spacing = data["SpacingX"]
 
+		return self.concatImgArray(imgs, spacing=spacing)
+
+	def concatImgArray(self, imgs, spacing=0):
 		fullWidth = 0
 		fullHeight = 0
 		for i in imgs:
@@ -92,7 +101,7 @@ class PreviewDrawer:
 		out = Image.new("RGBA", (fullWidth, fullHeight))
 		x = 0
 		for i in imgs:
-			out.paste(i, (x, 0), i)
+			out.alpha_composite(i, (x, 0), (0, 0))
 			x += i.size[0]+spacing
 		return out
 
