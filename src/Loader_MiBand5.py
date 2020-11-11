@@ -42,7 +42,7 @@ class Loader_MiBand5:
 			"PULSE", "DISTANCE", "CALORIES", "MONTH", "DAY", "WEEKDAY_LANG",
 			"WEEKDAY", "24H", "APM_CN", "APM_PM", "BATTERY", "BLUETOOTH",
 			"MUTE", "LOCK", "ANIMATION_FRAME", "ALARM_ON", "WEATHER_ICON",
-			"TEMP_CURRENT", "TEMP_DAY", "TEMP_NIGHT"]
+			"TEMP_CURRENT", "TEMP_DAY", "TEMP_NIGHT", "PAI"]
 
 	def render(self):
 		pvd = PreviewDrawer.new(size=(126,294))
@@ -70,8 +70,12 @@ class Loader_MiBand5:
 
 		# Activity
 		if "Activity" in config:
-			if "Steps" in config["Activity"]: pvd.drawRectNumberObject(config["Activity"]["Steps"]["Number"], data["STEPS"])
-			if "Pulse" in config["Activity"]: pvd.drawRectNumberObject(config["Activity"]["Pulse"]["Number"], data["PULSE"])
+			if "Steps" in config["Activity"]:
+				pvd.drawRectNumberObject(config["Activity"]["Steps"]["Number"], data["STEPS"])
+			if "Pulse" in config["Activity"]:
+				pvd.drawRectNumberObject(config["Activity"]["Pulse"]["Number"], data["PULSE"])
+			if "PAI" in config["Activity"]:
+				pvd.drawRectNumberObject(config["Activity"]["PAI"]["Number"], data["PAI"])
 			if "Distance" in config["Activity"]:
 				dist = config["Activity"]["Distance"]
 				img = pvd.buildHybridLine(dist["Number"], data["DISTANCE"],

@@ -20,7 +20,8 @@ PV_DATA = {
     "PULSE": 120, "CALORIES": 420, "DISTANCE": 3.5,
     "BATTERY": 80, "LOCK": True, "MUTE": True,
     "BLUETOOTH": False, "ANIMATION_FRAME": 2, "ALARM_ON": True,
-    "WEATHER_ICON": 0, "TEMP_CURRENT": -10, "TEMP_DAY": 15, "TEMP_NIGHT": -2
+    "WEATHER_ICON": 0, "TEMP_CURRENT": -10, "TEMP_DAY": 15, "TEMP_NIGHT": -2,
+    "PAI": 60
 }
 
 def img2buf(im):
@@ -54,8 +55,10 @@ class AppWindow(Gtk.Window):
         global PV_DATA
         try:
             with open(str(Path.home())+"/.mibandpreview.json", "r") as f:
-                if o["version"] != SETTINGS_VERSION: return
                 o = json.load(f)
+                if o["version"] != SETTINGS_VERSION:
+                    print("Settings file ignored, invalid version")
+                    return
                 self.compact_ui = o["compact_ui"]
                 self.device_id = o["device_id"]
                 self.force_lang = o["force_lang"]
@@ -437,6 +440,20 @@ class AppWindow(Gtk.Window):
         prop.set_numeric(True)
         prop.connect("value-changed", self.set_int_prop, "TEMP_NIGHT")
         box.add(prop)
+
+        # MB5 etc
+        box = create_box(self.locale["settings_groups"]["mb5_misc"])
+        settings_box.add(box)
+        self.mb5_oly.append(box)
+
+        pai = Gtk.SpinButton(adjustment=Gtk.Adjustment(
+            value=PV_DATA["PAI"],
+            lower=0, upper=100
+        ))
+        pai.set_increments(1, 10)
+        pai.set_numeric(True)
+        pai.connect("value-changed", self.set_int_prop, "PAI")
+        box.add(pai)
 
     def spawn(self):
         self.show_all()

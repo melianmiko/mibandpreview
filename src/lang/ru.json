@@ -18,7 +18,8 @@
     "steps": "Шаги, цель, км:",
     "misc": "Пульс, калории, кадр:",
     "status": "Батарея, статус:",
-    "weather": "Погода:"
+    "weather": "Погода:",
+    "mb5_misc": "PAI:"
   },
   "status_checkboxes": {
     "bt": "Bluetooth",

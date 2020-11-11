@@ -18,7 +18,8 @@
     "steps": "Steps, target, distance:",
     "misc": "Pulse, calories, GIF-frame:",
     "status": "Battery, status:",
-    "weather": "Weather:"
+    "weather": "Weather:",
+    "mb5_misc": "PAI:"
   },
   "status_checkboxes": {
     "bt": "Bluetooth",
