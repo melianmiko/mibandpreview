@@ -1,9 +1,6 @@
-mibandpreview (0.4-2) unstable; urgency=medium
+mibandpreview (0.4.1-1) unstable; urgency=medium
 
-  * Using notify-tools instead of python3-watchdog
-  * Mi Band 5 weather preview
-  * Russian translation
-  * Language picker menu
-  * Bug fixes
+  * PAI and humidity display support
+  * Settings load fixed
 
  -- MelianMiko <melianmiko@gmail.com>  Sun, 01 Nov 2020 18:49:00 +0700
