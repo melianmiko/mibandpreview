@@ -42,7 +42,7 @@ class Loader_MiBand5:
 			"PULSE", "DISTANCE", "CALORIES", "MONTH", "DAY", "WEEKDAY_LANG",
 			"WEEKDAY", "24H", "APM_CN", "APM_PM", "BATTERY", "BLUETOOTH",
 			"MUTE", "LOCK", "ANIMATION_FRAME", "ALARM_ON", "WEATHER_ICON",
-			"TEMP_CURRENT", "TEMP_DAY", "TEMP_NIGHT", "PAI"]
+			"TEMP_CURRENT", "TEMP_DAY", "TEMP_NIGHT", "PAI", "HUMIDITY"]
 
 	def render(self):
 		pvd = PreviewDrawer.new(size=(126,294))
@@ -237,6 +237,12 @@ class Loader_MiBand5:
 
 		# Weather
 		if "Weather" in config:
+			if "Humidity" in config["Weather"]:
+				c = config["Weather"]["Humidity"]
+				i = pvd.buildHybridLine(c["Text"], data["HUMIDITY"],
+					posixIndex=c["SuffixImageIndex"])
+				x, y = pvd.calculateXYPos(c["Text"], i.size)
+				pvd.addToCanvas(i, (int(x),int(y)))
 			if "Icon" in config["Weather"]:
 				if "CustomIcon" in config["Weather"]["Icon"]:
 					pvd.drawObject(config["Weather"]["Icon"]["CustomIcon"], value=data["WEATHER_ICON"])

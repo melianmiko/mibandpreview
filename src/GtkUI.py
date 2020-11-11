@@ -21,7 +21,7 @@ PV_DATA = {
     "BATTERY": 80, "LOCK": True, "MUTE": True,
     "BLUETOOTH": False, "ANIMATION_FRAME": 2, "ALARM_ON": True,
     "WEATHER_ICON": 0, "TEMP_CURRENT": -10, "TEMP_DAY": 15, "TEMP_NIGHT": -2,
-    "PAI": 60
+    "PAI": 60, "HUMIDITY": 25
 }
 
 def img2buf(im):
@@ -454,6 +454,15 @@ class AppWindow(Gtk.Window):
         pai.set_numeric(True)
         pai.connect("value-changed", self.set_int_prop, "PAI")
         box.add(pai)
+
+        prop = Gtk.SpinButton(adjustment=Gtk.Adjustment(
+            value=PV_DATA["HUMIDITY"],
+            lower=-0, upper=100
+        ))
+        prop.set_increments(1, 10)
+        prop.set_numeric(True)
+        prop.connect("value-changed", self.set_int_prop, "HUMIDITY")
+        box.add(prop)
 
     def spawn(self):
         self.show_all()

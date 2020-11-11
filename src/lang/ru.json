@@ -19,7 +19,7 @@
     "misc": "Пульс, калории, кадр:",
     "status": "Батарея, статус:",
     "weather": "Погода:",
-    "mb5_misc": "PAI:"
+    "mb5_misc": "PAI, влажность:"
   },
   "status_checkboxes": {
     "bt": "Bluetooth",
