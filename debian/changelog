@@ -1,6 +1,6 @@
-mibandpreview (0.4.1-1) unstable; urgency=medium
+mibandpreview (0.4.2-1) unstable; urgency=medium
 
-  * PAI and humidity display support
-  * Settings load fixed
+  * Locale fixes
+  * Separate weather, timezone, pulse posix support for mb5
 
  -- MelianMiko <melianmiko@gmail.com>  Sun, 01 Nov 2020 18:49:00 +0700
