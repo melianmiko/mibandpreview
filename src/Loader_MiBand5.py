@@ -42,7 +42,8 @@ class Loader_MiBand5:
 			"PULSE", "DISTANCE", "CALORIES", "MONTH", "DAY", "WEEKDAY_LANG",
 			"WEEKDAY", "24H", "APM_CN", "APM_PM", "BATTERY", "BLUETOOTH",
 			"MUTE", "LOCK", "ANIMATION_FRAME", "ALARM_ON", "WEATHER_ICON",
-			"TEMP_CURRENT", "TEMP_DAY", "TEMP_NIGHT", "PAI", "HUMIDITY"]
+			"TEMP_CURRENT", "TEMP_DAY", "TEMP_NIGHT", "PAI", "HUMIDITY",
+			"TZ1_NO_TIME", "TZ2_NO_TIME"]
 
 	def render(self):
 		pvd = PreviewDrawer.new(size=(126,294))
@@ -67,13 +68,33 @@ class Loader_MiBand5:
 				if "Tens" in config["Time"]["Minutes"]: pvd.drawObject(config["Time"]["Minutes"]["Tens"], data["M0"])
 				if "Ones" in config["Time"]["Minutes"]: pvd.drawObject(config["Time"]["Minutes"]["Ones"], data["M1"])
 			if "DelimiterImage" in config["Time"]: pvd.drawObject(config["Time"]["DelimiterImage"])
+			if "TimeZone1" in config["Time"]:
+				a = round(data["H0"]*10+data["H1"]+data["M0"]*0.1+data["M1"]*0.01, 2)
+				img =  pvd.buildHybridLine(config["Time"]["TimeZone1"], a,
+					dotIndex=config["Time"]["TimeZone1DelimiterImage"],
+					digits_after_dot=2, digits_before_dot=2)
+				x, y = pvd.calculateXYPos(config["Time"]["TimeZone1"], img.size)
+				pvd.addToCanvas(img, (int(x),int(y)))
+			if "TimeZone2" in config["Time"]:
+				a = round(data["H0"]*10+data["H1"]+data["M0"]*0.1+data["M1"]*0.01, 2)
+				img =  pvd.buildHybridLine(config["Time"]["TimeZone2"], a,
+					dotIndex=config["Time"]["TimeZone2DelimiterImage"],
+					digits_after_dot=2, digits_before_dot=2)
+				x, y = pvd.calculateXYPos(config["Time"]["TimeZone2"], img.size)
+				pvd.addToCanvas(img, (int(x),int(y)))
 
 		# Activity
 		if "Activity" in config:
 			if "Steps" in config["Activity"]:
 				pvd.drawRectNumberObject(config["Activity"]["Steps"]["Number"], data["STEPS"])
 			if "Pulse" in config["Activity"]:
-				pvd.drawRectNumberObject(config["Activity"]["Pulse"]["Number"], data["PULSE"])
+				pulse = config["Activity"]["Pulse"]
+				img = pvd.buildHybridLine(pulse["Number"], data["PULSE"],
+					prefixIndex=pulse["PrefixImageIndex"])
+				x, y = pvd.calculateXYPos(pulse["Number"], img.size)
+				pvd.addToCanvas(img, (int(x),int(y)))
+			if "Calories" in self.config["Activity"]:
+				pvd.drawRectNumberObject(self.config["Activity"]["Calories"]["Text"], data["CALORIES"])
 			if "PAI" in config["Activity"]:
 				pvd.drawRectNumberObject(config["Activity"]["PAI"]["Number"], data["PAI"])
 			if "Distance" in config["Activity"]:
@@ -254,6 +275,20 @@ class Loader_MiBand5:
 					x, y = pvd.calculateXYPos(c["Number"], i.size)
 					pvd.addToCanvas(i, (int(x),int(y)))
 				if "Today" in config["Weather"]["Temperature"]:
+					if "Separate" in config["Weather"]["Temperature"]["Today"]:
+						c = config["Weather"]["Temperature"]["Today"]["Separate"]
+						if "Day" in config["Weather"]["Temperature"]["Today"]["Separate"]:
+							img = pvd.buildHybridLine(c["Day"]["Number"], data["TEMP_DAY"],
+								minusIndex=c["Day"]["MinusImageIndex"],
+								posixIndex=c["Day"]["DegreesImageIndex"])
+							x, y = pvd.calculateXYPos(c["Day"]["Number"], img.size)
+							pvd.addToCanvas(img, (int(x), int(y)))
+						if "Night" in config["Weather"]["Temperature"]["Today"]["Separate"]:
+							img = pvd.buildHybridLine(c["Night"]["Number"], data["TEMP_NIGHT"],
+								minusIndex=c["Night"]["MinusImageIndex"],
+								posixIndex=c["Night"]["DegreesImageIndex"])
+							x, y = pvd.calculateXYPos(c["Night"]["Number"], img.size)
+							pvd.addToCanvas(img, (int(x), int(y)))
 					if "OneLine" in config["Weather"]["Temperature"]["Today"]:
 						c = config["Weather"]["Temperature"]["Today"]["OneLine"]
 						imgs = []

@@ -63,9 +63,12 @@ class PreviewDrawer:
 			return [x1, y1]
 
 	def buildHybridLine(self, data, a, dotIndex=-1, posixIndex=-1, minusIndex=-1,
-			digits_before_dot=0, digits_after_dot=0):
+			digits_before_dot=0, digits_after_dot=0, prefixIndex=-1):
 
 		imgs = []
+
+		if prefixIndex >= 0:
+			imgs.append(self.images[prefixIndex])
 
 		if a < 0 and minusIndex >= 0:
 			imgs.append(self.images[minusIndex])
