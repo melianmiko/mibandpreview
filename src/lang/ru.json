@@ -24,7 +24,7 @@
   "status_checkboxes": {
     "bt": "Bluetooth",
     "mute": "Звук",
-    "lock": "Болк",
+    "lock": "Блок",
     "alarm": "Будильник"
   },
   "weekdays": ["Пон", "Втр", "Срд", "Чтв", "Пят", "Суб", "Вск"]
