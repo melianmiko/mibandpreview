@@ -89,8 +89,10 @@ class Loader_MiBand5:
 				pvd.drawRectNumberObject(config["Activity"]["Steps"]["Number"], data["STEPS"])
 			if "Pulse" in config["Activity"]:
 				pulse = config["Activity"]["Pulse"]
+				pimg = 0
+				if "PrefixImageIndex" in pulse: pimg = pulse["PrefixImageIndex"]
 				img = pvd.buildHybridLine(pulse["Number"], data["PULSE"],
-					prefixIndex=pulse["PrefixImageIndex"])
+					prefixIndex=pimg)
 				x, y = pvd.calculateXYPos(pulse["Number"], img.size)
 				pvd.addToCanvas(img, (int(x),int(y)))
 			if "Calories" in self.config["Activity"]:
