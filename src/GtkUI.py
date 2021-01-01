@@ -6,7 +6,7 @@ from gi.repository import Gtk, GdkPixbuf, GLib
 from pathlib import Path
 from PIL import Image
 import os, io, array, json, locale
-import Loader_MiBand4, Loader_MiBand5, DirObserver
+import Loader_MiBand4, Loader_MiBand5, DirObserver, PreviewDrawer
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -33,7 +33,7 @@ def img2buf(im):
 class MiBandPreviewApp:
     def __init__(self):
         self.builder = Gtk.Builder()
-        self.builder.add_from_file("app.glade")
+        self.builder.add_from_file(ROOT_DIR+"/app.glade")
         self.builder.connect_signals(self)
 
         self.builder.get_object("preview_host_big").set_from_file(ROOT_DIR+"/res/no_file.png")
@@ -44,6 +44,7 @@ class MiBandPreviewApp:
         self.path = ""
         self.is_expanded = True
         self.is_watcher_added = False
+        self.current_frame = [False, 0, 0, 0, 0]
         self.set_device("Mi Band 4")
 
         self.load_settings()
@@ -70,7 +71,10 @@ class MiBandPreviewApp:
             self.rebuild()
 
     def gif_settings_changed(self, *args):
-        print(2)
+        for a in range(1, 5):
+            obj = self.builder.get_object("frame_input"+str(a))
+            self.current_frame[a] = obj.get_adjustment().get_value()
+        self.sth_changed()
 
     def on_device_select(self, *args):
         if self.allow_interact:
@@ -104,6 +108,10 @@ class MiBandPreviewApp:
             print("Stopping previous watcher...")
             self.watcher.stop()
 
+        if path == "" or not os.path.isdir(path):
+            print("Empty or invalid path, ignoring...")
+            return
+
         self.watcher = DirObserver.new(path, self)
         self.is_watcher_added = True
 
@@ -136,9 +144,14 @@ class MiBandPreviewApp:
     def rebuild(self):
         if self.path == "": return
         try:
+            print("Drawing...")
             loader = self.Loader.from_path(self.path)
             loader.setSettings(PV_DATA)
             img = loader.render()
+
+            img = loader.draw_animation_layers(self.current_frame, img)
+            self.setup_animations_ui(loader)
+
             img = img.resize((img.size[0]*2, img.size[1]*2), resample=Image.BOX)
             buf = img2buf(img)
 
@@ -150,6 +163,13 @@ class MiBandPreviewApp:
             print(e)
             self.builder.get_object("preview_host_big").set_from_file(ROOT_DIR+"/res/error.png")
             self.builder.get_object("preview_host_small").set_from_file(ROOT_DIR+"/res/error.png")
+
+    def setup_animations_ui(self, loader):
+        count = loader.get_animations_count()
+        for a in range(1, 5):
+            obj = self.builder.get_object("gif_box"+str(a))
+            if a <= count: obj.show()
+            else: obj.hide()
 
     def show_app_menu(self, *args):
         menu = self.builder.get_object("app_menu")

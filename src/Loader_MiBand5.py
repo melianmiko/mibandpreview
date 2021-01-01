@@ -37,6 +37,29 @@ class Loader_MiBand5:
 			elif fixmissing:
 				self.images[a] = placeholder
 
+	def get_animations_count(self):
+		if "Other" in self.config:
+			if "Animation" in self.config["Other"]:
+				return len(self.config["Other"]["Animation"])
+		return 0
+
+	def draw_animation_layers(self, current_frame, img):
+		pvd = PreviewDrawer.new(img.size)
+		config = self.config
+
+		pvd.addToCanvas(img, (0,0))
+		pvd.putImages(self.images)
+
+		n = 1
+		if "Other" in config:
+			if "Animation" in config["Other"]:
+				for a in config["Other"]["Animation"]:
+					if current_frame[n] < a["AnimationImages"]["ImagesCount"]:
+						pvd.drawObject(a["AnimationImages"], value=current_frame[n])
+					n += 1
+
+		return pvd.getCanvas()
+
 	def getAviableProps(self):
 		return ["H0", "H1", "M0", "M1", "S0", "S1", "STEPS", "STEPS_TARGET",
 			"PULSE", "DISTANCE", "CALORIES", "MONTH", "DAY", "WEEKDAY_LANG",

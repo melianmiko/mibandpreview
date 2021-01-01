@@ -37,6 +37,26 @@ class Loader_MiBand4:
 			elif fixmissing:
 				self.images[a] = placeholder
 
+	def get_animations_count(self):
+		if "Other" in self.config:
+			if "Animation" in self.config["Other"]:
+				return 1
+		return 0
+
+	def draw_animation_layers(self, current_frame, img):
+		pvd = PreviewDrawer.new(img.size)
+		config = self.config
+
+		pvd.addToCanvas(img, (0,0))
+		pvd.putImages(self.images)
+
+		if "Other" in config:
+			if "Animation" in config["Other"]:
+				if current_frame[1] < config["Other"]["Animation"]["AnimationImage"]["ImagesCount"]:
+					pvd.drawObject(config["Other"]["Animation"]["AnimationImage"], value=current_frame[1])
+
+		return pvd.getCanvas()
+
 	def getAviableProps(self):
 		return ["H0", "H1", "M0", "M1", "S0", "S1", "STEPS", "STEPS_TARGET",
 			"PULSE", "DISTANCE", "CALORIES", "MONTH", "DAY", "WEEKDAY_LANG",
@@ -195,6 +215,7 @@ class Loader_MiBand4:
 		# Other
 		if "Other" in config:
 			if "Animation" in config["Other"]:
-				pvd.drawObject(config["Other"]["Animation"]["AnimationImage"], value=data["ANIMATION_FRAME"])
+				if data["ANIMATION_FRAME"] < config["Other"]["Animation"]["AnimationImage"]["ImagesCount"]:
+					pvd.drawObject(config["Other"]["Animation"]["AnimationImage"], value=data["ANIMATION_FRAME"])
 
 		return pvd.getCanvas()
