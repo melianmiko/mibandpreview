@@ -46,6 +46,7 @@ class Loader_MiBand5:
 	def draw_animation_layers(self, current_frame, img):
 		pvd = PreviewDrawer.new(img.size)
 		config = self.config
+		state = [False, False, False, False, False]
 
 		pvd.addToCanvas(img, (0,0))
 		pvd.putImages(self.images)
@@ -56,9 +57,10 @@ class Loader_MiBand5:
 				for a in config["Other"]["Animation"]:
 					if current_frame[n] < a["AnimationImages"]["ImagesCount"]:
 						pvd.drawObject(a["AnimationImages"], value=current_frame[n])
+					else: state[n] = True
 					n += 1
 
-		return pvd.getCanvas()
+		return (pvd.getCanvas(), state)
 
 	def getAviableProps(self):
 		return ["H0", "H1", "M0", "M1", "S0", "S1", "STEPS", "STEPS_TARGET",

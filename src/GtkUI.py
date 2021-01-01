@@ -5,7 +5,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GdkPixbuf, GLib
 from pathlib import Path
 from PIL import Image
-import os, io, array, json, locale
+import os, io, array, json, locale, threading
 import Loader_MiBand4, Loader_MiBand5, DirObserver, PreviewDrawer
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -42,20 +42,42 @@ class MiBandPreviewApp:
         self.builder.get_object("main_window_compact").set_wmclass("mi-band-preview", "Mi Band Preview")
 
         self.path = ""
+        self.is_active = True
         self.is_expanded = True
         self.is_watcher_added = False
+        self.allow_interact = False
         self.current_frame = [False, 0, 0, 0, 0]
+        self.is_animation_complete = [False, False, False, False, False]
         self.set_device("Mi Band 4")
 
         self.load_settings()
         self.restore_data()
+
+        self.gif_autoplay()
 
     def start(self):
         self.current_window = self.builder.get_object("main_window" if self.is_expanded else "main_window_compact")
         self.current_window.show()
 
     # Events
+    def gif_autoplay(self):
+        if not self.is_active: return
+        rebuild_required = False
+
+        for a in range(1,5):
+            enabled = self.builder.get_object("gif_switch"+str(a)).get_active()
+            if enabled:
+                self.current_frame[a] += 1
+                if self.is_animation_complete[a]: self.current_frame[a] = 0
+                rebuild_required = True
+
+        if rebuild_required: self.rebuild()
+
+        threading.Timer(0.25, self.gif_autoplay).start()
+
     def on_exit(self, *args):
+        self.is_active = False
+        self.allow_interact = False
         self.current_window.hide()
         if self.is_watcher_added:
             self.watcher.stop()
@@ -144,13 +166,13 @@ class MiBandPreviewApp:
     def rebuild(self):
         if self.path == "": return
         try:
-            print("Drawing...")
             loader = self.Loader.from_path(self.path)
             loader.setSettings(PV_DATA)
             img = loader.render()
 
-            img = loader.draw_animation_layers(self.current_frame, img)
+            img, state = loader.draw_animation_layers(self.current_frame, img)
             self.setup_animations_ui(loader)
+            self.is_animation_complete = state
 
             img = img.resize((img.size[0]*2, img.size[1]*2), resample=Image.BOX)
             buf = img2buf(img)
