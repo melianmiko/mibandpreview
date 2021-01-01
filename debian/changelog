@@ -1,6 +1,9 @@
-mibandpreview (0.4.2-1) unstable; urgency=medium
+mibandpreview (0.5-1) unstable; urgency=medium
 
-  * Locale fixes
-  * Separate weather, timezone, pulse posix support for mb5
+  * New pretty UI, created with Glade
+  * Pretty weather icon picker
+  * Separated animation preview
+  * Automatic animation preview (beta)
+  * Full Russian translation
 
  -- MelianMiko <melianmiko@gmail.com>  Sun, 01 Nov 2020 18:49:00 +0700
