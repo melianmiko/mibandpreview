@@ -21,13 +21,14 @@
       <object class="GtkHeaderBar">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="title" translatable="yes">Preview</property>
+        <property name="title">Mi Band Preview</property>
         <property name="show_close_button">True</property>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="expand_button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="tooltip_text" translatable="yes">Return to full window</property>
             <property name="image">action_expand</property>
             <property name="always_show_image">True</property>
             <signal name="clicked" handler="toggle_compact_mode" swapped="no"/>
@@ -75,50 +76,6 @@
     <property name="value">1</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
-  </object>
-  <object class="GtkAboutDialog" id="dialog_about">
-    <property name="can_focus">False</property>
-    <property name="resizable">False</property>
-    <property name="modal">True</property>
-    <property name="window_position">center</property>
-    <property name="type_hint">dialog</property>
-    <property name="gravity">static</property>
-    <property name="program_name">Mi Band Preview</property>
-    <property name="version">0.5</property>
-    <property name="copyright" translatable="yes">By MelianMiko</property>
-    <property name="website">https://github.com/melianmiko/MiBandPreview4Linux</property>
-    <property name="logo">res/icon96.png</property>
-    <property name="license_type">apache-2-0</property>
-    <child type="titlebar">
-      <placeholder/>
-    </child>
-    <child internal-child="vbox">
-      <object class="GtkBox">
-        <property name="can_focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox">
-            <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-      </object>
-    </child>
   </object>
   <object class="GtkAdjustment" id="distance_inpu">
     <property name="upper">9.9900000000000002</property>
@@ -223,15 +180,16 @@
       <object class="GtkHeaderBar">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="title" translatable="yes">Mi Band Preview</property>
+        <property name="title">Mi Band Preview</property>
         <property name="show_close_button">True</property>
         <child>
           <object class="GtkComboBoxText" id="device_picker">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="tooltip_text" translatable="yes">Select target device for preview</property>
             <items>
-              <item id="mb4" translatable="yes">Mi Band 4</item>
-              <item id="mb5" translatable="yes">Mi Band 5</item>
+              <item id="mb4">Mi Band 4</item>
+              <item id="mb5">Mi Band 5</item>
             </items>
             <signal name="changed" handler="on_device_select" swapped="no"/>
           </object>
@@ -244,6 +202,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="tooltip_text" translatable="yes">Options</property>
             <property name="image">menu_icon</property>
             <signal name="clicked" handler="show_app_menu" swapped="no"/>
           </object>
@@ -257,6 +216,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="tooltip_text" translatable="yes">Compact mode</property>
             <property name="image">action_collspace</property>
             <property name="always_show_image">True</property>
             <signal name="clicked" handler="toggle_compact_mode" swapped="no"/>
@@ -295,7 +255,7 @@
             <property name="hexpand">True</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkStackSwitcher">
+              <object class="GtkStackSwitcher" id="tab_switcher">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">center</property>
@@ -404,14 +364,15 @@
                             <property name="width_request">120</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="tooltip_text" translatable="yes">Clock format, AM/PM toggle</property>
                             <property name="halign">start</property>
                             <property name="active">0</property>
                             <items>
                               <item id="none" translatable="yes">24h format</item>
-                              <item id="am_en" translatable="yes">AM (EN(</item>
-                              <item id="pm_en" translatable="yes">PM (EN)</item>
-                              <item id="am_cn" translatable="yes">AM (CN)</item>
-                              <item id="pm_cn" translatable="yes">PM (CN)</item>
+                              <item id="am_en">AM (EN(</item>
+                              <item id="pm_en">PM (EN)</item>
+                              <item id="am_cn">AM (CN)</item>
+                              <item id="pm_cn">PM (CN)</item>
                             </items>
                             <signal name="changed" handler="sth_changed" swapped="no"/>
                           </object>
@@ -496,15 +457,16 @@
                               <object class="GtkComboBoxText" id="weekday_combo">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Current weekday</property>
                                 <property name="active">0</property>
                                 <items>
-                                  <item id="0" translatable="yes">0 Monday</item>
-                                  <item id="1" translatable="yes">1 Tuesday</item>
-                                  <item id="2" translatable="yes">2 Wednesday</item>
-                                  <item id="3" translatable="yes">3 Thursday</item>
-                                  <item id="4" translatable="yes">4 Friday</item>
-                                  <item id="5" translatable="yes">5 Saturday</item>
-                                  <item id="6" translatable="yes">6 Sunday</item>
+                                  <item id="0" translatable="yes">Monday</item>
+                                  <item id="1" translatable="yes">Tuesday</item>
+                                  <item id="2" translatable="yes">Wednesday</item>
+                                  <item id="3" translatable="yes">Thursday</item>
+                                  <item id="4" translatable="yes">Friday</item>
+                                  <item id="5" translatable="yes">Saturday</item>
+                                  <item id="6" translatable="yes">Sunday</item>
                                 </items>
                                 <signal name="changed" handler="sth_changed" swapped="no"/>
                               </object>
@@ -518,11 +480,12 @@
                               <object class="GtkComboBoxText" id="weekday_lang_combo">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Weekdays language</property>
                                 <property name="active">0</property>
                                 <items>
-                                  <item translatable="yes">CN1</item>
-                                  <item translatable="yes">CN2</item>
-                                  <item translatable="yes">INT</item>
+                                  <item>CN1</item>
+                                  <item>CN2</item>
+                                  <item translatable="yes">Other</item>
                                 </items>
                                 <signal name="changed" handler="sth_changed" swapped="no"/>
                               </object>
@@ -583,7 +546,6 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="valign">start</property>
-                            <property name="text" translatable="yes">1</property>
                             <property name="input_purpose">number</property>
                             <property name="adjustment">battery_adj</property>
                             <property name="numeric">True</property>
@@ -756,8 +718,8 @@
                             <property name="active">0</property>
                             <property name="button_sensitivity">off</property>
                             <items>
-                              <item id="0" translatable="yes">KM</item>
-                              <item id="1" translatable="yes">MIL</item>
+                              <item id="0">KM</item>
+                              <item id="1">MIL</item>
                             </items>
                             <signal name="changed" handler="sth_changed" swapped="no"/>
                           </object>
@@ -1207,7 +1169,7 @@
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">0</property>
+                                <property name="label">0</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1258,7 +1220,7 @@
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">1</property>
+                                <property name="label">1</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1309,7 +1271,7 @@
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">2</property>
+                                <property name="label">2</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1360,7 +1322,7 @@
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">3</property>
+                                <property name="label">3</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>

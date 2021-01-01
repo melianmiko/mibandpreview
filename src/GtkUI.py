@@ -5,7 +5,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GdkPixbuf, GLib
 from pathlib import Path
 from PIL import Image
-import os, io, array, json, locale, threading
+import os, io, array, json, locale, threading, locale, gettext
 import Loader_MiBand4, Loader_MiBand5, DirObserver, PreviewDrawer
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -32,7 +32,13 @@ def img2buf(im):
 
 class MiBandPreviewApp:
     def __init__(self):
+        locale.setlocale(locale.LC_ALL, '')
+        locale.bindtextdomain("app", ROOT_DIR+"/locale")
+        gettext.bindtextdomain("app", ROOT_DIR+"/locale")
+        gettext.textdomain("app")
+
         self.builder = Gtk.Builder()
+        self.builder.set_translation_domain("app")
         self.builder.add_from_file(ROOT_DIR+"/app.glade")
         self.builder.connect_signals(self)
 
@@ -300,10 +306,7 @@ class MiBandPreviewApp:
         data["MONTH"] = int(b.get_object("date_month_spin").get_adjustment().get_value())
         data["WEEKDAY"] = int(b.get_object("weekday_combo").get_active())
 
-        val = b.get_object("weekday_lang_combo").get_active_text()
-        data["WEEKDAY_LANG"] = 0
-        if "CN2" in val: data["WEEKDAY_LANG"] = 1
-        if "INT" in val: data["WEEKDAY_LANG"] = 2
+        data["WEEKDAY_LANG"] = b.get_object("weekday_lang_combo").get_active()
 
         val = b.get_object("ampm_mode").get_active_text()
         data["24H"] = 1 if "24h" in val else 0
