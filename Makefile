@@ -18,3 +18,10 @@ uninstall:
 
 debian:
 	dpkg-buildpackage
+
+windows:
+	export PATH=$PATH:/mingw64/bin
+	pyinstaller --name mibandpreview --icon src/res/icon.ico \
+		--add-data src/res;res --add-data src/app.glade;app.glade \
+		--add-data src/locale;locale \
+		src/GtkUi.py
