@@ -17,8 +17,8 @@ uninstall:
 	rm $(DESTDIR)/usr/share/applications/mi-band-preview.desktop
 	rm -rf $(DESTDIR)/opt/mibandpreview
 
-debian:
-	dpkg-buildpackage
+deb:
+	dpkg-buildpackage -sa
 
 windows:
 	export PATH=$PATH:/mingw64/bin

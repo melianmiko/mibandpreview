@@ -1,7 +1,7 @@
 Source: mibandpreview
-Section: unknown
+Section: utils
 Priority: optional
-Maintainer: MelianMiko <melianmiko@gmail.com>
+Maintainer: MelianMiko <mikigaru@zohomail.com>
 Build-Depends: debhelper-compat (= 12)
 Standards-Version: 4.4.1
 Homepage: https://github.com/melianmiko/MiBandPreview4Linux
@@ -9,6 +9,6 @@ Homepage: https://github.com/melianmiko/MiBandPreview4Linux
 #Vcs-Git: https://salsa.debian.org/debian/mibandpreview.git
 
 Package: mibandpreview
-Architecture: any
+Architecture: all
 Depends: ${misc:Depends}, python3, python3-pil, python3-watchdog, python3-gi, libgtk-3-0
 Description: Mi Band 4/5 watchface preview tool
