@@ -5,6 +5,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GdkPixbuf, GLib
 from pathlib import Path
 from PIL import Image
+from ctypes import cdll
 import os, io, array, json, locale, threading, locale, gettext
 import Loader_MiBand4, Loader_MiBand5, DirObserver, PreviewDrawer
 
@@ -30,12 +31,33 @@ def img2buf(im):
     return GdkPixbuf.Pixbuf.new_from_data(arr, GdkPixbuf.Colorspace.RGB,
                                           True, 8, width, height, width * 4)
 
+def load_translations():
+    domain = "app"
+    path = ROOT_DIR+"/locale"
+
+    # For locale class
+    try:
+        locale.setlocale(locale.LC_ALL, '')
+        locale.bindtextdomain(domain, path)
+    except Exception: pass
+
+    # For gettext class
+    try:
+        gettext.bindtextdomain(domain, path)
+        gettext.textdomain(domain)
+    except Exception: pass
+
+    # For intl-8 library
+    try:
+        libintl = cdll.LoadLibrary('libintl-8')
+        libintl.bindtextdomain(domain, path)
+        libintl.textdomain(domain)
+        libintl.bind_textdomain_codeset(domain, "UTF-8")
+    except Exception: pass
+
 class MiBandPreviewApp:
     def __init__(self):
-        locale.setlocale(locale.LC_ALL, '')
-        locale.bindtextdomain("app", ROOT_DIR+"/locale")
-        gettext.bindtextdomain("app", ROOT_DIR+"/locale")
-        gettext.textdomain("app")
+        load_translations()
 
         self.builder = Gtk.Builder()
         self.builder.set_translation_domain("app")
