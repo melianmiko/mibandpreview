@@ -37,4 +37,4 @@ windows:
 	rm -rf dist/mibandpreview/share/icons/Adwaita/cursors
 	rm -rf dist/mibandpreview/share/icons/Adwaita/scalable
 	rm -rf dist/mibandpreview/share/icons/Adwaita/scalable-up-to-32
-	pwd
+	cp src/res/installer.nsi dist
