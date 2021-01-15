@@ -53,7 +53,8 @@ def load_translations():
         libintl.bindtextdomain(domain, path)
         libintl.textdomain(domain)
         libintl.bind_textdomain_codeset(domain, "UTF-8")
-    except Exception: pass
+    except Exception as e:
+        print(e)
 
 class MiBandPreviewApp:
     def __init__(self):
