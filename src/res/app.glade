@@ -16,7 +16,7 @@
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
     <property name="default_height">240</property>
-    <property name="icon">res/icon48.png</property>
+    <property name="icon">icon48.png</property>
     <child type="titlebar">
       <object class="GtkHeaderBar">
         <property name="visible">True</property>
@@ -173,7 +173,7 @@
     <property name="resizable">False</property>
     <property name="default_width">800</property>
     <property name="default_height">360</property>
-    <property name="icon">res/icon48.png</property>
+    <property name="icon">icon48.png</property>
     <property name="startup_id">mi-band-preview</property>
     <signal name="destroy" handler="on_exit" swapped="no"/>
     <child type="titlebar">

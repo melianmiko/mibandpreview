@@ -23,10 +23,11 @@ export PATH=$PATH:/mingw64/bin
 pip install pyinstaller
 ```
 Then run build
-```
+```bash
 make windows
 ```
 Build artifacts will be located in `dist` folder.
+To build an installer, use nsis with `dist/installer.nsi` script.
 
 ## Launch from source
 First of all, install python3 and pip with your package manager. For ubuntu: `sudo
