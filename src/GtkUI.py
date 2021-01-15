@@ -62,7 +62,7 @@ class MiBandPreviewApp:
 
         self.builder = Gtk.Builder()
         self.builder.set_translation_domain("app")
-        self.builder.add_from_file(ROOT_DIR+"/app.glade")
+        self.builder.add_from_file(ROOT_DIR+"/res/app.glade")
         self.builder.connect_signals(self)
 
         self.builder.get_object("preview_host_big").set_from_file(ROOT_DIR+"/res/no_file.png")
