@@ -227,7 +227,7 @@ class MiBandPreviewApp:
         )
         dialog.set_program_name("Mi Band Preview")
         dialog.set_version(str(APP_VERSION))
-        dialog.set_website('https://github.com/melianmiko/MiBandPreview4Linux')
+        dialog.set_website('https://melianmiko.ru/mibandpreview')
         dialog.set_authors(['MelianMiko'])
         dialog.set_license("Licensed under Apache 2.0")
         dialog.run()
