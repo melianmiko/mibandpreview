@@ -32,25 +32,12 @@ def img2buf(im):
                                           True, 8, width, height, width * 4)
 
 def load_translations():
-    domain = "app"
-    path = ROOT_DIR+"/locale"
-
-    # For locale class
-    try:
-        locale.setlocale(locale.LC_ALL, '')
-        locale.bindtextdomain(domain, path)
-    except Exception: pass
-
-    # For gettext class
-    try:
-        gettext.bindtextdomain(domain, path)
-        gettext.textdomain(domain)
-    except Exception: pass
+    domain = "mibandpreview"
 
     # For intl-8 library
     try:
         libintl = cdll.LoadLibrary('libintl-8')
-        libintl.bindtextdomain(domain, path)
+        libintl.bindtextdomain(domain)
         libintl.textdomain(domain)
         libintl.bind_textdomain_codeset(domain, "UTF-8")
     except Exception as e:
@@ -61,7 +48,7 @@ class MiBandPreviewApp:
         load_translations()
 
         self.builder = Gtk.Builder()
-        self.builder.set_translation_domain("app")
+        self.builder.set_translation_domain("mibandpreview")
         self.builder.add_from_file(ROOT_DIR+"/res/app.glade")
         self.builder.connect_signals(self)
 

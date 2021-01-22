@@ -1,34 +1,42 @@
 #!/usr/bin/make -f
 DESTDIR=/
 
-all: clean
+all: l18n clean
+all_win32: l18n windows clean
+
+l18n:
+	./tools/merge_l18ns.sh
+	mkdir -p dist/locale/ru/LC_MESSAGES
+	msgfmt src/l18n/ru.po -o dist/locale/ru/LC_MESSAGES/mibandpreview.mo
 
 clean:
 	rm -rf src/__pycache__
-	rm -rf build dist
+	rm -rf build
 
 install:
 	mkdir -p $(DESTDIR)/opt/mibandpreview
 	mkdir -p $(DESTDIR)/usr/share/applications
+	mkdir -p $(DESTDIR)/usr/share/locale
+	cp tools/mi-band-preview.desktop $(DESTDIR)/usr/share/applications/mi-band-preview.desktop
 	cp -r src/* $(DESTDIR)/opt/mibandpreview
-	ln -sf /opt/mibandpreview/res/mi-band-preview.desktop $(DESTDIR)/usr/share/applications/mi-band-preview.desktop
+	cp -r dist/locale/* $(DESTDIR)/usr/share/locale/
 
 uninstall:
 	rm $(DESTDIR)/usr/share/applications/mi-band-preview.desktop
 	rm -rf $(DESTDIR)/opt/mibandpreview
+	find $(DESTDIR)/usr/share/locale -name "mibandpreview.mo" -delete
 
 deb:
 	dpkg-buildpackage -sa
 
 windows:
-	export PATH=$PATH:/mingw64/bin
-	rm -rf build dist
+	export PATH=$(PATH):/mingw64/bin
 	pyinstaller --name mibandpreview --icon src/res/icon.ico -w \
 		--add-data "src/res;res" --add-data "src/locale;locale" \
 		src/GtkUi.py
 	mkdir dist/mibandpreview/etc
-	mv dist/mibandpreview/res/gtk-3.0 dist/mibandpreview/etc/gtk-3.0
-	rm -rf dist/mibandpreview/share/locale
+	cp -r tools/gtk-3.0 dist/mibandpreview/etc/gtk-3.0
+	cp -r dist/locale/* dist/mibandpreview/share/locale
 	rm -rf dist/mibandpreview/share/icons/Adwaita/48x48
 	rm -rf dist/mibandpreview/share/icons/Adwaita/64x64
 	rm -rf dist/mibandpreview/share/icons/Adwaita/96x96
@@ -37,4 +45,3 @@ windows:
 	rm -rf dist/mibandpreview/share/icons/Adwaita/cursors
 	rm -rf dist/mibandpreview/share/icons/Adwaita/scalable
 	rm -rf dist/mibandpreview/share/icons/Adwaita/scalable-up-to-32
-	cp src/res/installer.nsi dist
