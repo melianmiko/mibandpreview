@@ -6,7 +6,7 @@ from gi.repository import Gtk, GdkPixbuf, GLib
 from pathlib import Path
 from PIL import Image
 from ctypes import cdll
-import os, io, array, json, locale, threading, locale, gettext
+import os, io, array, json, locale, threading, locale, gettext, platform
 import Loader_MiBand4, Loader_MiBand5, DirObserver, PreviewDrawer
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -32,16 +32,23 @@ def img2buf(im):
                                           True, 8, width, height, width * 4)
 
 def load_translations():
-    domain = "mibandpreview"
+    if platform.system() == "Windows":
+        if os.getenv('LANG') is None:
+            lang, enc = locale.getdefaultlocale()
+            os.environ['LANG'] = lang
+        print("Setup locale for windows...")
+        
+        domain = "mibandpreview"
+        gettext.textdomain(domain)
 
-    # For intl-8 library
-    try:
+        # For intl-8 library
         libintl = cdll.LoadLibrary('libintl-8')
         libintl.bindtextdomain(domain)
         libintl.textdomain(domain)
         libintl.bind_textdomain_codeset(domain, "UTF-8")
-    except Exception as e:
-        print(e)
+
+    locale.setlocale(locale.LC_ALL, '')
+    print(locale.getlocale())
 
 class MiBandPreviewApp:
     def __init__(self):

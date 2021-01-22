@@ -31,9 +31,9 @@ deb:
 
 windows:
 	export PATH=$(PATH):/mingw64/bin
+	rm -rf dist/mibandpreview
 	pyinstaller --name mibandpreview --icon src/res/icon.ico -w \
-		--add-data "src/res;res" --add-data "src/locale;locale" \
-		src/GtkUi.py
+		--add-data "src/res;res" src/__main__.py
 	mkdir dist/mibandpreview/etc
 	cp -r tools/gtk-3.0 dist/mibandpreview/etc/gtk-3.0
 	cp -r dist/locale/* dist/mibandpreview/share/locale
