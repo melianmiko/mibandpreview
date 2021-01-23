@@ -1,3 +1,6 @@
+# REPOSITORY CLOSED
+## APP MOVED TO https://gitlab.com/melianmiko/MiBandPreview4Linux
+
 # MiBandPreview4Linux
 Mi Band 4/5 watchface preview tool for Linux (CLI + GTK).
 This app created as an FOSS-alternative for WF_Preview app for Windows.
