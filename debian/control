@@ -2,7 +2,7 @@ Source: mibandpreview
 Section: utils
 Priority: optional
 Maintainer: MelianMiko <mikigaru@zohomail.com>
-Build-Depends: debhelper-compat (= 12)
+Build-Depends: debhelper-compat (= 12), intltool
 Standards-Version: 4.4.1
 Homepage: https://github.com/melianmiko/MiBandPreview4Linux
 #Vcs-Browser: https://salsa.debian.org/debian/mibandpreview
