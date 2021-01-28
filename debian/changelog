@@ -1,6 +1,7 @@
-mibandpreview (0.5.2-1) focal; urgency=medium
-  
-  * website link changed (github -> melianmiko.ru)
-  * mirror windows fixes
+mibandpreview (0.5.4-1) focal; urgency=medium
+
+  * moved to gitlab
+  * cleanup
+  * misc fixes
 
  -- MelianMiko <mikigaru@zohomail.com>  Sun, 01 Nov 2020 18:49:00 +0700

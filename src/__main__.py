@@ -7,11 +7,12 @@ from pathlib import Path
 from PIL import Image
 from ctypes import cdll
 import os, io, array, json, locale, threading, locale, gettext, platform
+import urllib.request
 import Loader_MiBand4, Loader_MiBand5, DirObserver, PreviewDrawer
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-APP_VERSION = 0.5
+APP_VERSION = "v0.5.4"
 SETTINGS_VERSION = 2
 PV_DATA = {
     "H0": 1, "H1": 2, "M0": 3, "M1": 0, "S0": 3, "S1": 0,
@@ -50,6 +51,7 @@ class MiBandPreviewApp:
         self.builder.get_object("main_window_compact").set_wmclass("mi-band-preview", "Mi Band Preview")
 
         self.path = ""
+        self.watcher = False
         self.is_active = True
         self.is_expanded = True
         self.is_watcher_added = False
@@ -63,11 +65,31 @@ class MiBandPreviewApp:
 
         self.gif_autoplay()
 
+        # Check for updates
+        self.builder.get_object("new_version_message").hide()
+        try:
+            if platform.system() == "Windows":
+                res = urllib.request.urlopen(
+                    "https://gitlab.com/api/v4/projects/melianmiko%2Fmibandpreview/releases",
+                    timeout=3
+                    )
+                res = json.loads(res.read())[0]
+                if not res["tag_name"] == APP_VERSION:
+                    print("New version: "+APP_VERSION+" != "+res["tag_name"])
+                    self.builder.get_object("new_version_message").show()
+        except Exception: pass
+
     def start(self):
         self.current_window = self.builder.get_object("main_window" if self.is_expanded else "main_window_compact")
         self.current_window.show()
 
     # Events
+    def on_update_confirm(self, *args):
+        pass
+
+    def on_update_ignore(self, *args):
+        self.builder.get_object("new_version_message").hide()
+
     def gif_autoplay(self):
         if not self.is_active: return
         rebuild_required = False
