@@ -7,7 +7,7 @@ from pathlib import Path
 from PIL import Image
 from ctypes import cdll
 import os, io, array, json, locale, threading, locale, gettext, platform
-import urllib.request
+import urllib.request, certifi
 import Loader_MiBand4, Loader_MiBand5, DirObserver, PreviewDrawer
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -67,6 +67,7 @@ class MiBandPreviewApp:
 
         # Check for updates
         self.builder.get_object("new_version_message").hide()
+        print(platform.system())
         try:
             if platform.system() == "Windows":
                 res = urllib.request.urlopen(
@@ -77,7 +78,7 @@ class MiBandPreviewApp:
                 if not res["tag_name"] == APP_VERSION:
                     print("New version: "+APP_VERSION+" != "+res["tag_name"])
                     self.builder.get_object("new_version_message").show()
-        except Exception: pass
+        except Exception as e: print(e)
 
     def start(self):
         self.current_window = self.builder.get_object("main_window" if self.is_expanded else "main_window_compact")

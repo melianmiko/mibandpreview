@@ -29,6 +29,15 @@ uninstall:
 deb:
 	dpkg-buildpackage -sa
 
+windows_debug:
+	export PATH=$(PATH):/mingw64/bin
+	rm -rf dist/mibandpreview
+	pyinstaller --name mibandpreview --icon src/res/icon.ico \
+		--add-data "src/res;res" \
+		--add-data "tools/gtk-3.0;etc/gtk-3.0" \
+		--add-data "dist/locale;share/locale" \
+		src/__main__.py
+
 windows:
 	export PATH=$(PATH):/mingw64/bin
 	rm -rf dist/mibandpreview
