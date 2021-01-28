@@ -33,10 +33,10 @@ windows:
 	export PATH=$(PATH):/mingw64/bin
 	rm -rf dist/mibandpreview
 	pyinstaller --name mibandpreview --icon src/res/icon.ico -w \
-		--add-data "src/res;res" src/__main__.py
-	mkdir dist/mibandpreview/etc
-	cp -r tools/gtk-3.0 dist/mibandpreview/etc/gtk-3.0
-	cp -r dist/locale/* dist/mibandpreview/share/locale
+		--add-data "src/res;res" \
+		--add-data "tools/gtk-3.0;etc/gtk-3.0" \
+		--add-data "dist/locale;share/locale" \
+		src/__main__.py
 	rm -rf dist/mibandpreview/share/icons/Adwaita/48x48
 	rm -rf dist/mibandpreview/share/icons/Adwaita/64x64
 	rm -rf dist/mibandpreview/share/icons/Adwaita/96x96
@@ -45,3 +45,5 @@ windows:
 	rm -rf dist/mibandpreview/share/icons/Adwaita/cursors
 	rm -rf dist/mibandpreview/share/icons/Adwaita/scalable
 	rm -rf dist/mibandpreview/share/icons/Adwaita/scalable-up-to-32
+	cp tools/installer.nsi dist/installer.nsi
+	cd dist && makensis installer.nsi
