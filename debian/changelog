@@ -1,5 +1,5 @@
-mibandpreview (0.5.3-1) focal; urgency=medium
-  
+mibandpreview (0.5.4-1) focal; urgency=medium
+
   * moved to gitlab
   * cleanup
   * misc fixes
