@@ -8,7 +8,7 @@ from PIL import Image
 from ctypes import cdll
 import os, io, array, json, locale, threading, locale, gettext, platform
 import urllib.request, certifi
-import Loader_MiBand4, Loader_MiBand5, DirObserver, PreviewDrawer
+import Loader_MiBand4, Loader_MiBand5, Loader_MiBand6, DirObserver, PreviewDrawer
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -192,6 +192,15 @@ class MiBandPreviewApp:
             self.builder.get_object("distance_type_picker").show()
             self.builder.get_object("weather_settings").show()
             self.rebuild()
+        elif device_name == "Mi Band 6":
+            self.Loader = Loader_MiBand6
+            self.builder.get_object("device_picker").set_active(2)
+            self.builder.get_object("alarm_toggle").show()
+            self.builder.get_object("pai_label").show()
+            self.builder.get_object("pai_input").show()
+            self.builder.get_object("distance_type_picker").show()
+            self.builder.get_object("weather_settings").show()
+            self.rebuild()
         self.allow_interact = True
 
     def rebuild(self):
@@ -205,7 +214,10 @@ class MiBandPreviewApp:
             self.setup_animations_ui(loader)
             self.is_animation_complete = state
 
-            img = img.resize((img.size[0]*2, img.size[1]*2), resample=Image.BOX)
+            if self.device_id == "Mi Band 6":
+                img = img.resize((round(img.size[0]*1.5), round(img.size[1]*1.5)), resample=Image.BOX)
+            else:
+                img = img.resize((img.size[0]*2, img.size[1]*2), resample=Image.BOX)
             buf = img2buf(img)
 
             self.builder.get_object("preview_host_big").set_from_pixbuf(buf)

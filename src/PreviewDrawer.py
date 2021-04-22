@@ -96,7 +96,7 @@ class PreviewDrawer:
 		return self.concatImgArray(imgs, spacing=spacing)
 
 	def concatImgArray(self, imgs, spacing=0):
-		fullWidth = 0
+		fullWidth = spacing
 		fullHeight = 0
 		for i in imgs:
 			fullWidth += i.size[0]+spacing
@@ -110,34 +110,40 @@ class PreviewDrawer:
 
 	def buildDateLine(self, data, dotIndex=-1, twoDMonth=False, twoDDay=False, date=(1,1)):
 		imgs = []
-		if twoDMonth:
-			imgs.append(self.buildNumberImg(data, date[0], digits=2))
-		else:
-			imgs.append(self.buildNumberImg(data, date[0]))
+		if twoDMonth or date[0] // 10 != 0:
+			imgs.append(self.buildNumberImg(data, date[0] // 10))
+		imgs.append(self.buildNumberImg(data, date[0] % 10))
 
 		imgs.append(self.images[dotIndex])
 
-		if twoDDay:
-			imgs.append(self.buildNumberImg(data, date[1], digits=2))
-		else:
-			imgs.append(self.buildNumberImg(data, date[1]))
+		if twoDDay or date[1] // 10 != 0:
+			imgs.append(self.buildNumberImg(data, date[1] // 10))
+		imgs.append(self.buildNumberImg(data, date[1] % 10))
 
 		spacing = 0
+		spacingY = 0
 		if "Spacing" in data:
 			spacing = data["Spacing"]
 		elif "SpacingX" in data:
 			spacing = data["SpacingX"]
+		
+		if "SpacingY" in data:
+			spacingY = data["SpacingY"]
 
-		fullWidth = 0
-		fullHeight = 0
+		fullWidth = abs(spacing)
+		fullHeight = abs(spacingY)
 		for i in imgs:
 			fullWidth += i.size[0]+spacing
 			fullHeight = max(fullHeight, i.size[1])
+		fullHeight += abs(spacingY) * (len(imgs)-1)
+
 		out = Image.new("RGBA", (fullWidth, fullHeight))
 		x = 0
+		y = 0 if spacingY > 0 else -spacingY*(len(imgs)-1)
 		for i in imgs:
-			out.paste(i, (x, 0), i)
+			out.alpha_composite(i, (x, y))
 			x += i.size[0]+spacing
+			y += spacingY
 		return out
 
 	def getImgSet(self, obj):
@@ -179,7 +185,8 @@ class PreviewDrawer:
 		img = Image.new("RGBA", (w, h))
 		x = 0
 		for n in spn:
-			img.paste(numimgs[n],(x, 0), numimgs[n])
+			# img.paste(numimgs[n],(x, 0), numimgs[n])
+			img.alpha_composite(numimgs[n], (x, 0))
 			x += numimgs[n].size[0]+spacing
 		return img
 
