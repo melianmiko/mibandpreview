@@ -36,7 +36,7 @@ windows_debug:
 		--add-data "src/res;res" \
 		--add-data "tools/gtk-3.0;etc/gtk-3.0" \
 		--add-data "dist/locale;share/locale" \
-		src/__main__.py
+		mibandpreview-gtk/__init__.py
 
 windows:
 	export PATH=$(PATH):/mingw64/bin
@@ -45,7 +45,7 @@ windows:
 		--add-data "src/res;res" \
 		--add-data "tools/gtk-3.0;etc/gtk-3.0" \
 		--add-data "dist/locale;share/locale" \
-		src/__main__.py
+		mibandpreview-gtk/__init__.py
 	rm -rf dist/mibandpreview/share/icons/Adwaita/48x48
 	rm -rf dist/mibandpreview/share/icons/Adwaita/64x64
 	rm -rf dist/mibandpreview/share/icons/Adwaita/96x96

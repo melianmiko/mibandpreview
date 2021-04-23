@@ -8,23 +8,12 @@ from PIL import Image
 from ctypes import cdll
 import os, io, array, json, locale, threading, locale, gettext, platform
 import urllib.request, certifi
-import Loader_MiBand4, Loader_MiBand5, Loader_MiBand6, DirObserver, PreviewDrawer
+import DirObserver, mibandpreview
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-APP_VERSION = "v0.5.4"
+APP_VERSION = "v0.6"
 SETTINGS_VERSION = 2
-PV_DATA = {
-    "H0": 1, "H1": 2, "M0": 3, "M1": 0, "S0": 3, "S1": 0,
-    "DAY": 30, "MONTH": 2, "WEEKDAY": 4, "WEEKDAY_LANG": 2,
-    "24H": False, "APM_CN": True, "APM_PM": True,
-    "STEPS": 4000, "STEPS_TARGET": 8000,
-    "PULSE": 120, "CALORIES": 420, "DISTANCE": 3.5,
-    "BATTERY": 80, "LOCK": True, "MUTE": True,
-    "BLUETOOTH": False, "ANIMATION_FRAME": 999, "ALARM_ON": True,
-    "WEATHER_ICON": 3, "TEMP_CURRENT": -10, "TEMP_DAY": 15, "TEMP_NIGHT": -2,
-    "PAI": 60, "HUMIDITY": 25
-}
 
 def img2buf(im):
     arr = array.array('B', im.tobytes())
@@ -50,6 +39,8 @@ class MiBandPreviewApp:
         self.builder.get_object("main_window").set_wmclass("mi-band-preview", "Mi Band Preview")
         self.builder.get_object("main_window_compact").set_wmclass("mi-band-preview", "Mi Band Preview")
 
+        self.loader = mibandpreview.create()
+
         self.path = ""
         self.watcher = False
         self.is_active = True
@@ -59,9 +50,11 @@ class MiBandPreviewApp:
         self.current_frame = [False, 0, 0, 0, 0]
         self.is_animation_complete = [False, False, False, False, False]
         self.set_device("Mi Band 4")
+        self.preview = False
 
         self.load_settings()
         self.restore_data()
+        self.rebuild()
 
         self.gif_autoplay()
 
@@ -167,15 +160,16 @@ class MiBandPreviewApp:
 
         self.watcher = DirObserver.new(path, self)
         self.is_watcher_added = True
-
         self.path = path
+
+        self.loader.bind_path(path)
         self.rebuild()
 
     def set_device(self, device_name):
         self.allow_interact = False
         self.device_id = device_name
         if device_name == "Mi Band 4":
-            self.Loader = Loader_MiBand4
+            self.device_name = "miband4"
             self.builder.get_object("device_picker").set_active(0)
             self.builder.get_object("alarm_toggle").hide()
             self.builder.get_object("pai_label").hide()
@@ -184,7 +178,7 @@ class MiBandPreviewApp:
             self.builder.get_object("weather_settings").hide()
             self.rebuild()
         elif device_name == "Mi Band 5":
-            self.Loader = Loader_MiBand5
+            self.device_name = "miband5"
             self.builder.get_object("device_picker").set_active(1)
             self.builder.get_object("alarm_toggle").show()
             self.builder.get_object("pai_label").show()
@@ -193,7 +187,7 @@ class MiBandPreviewApp:
             self.builder.get_object("weather_settings").show()
             self.rebuild()
         elif device_name == "Mi Band 6":
-            self.Loader = Loader_MiBand6
+            self.device_name = "miband6"
             self.builder.get_object("device_picker").set_active(2)
             self.builder.get_object("alarm_toggle").show()
             self.builder.get_object("pai_label").show()
@@ -206,12 +200,11 @@ class MiBandPreviewApp:
     def rebuild(self):
         if self.path == "": return
         try:
-            loader = self.Loader.from_path(self.path)
-            loader.setSettings(PV_DATA)
-            img = loader.render()
+            self.loader.set_property("device", self.device_name)
+            img = self.loader.render()
 
-            img, state = loader.draw_animation_layers(self.current_frame, img)
-            self.setup_animations_ui(loader)
+            img, state = self.loader.render_with_animation_frame(self.current_frame)
+            self.setup_animations_ui()
             self.is_animation_complete = state
 
             if self.device_id == "Mi Band 6":
@@ -222,15 +215,13 @@ class MiBandPreviewApp:
 
             self.builder.get_object("preview_host_big").set_from_pixbuf(buf)
             self.builder.get_object("preview_host_small").set_from_pixbuf(buf)
-
-            # self.save_settings()
         except Exception as e:
             print(e)
             self.builder.get_object("preview_host_big").set_from_file(ROOT_DIR+"/res/error.png")
             self.builder.get_object("preview_host_small").set_from_file(ROOT_DIR+"/res/error.png")
 
-    def setup_animations_ui(self, loader):
-        count = loader.get_animations_count()
+    def setup_animations_ui(self):
+        count = self.loader.get_animations_count()
         for a in range(1, 5):
             obj = self.builder.get_object("gif_box"+str(a))
             if a <= count: obj.show()
@@ -255,7 +246,6 @@ class MiBandPreviewApp:
 
     # Settings storage
     def load_settings(self):
-        global PV_DATA
         try:
             with open(str(Path.home())+"/.mibandpreview.json", "r") as f:
                 o = json.load(f)
@@ -263,16 +253,15 @@ class MiBandPreviewApp:
                     print("Settings file ignored, invalid version")
                     return
                 self.set_device(o["device_id"])
-                PV_DATA = o["pv_data"]
+                self.loader.config_import(o["pv_data"])
                 self.bind_path(o["path"])
-                self.rebuild()
         except Exception as e:
             print(e)
 
     def save_settings(self):
         data = {}
         data["version"] = SETTINGS_VERSION
-        data["pv_data"] = PV_DATA
+        data["pv_data"] = self.loader.config_export()
         data["path"] = self.path
         data["device_id"] = self.device_id
         with open(str(Path.home())+"/.mibandpreview.json", "w") as f:
@@ -293,86 +282,73 @@ class MiBandPreviewApp:
     def restore_data(self):
         self.allow_interact = False
         b = self.builder
-        b.get_object("hours_spin").get_adjustment().set_value(PV_DATA["H0"]*10+PV_DATA["H1"])
-        b.get_object("minutes_spin").get_adjustment().set_value(PV_DATA["M0"]*10+PV_DATA["M1"])
-        b.get_object("seconds_spin").get_adjustment().set_value(PV_DATA["S0"]*10+PV_DATA["S1"])
-        b.get_object("date_day_spin").get_adjustment().set_value(PV_DATA["DAY"])
-        b.get_object("date_month_spin").get_adjustment().set_value(PV_DATA["MONTH"])
-        b.get_object("weekday_combo").set_active(PV_DATA["WEEKDAY"])
-        b.get_object("weekday_lang_combo").set_active(PV_DATA["WEEKDAY_LANG"])
+        l = self.loader
+        b.get_object("hours_spin").get_adjustment().set_value(l.get_property("hours", 12))
+        b.get_object("minutes_spin").get_adjustment().set_value(l.get_property("minutes", 30))
+        b.get_object("seconds_spin").get_adjustment().set_value(l.get_property("seconds", 45))
+        b.get_object("date_day_spin").get_adjustment().set_value(l.get_property("day", 15))
+        b.get_object("date_month_spin").get_adjustment().set_value(l.get_property("month", 2))
+        b.get_object("weekday_combo").set_active(l.get_property("weekday", 2))
+        b.get_object("weekday_lang_combo").set_active(l.get_property("lang_weekday", 2))
         apm = 0
-        if not PV_DATA["24H"]:
-            apm = PV_DATA["APM_PM"]+1
-            if PV_DATA["APM_CN"]: apm += 2
+        if not l.get_property("24h", 0):
+            apm = l.get_property("ampm", 0)+1
+            if l.get_property("lang_ampm", 0): apm += 2
         b.get_object("ampm_mode").set_active(apm)
-        b.get_object("battery_spin").get_adjustment().set_value(PV_DATA["BATTERY"])
-        b.get_object("bluetooth_toggle").set_active(PV_DATA["BLUETOOTH"])
-        b.get_object("lock_toggle").set_active(PV_DATA["LOCK"])
-        b.get_object("mute_toggle").set_active(PV_DATA["MUTE"])
-        b.get_object("alarm_toggle").set_active(PV_DATA["ALARM_ON"])
-        b.get_object("steps_input").get_adjustment().set_value(PV_DATA["STEPS"])
-        b.get_object("steps_target_input").get_adjustment().set_value(PV_DATA["STEPS_TARGET"])
-        b.get_object("distance_input").get_adjustment().set_value(PV_DATA["DISTANCE"])
-        b.get_object("calories_input").get_adjustment().set_value(PV_DATA["CALORIES"])
-        b.get_object("bpm_input").get_adjustment().set_value(PV_DATA["PULSE"])
-        b.get_object("pai_input").get_adjustment().set_value(PV_DATA["PAI"])
-        b.get_object("t_now_input").get_adjustment().set_value(PV_DATA["TEMP_CURRENT"])
-        b.get_object("t_day_input").get_adjustment().set_value(PV_DATA["TEMP_DAY"])
-        b.get_object("t_night_input").get_adjustment().set_value(PV_DATA["TEMP_NIGHT"])
-        b.get_object("humidity_input").get_adjustment().set_value(PV_DATA["HUMIDITY"])
-        b.get_object("weather_icon_input").set_active(PV_DATA["WEATHER_ICON"])
+        b.get_object("battery_spin").get_adjustment().set_value(l.get_property("status_battery", 60))
+        b.get_object("bluetooth_toggle").set_active(l.get_property("status_bluetooth", 0))
+        b.get_object("lock_toggle").set_active(l.get_property("status_lock", 0))
+        b.get_object("mute_toggle").set_active(l.get_property("status_mute", 0))
+        b.get_object("alarm_toggle").set_active(l.get_property("status_alarm", 1))
+        b.get_object("steps_input").get_adjustment().set_value(l.get_property("steps", 6000))
+        b.get_object("steps_target_input").get_adjustment().set_value(l.get_property("target_steps", 9000))
+        b.get_object("distance_input").get_adjustment().set_value(l.get_property("distance", 14.2))
+        b.get_object("calories_input").get_adjustment().set_value(l.get_property("calories", 529))
+        b.get_object("bpm_input").get_adjustment().set_value(l.get_property("heartrate", 60))
+        b.get_object("pai_input").get_adjustment().set_value(l.get_property("pai", 88))
+        b.get_object("t_now_input").get_adjustment().set_value(l.get_property("weather_current", -5))
+        b.get_object("t_day_input").get_adjustment().set_value(l.get_property("weather_day", 10))
+        b.get_object("t_night_input").get_adjustment().set_value(l.get_property("weather_night", -15))
+        b.get_object("humidity_input").get_adjustment().set_value(l.get_property("weather_humidity", 60))
+        b.get_object("weather_icon_input").set_active(l.get_property("weather_icon", 2))
+
         self.allow_interact = True
 
     def read_new_data(self):
         b = self.builder
+        l = self.loader
         data = {}
 
-        val = b.get_object("hours_spin").get_adjustment().get_value()
-        data["H0"] = int(val // 10)
-        data["H1"] = int(val-(data["H0"]*10))
-
-        val = b.get_object("minutes_spin").get_adjustment().get_value()
-        data["M0"] = int(val // 10)
-        data["M1"] = int(val-(data["M0"]*10))
-
-        val = b.get_object("seconds_spin").get_adjustment().get_value()
-        data["S0"] = int(val // 10)
-        data["S1"] = int(val-(data["S0"]*10))
-
-        data["DAY"] = int(b.get_object("date_day_spin").get_adjustment().get_value())
-        data["MONTH"] = int(b.get_object("date_month_spin").get_adjustment().get_value())
-        data["WEEKDAY"] = int(b.get_object("weekday_combo").get_active())
-
-        data["WEEKDAY_LANG"] = b.get_object("weekday_lang_combo").get_active()
+        l.set_property("hours", b.get_object("hours_spin").get_adjustment().get_value())
+        l.set_property("minutes", b.get_object("minutes_spin").get_adjustment().get_value())
+        l.set_property("seconds", b.get_object("seconds_spin").get_adjustment().get_value())
+        l.set_property("day", int(b.get_object("date_day_spin").get_adjustment().get_value()))
+        l.set_property("month", int(b.get_object("date_month_spin").get_adjustment().get_value()))
+        l.set_property("weekday", int(b.get_object("weekday_combo").get_active()))
+        l.set_property("lang_weekday", b.get_object("weekday_lang_combo").get_active())
 
         val = b.get_object("ampm_mode").get_active_text()
-        data["24H"] = 1 if "24h" in val else 0
-        data["APM_CN"] = 1 if "CN" in val else 0
-        data["APM_PM"] = 1 if "PM" in val else 0
+        l.set_property("24h", 1 if "24h" in val else 0)
+        l.set_property("lang_ampm", 1 if "CN" in val else 0)
+        l.set_property("ampm", 1 if "PM" in val else 0)
 
-        data["BATTERY"] = int(b.get_object("battery_spin").get_adjustment().get_value())
-        data["BLUETOOTH"] = b.get_object("bluetooth_toggle").get_active()
-        data["MUTE"] = b.get_object("mute_toggle").get_active()
-        data["LOCK"] = b.get_object("lock_toggle").get_active()
-        data["ALARM_ON"] = b.get_object("alarm_toggle").get_active()
+        l.set_property("status_battery", int(b.get_object("battery_spin").get_adjustment().get_value()))
+        l.set_property("status_bluetooth", b.get_object("bluetooth_toggle").get_active())
+        l.set_property("status_mute", b.get_object("mute_toggle").get_active())
+        l.set_property("status_lock", b.get_object("lock_toggle").get_active())
+        l.set_property("status_alarm", b.get_object("alarm_toggle").get_active())
+        l.set_property("steps", int(b.get_object("steps_input").get_adjustment().get_value()))
+        l.set_property("target_steps", int(b.get_object("steps_target_input").get_adjustment().get_value()))
+        l.set_property("distance", b.get_object("distance_input").get_adjustment().get_value())
+        l.set_property("calories", int(b.get_object("calories_input").get_adjustment().get_value()))
+        l.set_property("heartrate", int(b.get_object("bpm_input").get_adjustment().get_value()))
+        l.set_property("pai", int(b.get_object("pai_input").get_adjustment().get_value()))
 
-        data["STEPS"] = int(b.get_object("steps_input").get_adjustment().get_value())
-        data["STEPS_TARGET"] = int(b.get_object("steps_target_input").get_adjustment().get_value())
-        data["DISTANCE"] = b.get_object("distance_input").get_adjustment().get_value()
-        data["CALORIES"] = int(b.get_object("calories_input").get_adjustment().get_value())
-        data["PULSE"] = int(b.get_object("bpm_input").get_adjustment().get_value())
-        data["PAI"] = int(b.get_object("pai_input").get_adjustment().get_value())
-
-        data["TEMP_CURRENT"] = int(b.get_object("t_now_input").get_adjustment().get_value())
-        data["TEMP_DAY"] = int(b.get_object("t_day_input").get_adjustment().get_value())
-        data["TEMP_NIGHT"] = int(b.get_object("t_night_input").get_adjustment().get_value())
-        data["HUMIDITY"] = int(b.get_object("humidity_input").get_adjustment().get_value())
-        data["WEATHER_ICON"] = int(b.get_object("weather_icon_input").get_active())
-
-        data["ANIMATION_FRAME"] = 999
-
-        global PV_DATA
-        PV_DATA = data
+        l.set_property("weather_current", int(b.get_object("t_now_input").get_adjustment().get_value()))
+        l.set_property("weather_day", int(b.get_object("t_day_input").get_adjustment().get_value()))
+        l.set_property("weather_night", int(b.get_object("t_night_input").get_adjustment().get_value()))
+        l.set_property("weather_humidity", int(b.get_object("humidity_input").get_adjustment().get_value()))
+        l.set_property("weather_icon", int(b.get_object("weather_icon_input").get_active()))
 
 if __name__ == "__main__":
     app = MiBandPreviewApp()
