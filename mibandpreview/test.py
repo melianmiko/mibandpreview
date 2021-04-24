@@ -18,7 +18,7 @@ app_config = {
     "weather_icon": 0, "weather_wind": 1,
     "weather_current": -100, "weather_uv": 2,
     "weather_day": -15, "weather_night": -24,
-    "status_alarm": 0
+    "status_alarm": 0, "status_timezone": 0
 }
 
 def compare_images(a, b):

@@ -72,7 +72,7 @@ def render(app):
                 config["Time"]["DelimiterImage"]
             )
 
-        if "TimeZone1" in config["Time"]:
+        if "TimeZone1" in config["Time"] and app.get_property("status_timezone", 1) == 1:
             a = round(app.get_property("hours", 12) + app.get_property("minutes", 30) / 100, 2)
             draw_apos_number(
                 app, canvas, 
@@ -80,7 +80,11 @@ def render(app):
                 value=a, dot=config["Time"]["TimeZone1DelimiterImage"],
                 digits=2, digits_after_dot=2
             )
-        if "TimeZone2" in config["Time"]:
+
+        if "TimeZone1NoTime" in config["Time"] and app.get_property("status_timezone", 1) == 0:
+            draw_static_object(app, canvas, config["Time"]["TimeZone1NoTime"])
+
+        if "TimeZone2" in config["Time"] and app.get_property("status_timezone", 1) == 1:
             a = round(app.get_property("hours", 12) + app.get_property("minutes", 30) / 100, 2)
             draw_apos_number(
                 app, canvas, 
@@ -88,6 +92,9 @@ def render(app):
                 value=a, dot=config["Time"]["TimeZone1DelimiterImage"],
                 digits=2, digits_after_dot=2
             )
+    
+        if "TimeZone2NoTime" in config["Time"] and app.get_property("status_timezone", 1) == 0:
+            draw_static_object(app, canvas, config["Time"]["TimeZone2NoTime"])
     
     if "Activity" in config:
         if "Steps" in config["Activity"]: 
@@ -159,12 +166,31 @@ def render(app):
 
             if "OneLine" in config["Date"]["MonthAndDayAndYear"]:
                 date = config["Date"]["MonthAndDayAndYear"]["OneLine"]
+                dot = -1
+                if "DelimiterImageIndex" in date:
+                    dot = date["DelimiterImageIndex"]
+
                 draw_apos_date(
-                    app, canvas, 
-                    date["Number"],
+                    app, canvas, date["Number"], 
                     app.get_property("month", 2),
-                    app.get_property("day", 15), date["DelimiterImageIndex"], 
+                    app.get_property("day", 15), 
+                    dot,
                     twoDMonth, twoDDay
+                )
+
+            if "OneLineWithYear" in config["Date"]["MonthAndDayAndYear"]:
+                date = config["Date"]["MonthAndDayAndYear"]["OneLineWithYear"]
+                dot = -1
+                if "DelimiterImageIndex" in date:
+                    dot = date["DelimiterImageIndex"]
+
+                draw_apos_date(
+                    app, canvas, date["Number"], 
+                    app.get_property("month", 2),
+                    app.get_property("day", 15), 
+                    dot,
+                    twoDMonth, twoDDay,
+                    year=app.get_property("year", 2021)
                 )
 
             if "Separate" in config["Date"]["MonthAndDayAndYear"]:
@@ -173,7 +199,8 @@ def render(app):
                         app, canvas, 
                         config["Date"]["MonthAndDayAndYear"]["Separate"]["Month"],
                         value=app.get_property("month", 2),
-                        digits=(2 if twoDMonth else 1)
+                        digits=(2 if twoDMonth else 1),
+                        fix_y=True
                     )
 
                 if "MonthsEN" in config["Date"]["MonthAndDayAndYear"]["Separate"]:
@@ -188,7 +215,8 @@ def render(app):
                         app, canvas,
                         config["Date"]["MonthAndDayAndYear"]["Separate"]["Day"],
                         value=app.get_property("day", 15),
-                        digits=(2 if twoDDay else 1)
+                        digits=(2 if twoDDay else 1),
+                        fix_y=True
                     )
 
         if "ENWeekDays" in config["Date"] and app.get_property("lang_weekday", 2) == 2:
@@ -463,7 +491,8 @@ def render(app):
                     config["Weather"]["Temperature"]["Current"]["Number"],
                     value=app.get_property("weather_current", -5),
                     posix=config["Weather"]["Temperature"]["Current"]["DegreesImageIndex"],
-                    minus=config["Weather"]["Temperature"]["Current"]["MinusImageIndex"]
+                    minus=config["Weather"]["Temperature"]["Current"]["MinusImageIndex"],
+                    fix_y=True
                 )
 
             if "Today" in config["Weather"]["Temperature"]:
@@ -476,7 +505,8 @@ def render(app):
                             c["Day"]["Number"],
                             value=app.get_property("weather_day", 10),
                             posix=c["Day"]["DegreesImageIndex"],
-                            minus=c["Day"]["MinusImageIndex"]
+                            minus=c["Day"]["MinusImageIndex"],
+                            fix_y=True
                         )
 
                     if "Night" in config["Weather"]["Temperature"]["Today"]["Separate"] and app.get_property("weather_night", -15) > -100:
@@ -485,7 +515,8 @@ def render(app):
                             c["Night"]["Number"],
                             value=app.get_property("weather_night", -15),
                             posix=c["Night"]["DegreesImageIndex"],
-                            minus=c["Night"]["MinusImageIndex"]
+                            minus=c["Night"]["MinusImageIndex"],
+                            fix_y=True
                         )
 
                 if "OneLine" in config["Weather"]["Temperature"]["Today"]:
@@ -503,7 +534,7 @@ def render(app):
                     images.append(build_number_image(app, c["Number"], val_n, 1))
                     
                     img = build_multipart_image(c["Number"], images)
-                    xy = calculate_apos(c["Number"], img.size)
+                    xy = calculate_apos(c["Number"], img.size, fix_y=True)
                     add_to_canvas(canvas, img, xy)
 
     # Other

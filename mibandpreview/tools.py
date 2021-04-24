@@ -31,7 +31,7 @@ def draw_static_object(app, canvas, obj, value=0):
 
 def draw_apos_number(app, canvas, obj, value=0, 
         digits=1, digits_after_dot=1, dot=-1, 
-        posix=-1, prefix=-1, minus=-1):
+        posix=-1, prefix=-1, minus=-1, fix_y=False):
 
     images = []
     if prefix > -1: images.append(app.get_resource(prefix))
@@ -52,23 +52,27 @@ def draw_apos_number(app, canvas, obj, value=0,
     
     if posix > -1: images.append(app.get_resource(posix))
 
+    device = app.get_property("device", 0)
     img = build_multipart_image(obj, images,
-        fix_height=(app.get_property("device", 0) == "miband6") )
-    xy = calculate_apos(obj, img.size)
+        fix_height=(device == "miband6" or device == "miband5") )
+    xy = calculate_apos(obj, img.size, fix_y=fix_y)
     add_to_canvas(canvas, img, xy)
     return (
         xy[0], xy[1],
         xy[0]+img.size[0], xy[1]+img.size[1]
     )
 
-def draw_apos_date(app, canvas, obj, month, day, split, month_digits, day_digits):
+def draw_apos_date(app, canvas, obj, month, day, split, month_digits, day_digits, year=-1):
     images = []
+    if year > -1:
+        images += split_number_to_images(app, obj, year, digits=4)
+        if split > -1: images.append(app.get_resource(split))
     images += split_number_to_images(app, obj, month, digits=(2 if month_digits else 1))
-    images.append(app.get_resource(split))
+    if split > -1: images.append(app.get_resource(split))
     images += split_number_to_images(app, obj, day, digits=(2 if day_digits else 1))
 
     i = build_multipart_image(obj, images)
-    xy = calculate_apos(obj, i.size)
+    xy = calculate_apos(obj, i.size, fix_y=True)
     add_to_canvas(canvas, i, xy)
 
     return (
@@ -163,7 +167,7 @@ def build_multipart_image(data, images, fix_height=False):
     # Build image
     img = Image.new("RGBA", (w, h))
     x = 0
-    y = 0 if spacing_y >= 0 else -spacing_y*(len(images)-1)
+    y = 0 if spacing_y >= 0 else -spacing_y*(len(images))
     for n in images:
         offset = 0
         if n.size[1] < mh and fix_height:
@@ -174,38 +178,45 @@ def build_multipart_image(data, images, fix_height=False):
 
     return img
 
-def calculate_apos(data, size):
+def calculate_apos(data, size, fix_y=False):
     x1 = int(data["TopLeftX"])
     x2 = int(data["BottomRightX"])
     y1 = int(data["TopLeftY"])
     y2 = int(data["BottomRightY"])
 
+    w = size[0]
+    h = size[1]
+
+    y_offset = 0
+    if "SpacingY" in data and fix_y:
+        y_offset = -abs(data["SpacingY"])
+
     pcw = x2-x1
     pch = y2-y1
-    rp = x2-size[0] if x2-size[0] >= x1 else x1
-    bp = y2-size[1] if y2-size[1] >= y1 else y1
-    cx = int(max(x1+(x2-x1-size[0])/2, x1))
-    cy = int(max(y1+(y2-y1-size[1])/2, y1))
+    rp = x2-w if x2-w >= x1 else x1
+    bp = y2-h if y2-h >= y1 else y1
+    cx = int(max(x1+(x2-x1-w)/2, x1))
+    cy = int(max(y1+(y2-y1-h)/2, y1))
 
     align = data["Alignment"]
     if align == "TopLeft" or align == "Top" or align == "Left":
-        return [x1, y1]
+        return [x1, y1+y_offset]
     elif align == "BottomRight":
-        return [rp, bp]
+        return [rp, bp+y_offset]
     elif align == "BottomLeft" or align == "Bottom":
-        return [x1, bp]
+        return [x1, bp+y_offset]
     elif align == "TopRight" or align == "Right":
-        return [rp, y1]
+        return [rp, y1+y_offset]
     elif align == "TopCenter" or align == "HCenter":
-        return [ cx, y1 ]
+        return [ cx, y1+y_offset ]
     elif align == "BottomCenter":
-        return [ cx, bp ]
+        return [ cx, bp+y_offset ]
     elif align == "CenterLeft" or align == "VCenter":
-        return [ x1, cy ]
+        return [ x1, cy+y_offset ]
     elif align == "CenterRight":
-        return [ rp, cy ]
+        return [ rp, cy+y_offset ]
     elif align == "Center":
-        return [ cx, cy ]
+        return [ cx, cy+y_offset ]
     else:
         print("Align mode unsupported!!!!!")
         return [x1, y1]
