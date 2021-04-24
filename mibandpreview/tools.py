@@ -44,13 +44,16 @@ def draw_apos_number(app, canvas, obj, value=0,
         images += split_number_to_images(app, obj, value, digits)
     else:
         images += split_number_to_images(app, obj, math.floor(value), digits)
-        if dot > -1: images.append(app.get_resource(dot))
+        if dot > -1: 
+            dot_img = app.get_resource(dot)
+            images.append(dot_img)
         n = int(str(value).split(".")[1])
         images += split_number_to_images(app, obj, n, digits)
     
     if posix > -1: images.append(app.get_resource(posix))
 
-    img = build_multipart_image(obj, images)
+    img = build_multipart_image(obj, images,
+        fix_height=(app.get_property("device", 0) == "miband6") )
     xy = calculate_apos(obj, img.size)
     add_to_canvas(canvas, img, xy)
     return (
@@ -133,12 +136,14 @@ def split_number_to_images(app, obj, value, digits):
 def build_number_image(app, obj, value, digits):
     return build_multipart_image(obj, split_number_to_images(app, obj, value, digits))
 
-def build_multipart_image(data, images):
+def build_multipart_image(data, images, fix_height=False):
     # Load spacings
     spacing_x = 0
     spacing_y = 0
     if "SpacingY" in data:
         spacing_y = data["SpacingY"]
+        if "Right" in data["Alignment"]:
+            spacing_y = -spacing_y
 
     if "Spacing" in data:
         spacing_x = data["Spacing"]
@@ -147,18 +152,23 @@ def build_multipart_image(data, images):
 
     # Calculate width/height
     w = h = 0
+    mh = 0
     for n in images:
         w += n.size[0]+abs(spacing_x)
         h = max(h, n.size[1])+abs(spacing_y)
+        mh = max(mh, n.size[1])
     if w < 0: w = 0
     if h < 0: h = 0
 
     # Build image
     img = Image.new("RGBA", (w, h))
     x = 0
-    y = 0 if spacing_y >= 0 else -spacing_y*len(images)
+    y = 0 if spacing_y >= 0 else -spacing_y*(len(images)-1)
     for n in images:
-        add_to_canvas(img, n, (x, y))
+        offset = 0
+        if n.size[1] < mh and fix_height:
+            offset = mh-n.size[1]
+        add_to_canvas(img, n, (x, y+offset))
         x += n.size[0]+spacing_x
         y += spacing_y
 

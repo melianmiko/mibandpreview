@@ -99,12 +99,18 @@ def render(app):
             prefix = -1
             if "PrefixImageIndex" in config["Activity"]["Pulse"]:
                 prefix = config["Activity"]["Pulse"]["PrefixImageIndex"]
-            draw_apos_number(
-                app, canvas,
-                config["Activity"]["Pulse"]["Number"],
-                value=app.get_property("heartrate", 120),
-                prefix=prefix
-            )
+
+            if app.get_property("heartrate", 120) > 0:
+                draw_apos_number(
+                    app, canvas,
+                    config["Activity"]["Pulse"]["Number"],
+                    value=app.get_property("heartrate", 120),
+                    prefix=prefix
+                )
+            elif "NoDataImageIndex" in config["Activity"]["Pulse"]:
+                img = app.get_resource(config["Activity"]["Pulse"]["NoDataImageIndex"])
+                xy = calculate_apos(config["Activity"]["Pulse"]["Number"], img.size)
+                add_to_canvas(canvas, img, xy)
 
         if "Distance" in config["Activity"]:
             dist = config["Activity"]["Distance"]

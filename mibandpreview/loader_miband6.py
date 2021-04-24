@@ -27,7 +27,7 @@ def render(app):
             d = ImageDraw.Draw(canvas)
             color = "#"+config["Background"]["BackgroundColor"][2:]
             print(color)
-            d.rectangle((0, 0, w, h), fill=color)
+            d.rectangle((0, 0, canvas.size[0], canvas.size[1]), fill=color)
         if "Image" in config["Background"]:
             draw_static_object(
                 app, canvas,
@@ -91,22 +91,33 @@ def render(app):
     
     if "Activity" in config:
         if "Steps" in config["Activity"]: 
+            prefix = -1
+            if "PrefixImageIndex" in config["Activity"]["Steps"]:
+                prefix = config["Activity"]["Steps"]["PrefixImageIndex"]
+
             draw_apos_number(
                 app, canvas,
                 config["Activity"]["Steps"]["Number"],
-                value=app.get_property("steps", 12345)
+                value=app.get_property("steps", 12345),
+                prefix=prefix
             )
 
-        if "Pulse" in config["Activity"]: 
+        if "Pulse" in config["Activity"]:
             prefix = -1
             if "PrefixImageIndex" in config["Activity"]["Pulse"]:
                 prefix = config["Activity"]["Pulse"]["PrefixImageIndex"]
-            draw_apos_number(
-                app, canvas,
-                config["Activity"]["Pulse"]["Number"],
-                value=app.get_property("heartrate", 120),
-                prefix=prefix
-            )
+
+            if app.get_property("heartrate", 120) > 0:
+                draw_apos_number(
+                    app, canvas,
+                    config["Activity"]["Pulse"]["Number"],
+                    value=app.get_property("heartrate", 120),
+                    prefix=prefix
+                )
+            elif "NoDataImageIndex" in config["Activity"]["Pulse"]:
+                img = app.get_resource(config["Activity"]["Pulse"]["NoDataImageIndex"])
+                xy = calculate_apos(config["Activity"]["Pulse"]["Number"], img.size)
+                add_to_canvas(canvas, img, xy)
 
         if "Distance" in config["Activity"]:
             dist = config["Activity"]["Distance"]
@@ -169,7 +180,7 @@ def render(app):
                     draw_static_object(
                         app, canvas,
                         config["Date"]["MonthAndDayAndYear"]["Separate"]["MonthsEN"],
-                        value=app.get_property("month", 2)
+                        value=app.get_property("month", 2)-1
                     )
 
                 if "Day" in config["Date"]["MonthAndDayAndYear"]["Separate"]:
@@ -211,6 +222,12 @@ def render(app):
                 app.get_resource(index), 
                 (int(apm["X"]), int(apm["Y"]))
             )
+
+    if "WeekDaysIcons" in config:
+        name = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        weekday = app.get_property("weekday", 3)
+        target = name[weekday-1]
+        draw_static_object(app, canvas, config["WeekDaysIcons"][target])
 
     # Indicators
     if "StepsProgress" in config:
@@ -414,8 +431,33 @@ def render(app):
                     config["Weather"]["Icon"]["CustomIcon"],
                     value=app.get_property("weather_icon", 2)
                 )
+
+        if "Wind" in config["Weather"]:
+            posix = -1
+            l = app.get_property("lang_wind", 2)
+            if l == 0 and "ImageSuffixCN1" in config["Weather"]["Wind"]:
+                posix = config["Weather"]["Wind"]["ImageSuffixCN1"]
+            elif l == 1 and "ImageSuffixCN2" in config["Weather"]["Wind"]:
+                posix = config["Weather"]["Wind"]["ImageSuffixCN2"]
+            elif l == 2 and "ImageSuffixEN" in config["Weather"]["Wind"]:
+                posix = config["Weather"]["Wind"]["ImageSuffixEN"]
+
+            draw_apos_number(
+                app, canvas, 
+                config["Weather"]["Wind"]["Text"],
+                value=app.get_property("weather_wind", 25),
+                posix=posix
+            )
+
+        if "UVIndex" in config["Weather"]:
+            draw_apos_number(
+                app, canvas,
+                config["Weather"]["UVIndex"]["UV"]["Text"],
+                value=app.get_property("weather_uv", 4)
+            )
+
         if "Temperature" in config["Weather"]:
-            if "Current" in config["Weather"]["Temperature"]:
+            if "Current" in config["Weather"]["Temperature"] and app.get_property("weather_current", -5) > -100:
                 draw_apos_number(
                     app, canvas, 
                     config["Weather"]["Temperature"]["Current"]["Number"],
@@ -428,20 +470,20 @@ def render(app):
                 if "Separate" in config["Weather"]["Temperature"]["Today"]:
                     c = config["Weather"]["Temperature"]["Today"]["Separate"]
 
-                    if "Day" in config["Weather"]["Temperature"]["Today"]["Separate"]:
+                    if "Day" in config["Weather"]["Temperature"]["Today"]["Separate"] and app.get_property("weather_day", 10) > -100:
                         draw_apos_number(
                             app, canvas,
                             c["Day"]["Number"],
-                            value=app.get_property("wather_day", 10),
+                            value=app.get_property("weather_day", 10),
                             posix=c["Day"]["DegreesImageIndex"],
                             minus=c["Day"]["MinusImageIndex"]
                         )
 
-                    if "Night" in config["Weather"]["Temperature"]["Today"]["Separate"]:
+                    if "Night" in config["Weather"]["Temperature"]["Today"]["Separate"] and app.get_property("weather_night", -15) > -100:
                         draw_apos_number(
                             app, canvas,
                             c["Night"]["Number"],
-                            value=app.get_property("wather_night", -15),
+                            value=app.get_property("weather_night", -15),
                             posix=c["Night"]["DegreesImageIndex"],
                             minus=c["Night"]["MinusImageIndex"]
                         )

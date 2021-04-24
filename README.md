@@ -1,17 +1,17 @@
 [Homepage](https://melianmiko.ru/mibandpreview) | [Donate](https://melianmiko.ru/donate)
 
 # MiBandPreview4Linux
-Mi Band 4/5 watchface preview tool (written with Python and GTK3).
+Mi Band watchface preview tool (written with Python and GTK3).
 This app created as an FOSS-alternative for WF_Preview app for Windows.
 
 Features:
-- Preview your Mi Band 4/5 watchfaces without building them (Mi Band 5 support is experimental)
+- Preview your Mi Band 4-6 watchfaces without building them (Mi Band 5 support is experimental)
 - Set custom date/time/activity/status values for preview
 - Preview updates automaticly when some file inside project dir is changed
 - Opened path and current settings saves automaticly
 
 ## Instalation
-You can download prebuild binaries here: https://gitlab.com/melianmiko/mibandpreview/-/releases
+You can download prebuild packages here: https://gitlab.com/melianmiko/mibandpreview/-/releases
 
 ### Ubuntu ppa
 ```bash

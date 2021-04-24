@@ -57,7 +57,8 @@ class MiBandPreview:
         return self.properties
     
     def config_import(self, p):
-        self.properties = p
+        for a in p:
+            self.properties[a] = p[a]
 
     def get_resource(self, index):
         index = int(index)
