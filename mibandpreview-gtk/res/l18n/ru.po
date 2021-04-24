@@ -1,0 +1,323 @@
+# Russian translations for MiBandPreview package.
+# Copyright (C) 2021 THE MiBandPreview'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the MiBandPreview package.
+# Miko <melianmiko@miko-pc>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: MiBandPreview\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-24 11:23+0000\n"
+"PO-Revision-Date: 2021-01-01 17:16+0700\n"
+"Last-Translator: Miko <melianmiko@miko-pc>\n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: ../app.glade.h:1
+msgid "Return to full window"
+msgstr "Развернуть"
+
+#: ../app.glade.h:2
+msgid "Time:"
+msgstr "Время:"
+
+#: ../app.glade.h:3
+msgid "Clock format, AM/PM toggle"
+msgstr "Формат времени"
+
+#: ../app.glade.h:4
+msgid "24h format"
+msgstr "24-х часовой"
+
+#: ../app.glade.h:5
+msgid "Date:"
+msgstr "Дата:"
+
+#: ../app.glade.h:6
+msgid "Current weekday"
+msgstr "День недели"
+
+#: ../app.glade.h:7
+msgid "Monday"
+msgstr "Понедельник"
+
+#: ../app.glade.h:8
+msgid "Tuesday"
+msgstr "Вторник"
+
+#: ../app.glade.h:9
+msgid "Wednesday"
+msgstr "Среда"
+
+#: ../app.glade.h:10
+msgid "Thursday"
+msgstr "Четверг"
+
+#: ../app.glade.h:11
+msgid "Friday"
+msgstr "Пятница"
+
+#: ../app.glade.h:12
+msgid "Saturday"
+msgstr "Суббота"
+
+#: ../app.glade.h:13
+msgid "Sunday"
+msgstr "Воскресенье"
+
+#: ../app.glade.h:14
+msgid "Weekdays language"
+msgstr "Язык дня недели"
+
+#: ../app.glade.h:15
+msgid "Other"
+msgstr "Другой"
+
+#: ../app.glade.h:16
+msgid "Battery:"
+msgstr "Батарея"
+
+#: ../app.glade.h:17
+msgid "Bluetooth enabled"
+msgstr "Bluetooth включен"
+
+#: ../app.glade.h:18
+msgid "Screen locked"
+msgstr "Экран заблокирован"
+
+#: ../app.glade.h:19
+msgid "Notifications disabled"
+msgstr "Не беспокоить"
+
+#: ../app.glade.h:20
+msgid "Alarm enabled"
+msgstr "Будильник включен"
+
+#: ../app.glade.h:21
+msgid "Basics"
+msgstr "Основное"
+
+#: ../app.glade.h:22
+msgid "Steps:"
+msgstr "Шаги:"
+
+#: ../app.glade.h:23
+msgid "Distance:"
+msgstr "Расстояние:"
+
+#: ../app.glade.h:24
+msgid "0,00"
+msgstr ""
+
+#: ../app.glade.h:25
+msgid "Steps target:"
+msgstr "Цель шагов:"
+
+#: ../app.glade.h:26
+msgid "Calories:"
+msgstr "Калории:"
+
+#: ../app.glade.h:27
+msgid "BPM:"
+msgstr "Пульс:"
+
+#: ../app.glade.h:28
+msgid "PAI:"
+msgstr ""
+
+#: ../app.glade.h:29
+msgid "Activity"
+msgstr "Физ. активность"
+
+#: ../app.glade.h:30
+msgid "Weather:\t\t"
+msgstr "Погода:\t\t"
+
+#: ../app.glade.h:31
+msgid "Now, C"
+msgstr "Сейчас, С"
+
+#: ../app.glade.h:32
+msgid "Today, C"
+msgstr "Сегодня, С"
+
+#: ../app.glade.h:33
+msgid "Night, C"
+msgstr "Ноьчю, С"
+
+#: ../app.glade.h:34
+msgid "Weather Icon"
+msgstr "Значок погоды"
+
+#: ../app.glade.h:35
+msgid "0 Unknown"
+msgstr ""
+
+#: ../app.glade.h:36
+msgid "1 Partaly Cloud"
+msgstr ""
+
+#: ../app.glade.h:37
+msgid "2 Cloudy And Rain"
+msgstr ""
+
+#: ../app.glade.h:38
+msgid "3 Cloudy And Snow"
+msgstr ""
+
+#: ../app.glade.h:39
+msgid "4 Sunny"
+msgstr ""
+
+#: ../app.glade.h:40
+msgid "5 Cloudy"
+msgstr ""
+
+#: ../app.glade.h:41
+msgid "6 Light Rain"
+msgstr ""
+
+#: ../app.glade.h:42
+msgid "7 Light Snow"
+msgstr ""
+
+#: ../app.glade.h:43
+msgid "8 Rain"
+msgstr ""
+
+#: ../app.glade.h:44
+msgid "9 Snow"
+msgstr ""
+
+#: ../app.glade.h:45
+msgid "10 Heavy Snow"
+msgstr ""
+
+#: ../app.glade.h:46
+msgid "11 Heavy Rain"
+msgstr ""
+
+#: ../app.glade.h:47
+msgid "12 Sand Storm"
+msgstr ""
+
+#: ../app.glade.h:48
+msgid "13 Snow And Rain"
+msgstr ""
+
+#: ../app.glade.h:49
+msgid "14 Fog"
+msgstr ""
+
+#: ../app.glade.h:50
+msgid "15 Haze"
+msgstr ""
+
+#: ../app.glade.h:51
+msgid "16 Storm"
+msgstr ""
+
+#: ../app.glade.h:52
+msgid "17 Very Heavy Snow"
+msgstr ""
+
+#: ../app.glade.h:53
+msgid "18 Floating Dust"
+msgstr ""
+
+#: ../app.glade.h:54
+msgid "19 Downpour"
+msgstr ""
+
+#: ../app.glade.h:55
+msgid "20 Hail"
+msgstr ""
+
+#: ../app.glade.h:56
+msgid "21 Hail Storm"
+msgstr ""
+
+#: ../app.glade.h:57
+msgid "22 Heavy Downpour"
+msgstr ""
+
+#: ../app.glade.h:58
+msgid "23 Blowing Dust"
+msgstr ""
+
+#: ../app.glade.h:59
+msgid "24 Tornado"
+msgstr ""
+
+#: ../app.glade.h:60
+msgid "25 Very Heavy Downpour"
+msgstr ""
+
+#: ../app.glade.h:61
+msgid "Humidity"
+msgstr "Влажность"
+
+#: ../app.glade.h:62
+msgid "Animation(s):"
+msgstr "Анимации:"
+
+#: ../app.glade.h:63
+msgid "Animation #"
+msgstr "Анимация №"
+
+#: ../app.glade.h:64
+msgid "Current frame"
+msgstr "Текущий кадр"
+
+#: ../app.glade.h:65
+msgid "Autoplay"
+msgstr "Авто-воспр."
+
+#: ../app.glade.h:66
+msgid "Advanced"
+msgstr "Дополнительно"
+
+#: ../app.glade.h:67
+msgid "New version is aviable!"
+msgstr "Доступна новая версия!"
+
+#: ../app.glade.h:68
+msgid "Get it"
+msgstr "Обновить"
+
+#: ../app.glade.h:69
+msgid "Ignore"
+msgstr "Скрыть"
+
+#: ../app.glade.h:70
+msgid "Options"
+msgstr "Параметры"
+
+#: ../app.glade.h:71
+msgid "Compact mode"
+msgstr "Компактный режим"
+
+#: ../app.glade.h:72
+msgid "Select target device for preview"
+msgstr "Выберите модель устройства для предпросмотра"
+
+#: ../app.glade.h:73
+msgid "Mi Band 6"
+msgstr ""
+
+#: ../app.glade.h:74
+msgid "Open project"
+msgstr "Открыть проект"
+
+#: ../app.glade.h:75
+msgid "Reset settings"
+msgstr "Сбросить настройки"
+
+#: ../app.glade.h:76
+msgid "About..."
+msgstr "О программе..."

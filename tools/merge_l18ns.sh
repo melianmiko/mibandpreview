@@ -1,7 +1,7 @@
 #!/bin/bash
-cd src/l18n
-intltool-extract --type=gettext/glade ../res/app.glade
-xgettext --keyword=N_ --output=LC.pot ../res/app.glade.h
+cd mibandpreview-gtk/res/l18n
+intltool-extract --type=gettext/glade ../app.glade
+xgettext --keyword=N_ --output=LC.pot ../app.glade.h
 
 merge() {
 	if [[ ! -f $1.po ]]
@@ -15,4 +15,4 @@ merge() {
 merge ru
 
 # Cleanup
-rm LC.pot ../res/app.glade.h
+rm LC.pot ../app.glade.h

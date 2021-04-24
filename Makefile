@@ -7,7 +7,7 @@ all_win32: l18n windows clean
 l18n:
 	./tools/merge_l18ns.sh
 	mkdir -p dist/locale/ru/LC_MESSAGES
-	msgfmt src/l18n/ru.po -o dist/locale/ru/LC_MESSAGES/mibandpreview.mo
+	msgfmt mibandpreview-gtk/res/l18n/ru.po -o dist/locale/ru/LC_MESSAGES/mibandpreview.mo
 
 clean:
 	rm -rf src/__pycache__
@@ -15,10 +15,12 @@ clean:
 
 install:
 	mkdir -p $(DESTDIR)/opt/mibandpreview
+	mkdir -p $(DESTDIR)/opt/mibandpreview-gtk
 	mkdir -p $(DESTDIR)/usr/share/applications
 	mkdir -p $(DESTDIR)/usr/share/locale
 	cp tools/mi-band-preview.desktop $(DESTDIR)/usr/share/applications/mi-band-preview.desktop
-	cp -r src/* $(DESTDIR)/opt/mibandpreview
+	cp -r mibandpreview-gtk/* $(DESTDIR)/opt/mibandpreview-gtk
+	cp -r mibandpreview/* $(DESTDIR)/opt/mibandpreview
 	cp -r dist/locale/* $(DESTDIR)/usr/share/locale/
 
 uninstall:
