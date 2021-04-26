@@ -7,7 +7,7 @@ from pathlib import Path
 from PIL import Image
 from ctypes import cdll
 import os, io, array, json, locale, threading, locale, gettext, platform
-import urllib.request, certifi
+import urllib.request, certifi, time
 import DirObserver, mibandpreview
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -51,6 +51,7 @@ class MiBandPreviewApp:
         self.is_animation_complete = [False, False, False, False, False]
         self.set_device("Mi Band 4")
         self.preview = False
+        self.last_wdtrigger = 0
 
         self.load_settings()
         self.restore_data()
@@ -112,9 +113,16 @@ class MiBandPreviewApp:
         self.sth_changed(0)
 
     def sth_changed(self, *args):
+        t = time.time()
+
+        if t-self.last_wdtrigger < 1:
+            return
+
         if self.allow_interact:
+            print("watchdog triggered, reloading...")
             self.read_new_data()
-            self.rebuild()
+            threading.Timer(0.5, self.rebuild, args=(self,)).start()
+            self.last_wdtrigger = t
 
     def gif_settings_changed(self, *args):
         for a in range(1, 5):
@@ -197,9 +205,10 @@ class MiBandPreviewApp:
             self.rebuild()
         self.allow_interact = True
 
-    def rebuild(self):
+    def rebuild(self, *args):
         if self.path == "": return
         try:
+            self.loader.load_data()
             self.loader.set_property("device", self.device_name)
             img = self.loader.render()
 
@@ -288,7 +297,7 @@ class MiBandPreviewApp:
         b.get_object("seconds_spin").get_adjustment().set_value(l.get_property("seconds", 45))
         b.get_object("date_day_spin").get_adjustment().set_value(l.get_property("day", 15))
         b.get_object("date_month_spin").get_adjustment().set_value(l.get_property("month", 2))
-        b.get_object("weekday_combo").set_active(l.get_property("weekday", 2))
+        b.get_object("weekday_combo").set_active(l.get_property("weekday", 2)-1)
         b.get_object("weekday_lang_combo").set_active(l.get_property("lang_weekday", 2))
         apm = 0
         if not l.get_property("24h", 0):
@@ -324,7 +333,7 @@ class MiBandPreviewApp:
         l.set_property("seconds", b.get_object("seconds_spin").get_adjustment().get_value())
         l.set_property("day", int(b.get_object("date_day_spin").get_adjustment().get_value()))
         l.set_property("month", int(b.get_object("date_month_spin").get_adjustment().get_value()))
-        l.set_property("weekday", int(b.get_object("weekday_combo").get_active()))
+        l.set_property("weekday", int(b.get_object("weekday_combo").get_active())+1)
         l.set_property("lang_weekday", b.get_object("weekday_lang_combo").get_active())
 
         val = b.get_object("ampm_mode").get_active_text()

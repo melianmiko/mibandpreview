@@ -14,7 +14,7 @@ class Handler(FileSystemEventHandler):
         self.cbk.on_change()
 
     def on_deleted(self, event):
-        self.cbk.on_change()
+        pass
 
     def on_moved(self, event):
         self.cbk.on_change()

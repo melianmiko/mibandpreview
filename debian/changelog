@@ -1,7 +1,7 @@
-mibandpreview (0.5.4-1) focal; urgency=medium
+mibandpreview (0.6-1) focal; urgency=medium
 
-  * moved to gitlab
-  * cleanup
-  * misc fixes
+  * Experimental Mi Band 6 suppot
+  * Better Mi Band 5 support
+  * Code refactor
 
  -- MelianMiko <mikigaru@zohomail.com>  Sun, 01 Nov 2020 18:49:00 +0700

@@ -20,6 +20,12 @@ sudo apt update
 sudo apt install mibandpreview
 ```
 
+### Arch Linux
+Install from AUR: https://aur.archlinux.org/packages/mibandpreview-git/
+```bash
+yay -S mibandpreview-git
+```
+
 ## Building for Linux
 To build everything and install:
 ```bash
@@ -35,7 +41,7 @@ dpkg-buildpackage -b
 ## Building for Windows
 Install msys2 and update all packages (`pacman -Suy`). Then, install build and runtime dependsis:
 ```bash
-pacman -S git mingw-w64-x86_64-python3 mingw-w64-x86_64-python3-pip mingw-w64-x86_64-gtk3 mingw-w64-x86_64-python3-gobject mingw-w64-x86_64-python-pillow mingw-w64-x86_64-python3-watchdog mingw-w64-x86_64-nsis
+pacman -S git mingw-w64-x86_64-python3 mingw-w64-x86_64-python3-pip mingw-w64-x86_64-gtk3 mingw-w64-x86_64-python3-gobject mingw-w64-x86_64-python-pillow mingw-w64-x86_64-python3-watchdog mingw-w64-x86_64-nsis make intltool mingw-w64-x86_64-python-certifi
 export PATH=$PATH:/mingw64/bin
 pip install pyinstaller
 ```
