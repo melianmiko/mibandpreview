@@ -38,14 +38,12 @@ class MiBandPreview:
                     break
 
         for a in os.listdir(self.dir):
-            aa = a.split(".")
-            if len(aa) > 1:
-                if aa[1] == "png":
-                    fn = a.split(".")[0]
-                    if len(fn) == 4 and all(c in string.digits for c in fn):
-                        img = Image.open(self.dir+"/"+fn+".png")
-                        img = img.convert("RGBA")
-                        self.images[int(fn)] = img
+            if a.split(".")[1] == "png":
+                fn = a.split(".")[0]
+                if len(fn) == 4 and all(c in string.digits for c in fn):
+                    img = Image.open(self.dir+"/"+fn+".png")
+                    img = img.convert("RGBA")
+                    self.images[int(fn)] = img
 
     def get_property(self, key, default_value):
         if not key in self.properties: 

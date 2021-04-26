@@ -7,6 +7,8 @@ from pathlib import Path
 from PIL import Image
 from ctypes import cdll
 import os, io, array, json, locale, threading, locale, gettext, platform
+
+os.environ['REQUESTS_CA_BUNDLE'] = os.path.join(os.getcwd(), 'cacert.pem')
 import urllib.request, certifi, time
 import DirObserver, mibandpreview
 
@@ -42,10 +44,10 @@ class MiBandPreviewApp:
         self.loader = mibandpreview.create()
 
         self.path = ""
-        self.watcher = False
+        #self.watcher = False
         self.is_active = True
         self.is_expanded = True
-        self.is_watcher_added = False
+        #self.is_watcher_added = False
         self.allow_interact = False
         self.current_frame = [False, 0, 0, 0, 0]
         self.is_animation_complete = [False, False, False, False, False]
@@ -110,9 +112,6 @@ class MiBandPreviewApp:
         Gtk.main_quit(*args)
 
     def on_change(self):
-        self.sth_changed(0)
-
-    def sth_changed(self, *args):
         t = time.time()
 
         if t-self.last_wdtrigger < 1:
@@ -120,9 +119,13 @@ class MiBandPreviewApp:
 
         if self.allow_interact:
             print("watchdog triggered, reloading...")
-            self.read_new_data()
-            threading.Timer(0.5, self.rebuild, args=(self,)).start()
+            threading.Timer(0.5, self.full_reload, args=(self,)).start()
             self.last_wdtrigger = t
+
+    def sth_changed(self, *args):
+        if self.allow_interact:
+            self.read_new_data()
+            self.rebuild()
 
     def gif_settings_changed(self, *args):
         for a in range(1, 5):
@@ -158,16 +161,16 @@ class MiBandPreviewApp:
         dialog.destroy()
 
     def bind_path(self, path):
-        if self.is_watcher_added:
-            print("Stopping previous watcher...")
-            self.watcher.stop()
+        #if self.is_watcher_added:
+            #print("Stopping previous watcher...")
+            #self.watcher.stop()
 
         if path == "" or not os.path.isdir(path):
             print("Empty or invalid path, ignoring...")
             return
 
-        self.watcher = DirObserver.new(path, self)
-        self.is_watcher_added = True
+        #self.watcher = DirObserver.new(path, self)
+        #self.is_watcher_added = True
         self.path = path
 
         self.loader.bind_path(path)
@@ -205,23 +208,26 @@ class MiBandPreviewApp:
             self.rebuild()
         self.allow_interact = True
 
+    def full_reload(self, *args):
+        self.loader.load_data()
+        self.rebuild()
+
     def rebuild(self, *args):
         if self.path == "": return
         try:
-            self.loader.load_data()
             self.loader.set_property("device", self.device_name)
             img = self.loader.render()
 
             img, state = self.loader.render_with_animation_frame(self.current_frame)
             self.setup_animations_ui()
             self.is_animation_complete = state
-
+            
             if self.device_id == "Mi Band 6":
                 img = img.resize((round(img.size[0]*1.5), round(img.size[1]*1.5)), resample=Image.BOX)
             else:
                 img = img.resize((img.size[0]*2, img.size[1]*2), resample=Image.BOX)
             buf = img2buf(img)
-
+            
             self.builder.get_object("preview_host_big").set_from_pixbuf(buf)
             self.builder.get_object("preview_host_small").set_from_pixbuf(buf)
         except Exception as e:
@@ -279,8 +285,8 @@ class MiBandPreviewApp:
 
     def reset_settings(self, *args):
         self.current_window.hide()
-        if self.is_watcher_added:
-            self.watcher.stop()
+        #if self.is_watcher_added:
+            #self.watcher.stop()
 
         if os.path.isfile(str(Path.home())+"/.mibandpreview.json"):
             os.remove(str(Path.home())+"/.mibandpreview.json")

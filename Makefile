@@ -31,23 +31,17 @@ uninstall:
 deb:
 	dpkg-buildpackage -sa
 
-windows_debug:
-	export PATH=$(PATH):/mingw64/bin
-	rm -rf dist/mibandpreview
-	pyinstaller --name mibandpreview --icon src/res/icon.ico \
-		--add-data "src/res;res" \
-		--add-data "tools/gtk-3.0;etc/gtk-3.0" \
-		--add-data "dist/locale;share/locale" \
-		mibandpreview-gtk/__init__.py
-
 windows:
 	export PATH=$(PATH):/mingw64/bin
 	rm -rf dist/mibandpreview
-	pyinstaller --name mibandpreview --icon src/res/icon.ico -w \
-		--add-data "src/res;res" \
+	pyinstaller --name mibandpreview --icon mibandpreview-gtk/res/icon.ico -w \
+		--add-data "mibandpreview/res;res" \
+		--path "mibandpreview" --path "mibandpreview-gtk" \
 		--add-data "tools/gtk-3.0;etc/gtk-3.0" \
 		--add-data "dist/locale;share/locale" \
 		mibandpreview-gtk/__init__.py
+	cp -r mibandpreview-gtk/res/* dist/mibandpreview/res
+	cp -r /usr/share/themes/Windows-10 dist/mibandpreview/share/themes
 	rm -rf dist/mibandpreview/share/icons/Adwaita/48x48
 	rm -rf dist/mibandpreview/share/icons/Adwaita/64x64
 	rm -rf dist/mibandpreview/share/icons/Adwaita/96x96
