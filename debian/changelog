@@ -1,7 +1,9 @@
-mibandpreview (0.6-1) focal; urgency=medium
+mibandpreview (0.6.1-1) focal; urgency=medium
 
-  * Experimental Mi Band 6 suppot
+  * Experimental Mi Band 6 support
   * Better Mi Band 5 support
   * Code refactor
+  * 0.6.1: Fixed weekday picker
+  * 0.6.1: Fixed auto-update feature
 
  -- MelianMiko <mikigaru@zohomail.com>  Sun, 01 Nov 2020 18:49:00 +0700
