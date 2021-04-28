@@ -1,9 +1,8 @@
-mibandpreview (0.6.1-1) focal; urgency=medium
+mibandpreview (0.7-1) focal; urgency=medium
 
-  * Experimental Mi Band 6 support
-  * Better Mi Band 5 support
-  * Code refactor
-  * 0.6.1: Fixed weekday picker
-  * 0.6.1: Fixed auto-update feature
+  * GTK3 UI replaced with Qt5-based
+  * Fixed app freeze on project edit
+  * Fixed lot of other bugs
+  * Russian translation for windows now works (!)
 
  -- MelianMiko <mikigaru@zohomail.com>  Sun, 01 Nov 2020 18:49:00 +0700
