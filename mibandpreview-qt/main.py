@@ -11,6 +11,7 @@ from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator
 from PyQt5.QtGui import QIcon
 import mibandpreview
+import use_certifi # Fix SSL issue on Windows
 import UiHandler
 from MainWindow import Ui_MainWindow
 
