@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 import json
-import math
 import os.path
-import shutil
+import platform
 import sys
 import threading
+import urllib.request
 from pathlib import Path
-
 from PIL import Image
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator
 from PyQt5.QtGui import QIcon
-
 import mibandpreview
 import UiHandler
 from MainWindow import Ui_MainWindow
@@ -19,6 +17,7 @@ from MainWindow import Ui_MainWindow
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 SETTINGS_PATH = str(Path.home())+"/.mi_band_preview.json"
 SETTINGS_VER = 3
+APP_VERSION = "0.7"
 
 LINK_GITHUB = "https://gitlab.com/melianmiko/mibandpreview"
 LINK_WEBSITE = "https://melianmiko.ru/mibandpreview"
@@ -59,6 +58,28 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.handler.get_user_settings()
         self.handler.set_no_preview()
         self.load_data()
+
+        self.check_updates()
+
+    def check_updates(self, *args):
+        print(platform.system())
+        try:
+            if platform.system() == "Windows":
+                res = urllib.request.urlopen(
+                    "https://gitlab.com/api/v4/projects/melianmiko%2Fmibandpreview/releases",
+                    timeout=3
+                    )
+                res = json.loads(res.read())[0]
+                if not res["tag_name"] == APP_VERSION:
+                    print("New version: "+APP_VERSION+" != "+res["tag_name"])
+                    url = LINK_WEBSITE
+                    for a in res["assets"]["links"]:
+                        if a["name"] == "windows_installer":
+                            url = a["url"]
+                            print("Download url: "+url)
+                    self.handler.show_update_dialog(url)
+        except Exception as e:
+            print(e)
 
     def rebuild(self):
         if self.path == "":
@@ -184,7 +205,7 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def get_scale_factor(self, size):
         w = self.width() / 3
-        h = self.height()
+        h = self.height() - 10
         ratio = min(w / size[0], h / size[1])
         ratio = round(max(1, ratio), 1)
         return ratio

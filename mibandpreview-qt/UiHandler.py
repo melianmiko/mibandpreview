@@ -1,8 +1,8 @@
 import webbrowser
 
-from PyQt5.QtCore import QTime, QDate
+from PyQt5.QtCore import QTime, QDate, QLocale
 from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QMessageBox
 from pathlib import Path
 from PIL import Image
 import os
@@ -83,6 +83,19 @@ class UIHandler:
         self.context.anim_play_2.stateChanged.connect(self._on_gif_change)
         self.context.anim_play_3.stateChanged.connect(self._on_gif_change)
         self.context.anim_play_4.stateChanged.connect(self._on_gif_change)
+
+    def show_update_dialog(self, url):
+        qm = QMessageBox()
+        qm.setModal(True)
+
+        locale = QLocale.system().name()[0:2]
+        message = "New version available. Download now?"
+        if locale == "ru":
+            message = "Доступна новая версия. Скачать?"
+
+        r = qm.question(self.context, '', message, qm.Yes | qm.No)
+        if r == qm.Yes:
+            webbrowser.open(url)
 
     def set_no_preview(self):
         self.context.preview_host.setPixmap(pil_to_qt(Image.open(RES_NO_IMAGE)))
