@@ -60,7 +60,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="tab_base">
          <attribute name="title">
@@ -90,10 +90,10 @@
             <item row="0" column="0">
              <widget class="QLabel" name="label">
               <property name="text">
-               <string>## Time and date</string>
+               <string>&lt;h2&gt;Time and date&lt;/h2&gt;</string>
               </property>
               <property name="textFormat">
-               <enum>Qt::MarkdownText</enum>
+               <enum>Qt::RichText</enum>
               </property>
              </widget>
             </item>
@@ -246,10 +246,10 @@
             <item row="7" column="0">
              <widget class="QLabel" name="label_2">
               <property name="text">
-               <string>## Device status</string>
+               <string>&lt;h2&gt;Device state&lt;/h2&gt;</string>
               </property>
               <property name="textFormat">
-               <enum>Qt::MarkdownText</enum>
+               <enum>Qt::RichText</enum>
               </property>
              </widget>
             </item>
@@ -319,10 +319,10 @@
           <item>
            <widget class="QLabel" name="label_3">
             <property name="text">
-             <string>## Activity</string>
+             <string>&lt;h2&gt;Activity&lt;/h2&gt;</string>
             </property>
             <property name="textFormat">
-             <enum>Qt::MarkdownText</enum>
+             <enum>Qt::RichText</enum>
             </property>
            </widget>
           </item>
@@ -435,10 +435,10 @@
           <item>
            <widget class="QLabel" name="label_4">
             <property name="text">
-             <string>## Weather</string>
+             <string>&lt;h2&gt;Weather&lt;/h2&gt;</string>
             </property>
             <property name="textFormat">
-             <enum>Qt::MarkdownText</enum>
+             <enum>Qt::RichText</enum>
             </property>
            </widget>
           </item>
@@ -664,10 +664,10 @@
           <item>
            <widget class="QLabel" name="label_5">
             <property name="text">
-             <string>## Animation(s)</string>
+             <string>&lt;h2&gt;Animations&lt;/h2&gt;</string>
             </property>
             <property name="textFormat">
-             <enum>Qt::MarkdownText</enum>
+             <enum>Qt::RichText</enum>
             </property>
            </widget>
           </item>

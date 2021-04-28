@@ -13,7 +13,7 @@
     </message>
     <message>
         <source>## Time and date</source>
-        <translation>## Время и дата</translation>
+        <translation type="vanished">## Время и дата</translation>
     </message>
     <message>
         <source>Time:</source>
@@ -101,7 +101,7 @@
     </message>
     <message>
         <source>## Device status</source>
-        <translation>## Состояние устройства</translation>
+        <translation type="vanished">## Состояние устройства</translation>
     </message>
     <message>
         <source>Battery</source>
@@ -129,7 +129,7 @@
     </message>
     <message>
         <source>## Activity</source>
-        <translation>## Активность</translation>
+        <translation type="vanished">## Активность</translation>
     </message>
     <message>
         <source>Steps:</source>
@@ -165,7 +165,7 @@
     </message>
     <message>
         <source>## Weather</source>
-        <translation>## Погода</translation>
+        <translation type="vanished">## Погода</translation>
     </message>
     <message>
         <source>Night, C</source>
@@ -297,7 +297,7 @@
     </message>
     <message>
         <source>## Animation(s)</source>
-        <translation>## Анимация(-ии)</translation>
+        <translation type="vanished">## Анимация(-ии)</translation>
     </message>
     <message>
         <source>Anim. 0</source>
@@ -374,6 +374,26 @@
     <message>
         <source>Ctrl+R</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>&lt;h2&gt;Time and date&lt;/h2&gt;</source>
+        <translation>&lt;h2&gt;Дата и время&lt;/h2&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;h2&gt;Device state&lt;/h2&gt;</source>
+        <translation>&lt;h2&gt;Состояние устройства&lt;/h2&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;h2&gt;Activity&lt;/h2&gt;</source>
+        <translation>&lt;h2&gt;Активность&lt;/h2&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;h2&gt;Weather&lt;/h2&gt;</source>
+        <translation>&lt;h2&gt;Погода&lt;/h2&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;h2&gt;Animations&lt;/h2&gt;</source>
+        <translation>&lt;h2&gt;Анимация&lt;/h2&gt;</translation>
     </message>
 </context>
 </TS>
