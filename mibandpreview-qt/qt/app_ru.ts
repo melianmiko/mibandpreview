@@ -381,7 +381,7 @@
     </message>
     <message>
         <source>&lt;h2&gt;Device state&lt;/h2&gt;</source>
-        <translation>&lt;h2&gt;Состояние устройства&lt;/h2&gt;</translation>
+        <translation type="unfinished">&lt;h2&gt;Состояние&lt;/h2&gt;</translation>
     </message>
     <message>
         <source>&lt;h2&gt;Activity&lt;/h2&gt;</source>

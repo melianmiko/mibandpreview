@@ -8,7 +8,6 @@ qt:
 	cd mibandpreview-qt/qt && lrelease app.pro
 
 clean:
-	rm -rf src/__pycache__
 	rm -rf build
 
 install:
@@ -33,8 +32,6 @@ windows: qt
 		--add-data "mibandpreview-qt/res;res" \
 		--add-data "mibandpreview-qt/qt;qt" \
 		--path "mibandpreview" --path "mibandpreview-qt" \
-		--add-data "tools/gtk-3.0;etc/gtk-3.0" \
-		--add-data "dist/locale;share/locale" \
 		mibandpreview-qt/mibandpreview-qt
 	cp tools/installer.nsi dist/installer.nsi
 	cd dist && makensis installer.nsi

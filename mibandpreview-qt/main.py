@@ -2,6 +2,7 @@
 import json
 import math
 import os.path
+import shutil
 import sys
 import threading
 from pathlib import Path
@@ -9,6 +10,7 @@ from pathlib import Path
 from PIL import Image
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator
+from PyQt5.QtGui import QIcon
 
 import mibandpreview
 import UiHandler
@@ -17,6 +19,9 @@ from MainWindow import Ui_MainWindow
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 SETTINGS_PATH = str(Path.home())+"/.mi_band_preview.json"
 SETTINGS_VER = 3
+
+LINK_GITHUB = "https://gitlab.com/melianmiko/mibandpreview"
+LINK_WEBSITE = "https://melianmiko.ru/mibandpreview"
 
 
 class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -45,6 +50,8 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.watcher = QFileSystemWatcher()                 # type: QFileSystemWatcher
         self.handler = UiHandler.create(self)               # type: UiHandler
 
+        self.setWindowIcon(QIcon(APP_ROOT+"/res/icon.png"))
+        self.tabWidget.setCurrentIndex(0)
         self.watcher.directoryChanged.connect(self.on_file_change)
         self.watcher.fileChanged.connect(self.on_file_change)
 
@@ -58,15 +65,24 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.handler.set_no_preview()
             return
 
-        img, state = self.loader.render_with_animation_frame(self.frames)
-        sf = self.get_scale_factor(img.size)
-        img = img.resize((round(img.size[0] * sf), round(img.size[1] * sf)), resample=Image.BOX)
+        try:
+            img, state = self.loader.render_with_animation_frame(self.frames)
+            sf = self.get_scale_factor(img.size)
+            img = img.resize((round(img.size[0] * sf), round(img.size[1] * sf)), resample=Image.BOX)
 
-        self.player_state = state
-        self.handler.set_preview(img)
+            self.player_state = state
+            self.handler.set_preview(img)
+        except Exception as e:
+            print("RENDER ERROR: "+str(e))
+            self.handler.set_error_preview()
 
     def exit(self):
         self.on_exit()
+        self.app.exit(0)
+
+    def wipe(self):
+        with open(SETTINGS_PATH, "w") as f:
+            f.write("{}")
         self.app.exit(0)
 
     def on_exit(self):

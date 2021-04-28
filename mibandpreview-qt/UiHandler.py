@@ -1,3 +1,5 @@
+import webbrowser
+
 from PyQt5.QtCore import QTime, QDate
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QFileDialog
@@ -39,7 +41,12 @@ class UIHandler:
         self.context.target_mb4.triggered.connect(lambda i: self._on_device_selected("miband4"))
         self.context.target_mb5.triggered.connect(lambda i: self._on_device_selected("miband5"))
         self.context.target_mb6.triggered.connect(lambda i: self._on_device_selected("miband6"))
+        self.context.action_wipe.triggered.connect(self.context.wipe)
         self.context.action_exit.triggered.connect(lambda i: self.context.exit())
+
+        # About
+        self.context.action_about_app.triggered.connect(lambda i: webbrowser.open(main.LINK_WEBSITE))
+        self.context.action_github.triggered.connect(lambda i: webbrowser.open(main.LINK_GITHUB))
 
         # Settings
         self.context.edit_time.userTimeChanged.connect(self._on_change)
@@ -79,6 +86,9 @@ class UIHandler:
 
     def set_no_preview(self):
         self.context.preview_host.setPixmap(pil_to_qt(Image.open(RES_NO_IMAGE)))
+
+    def set_error_preview(self):
+        self.context.preview_host.setPixmap(pil_to_qt(Image.open(RES_ERROR_IMAGE)))
 
     def set_preview(self, img):
         self.context.preview_host.setPixmap(pil_to_qt(img))

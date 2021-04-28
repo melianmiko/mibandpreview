@@ -850,9 +850,6 @@
      <string>About</string>
     </property>
     <addaction name="action_about_app"/>
-    <addaction name="action_about_qt"/>
-    <addaction name="separator"/>
-    <addaction name="action_website"/>
     <addaction name="action_github"/>
    </widget>
    <addaction name="menu_file"/>
