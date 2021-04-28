@@ -1,8 +1,12 @@
 #!/usr/bin/make -f
 DESTDIR=/
 
-all: l18n clean
+all: qt l18n clean
 all_win32: l18n windows clean
+
+qt:
+	cd mibandpreview-qt && pyuic5 qt/app.ui -o MainWindow.py
+	cd mibandpreview-qt/qt && lrelease app.pro
 
 l18n:
 	./tools/merge_l18ns.sh

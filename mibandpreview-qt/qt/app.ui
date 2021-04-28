@@ -1,0 +1,945 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>510</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>480</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>16777215</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Mi Band Preview (QT5)</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icon.png</normaloff>icon.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
+     <layout class="QHBoxLayout" name="root" stretch="0,0">
+      <item>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>2</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="tab_base">
+         <attribute name="title">
+          <string>Basics</string>
+         </attribute>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <layout class="QFormLayout" name="formLayout_2">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetDefaultConstraint</enum>
+            </property>
+            <property name="fieldGrowthPolicy">
+             <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+            </property>
+            <property name="rowWrapPolicy">
+             <enum>QFormLayout::DontWrapRows</enum>
+            </property>
+            <property name="formAlignment">
+             <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+            </property>
+            <property name="horizontalSpacing">
+             <number>16</number>
+            </property>
+            <property name="verticalSpacing">
+             <number>8</number>
+            </property>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>## Time and date</string>
+              </property>
+              <property name="textFormat">
+               <enum>Qt::MarkdownText</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="timeLabel">
+              <property name="text">
+               <string>Time:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QTimeEdit" name="edit_time">
+              <property name="showGroupSeparator" stdset="0">
+               <bool>false</bool>
+              </property>
+              <property name="displayFormat">
+               <string>HH:mm:ss</string>
+              </property>
+              <property name="calendarPopup">
+               <bool>false</bool>
+              </property>
+              <property name="currentSectionIndex">
+               <number>2</number>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="t24hLabel">
+              <property name="text">
+               <string>24-h format:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QCheckBox" name="edit_24h"/>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="aMPMLabel">
+              <property name="text">
+               <string>AM/PM:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QComboBox" name="edit_ampm">
+              <item>
+               <property name="text">
+                <string>AM (Chinese)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>PM (Chinese)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>AM (International)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>PM (International)</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="dateLabel">
+              <property name="text">
+               <string>Date:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QDateEdit" name="edit_date"/>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="dayOfWeekLabel">
+              <property name="text">
+               <string>Day of week:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QComboBox" name="edit_weekday">
+              <item>
+               <property name="text">
+                <string>Monay</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Tuesday</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Wednesday</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Thursday</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Friday</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Saturday</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Sunday</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="weekdaysLangLabel">
+              <property name="text">
+               <string>Weekdays lang:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QComboBox" name="edit_wd_lang">
+              <item>
+               <property name="text">
+                <string>Chinese 1</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Chinese 2</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>International</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>## Device status</string>
+              </property>
+              <property name="textFormat">
+               <enum>Qt::MarkdownText</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QLabel" name="batteryLabel">
+              <property name="text">
+               <string>Battery</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="1">
+             <widget class="QSpinBox" name="edit_battery">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="0">
+             <widget class="QLabel" name="bluetoothLabel">
+              <property name="text">
+               <string>Bluetooth:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="1">
+             <widget class="QCheckBox" name="edit_bluetooth"/>
+            </item>
+            <item row="10" column="0">
+             <widget class="QLabel" name="doNotDisturbLabel">
+              <property name="text">
+               <string>Do not disturb:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="1">
+             <widget class="QCheckBox" name="edit_mute"/>
+            </item>
+            <item row="11" column="0">
+             <widget class="QLabel" name="screenLockLabel">
+              <property name="text">
+               <string>Screen lock:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="11" column="1">
+             <widget class="QCheckBox" name="edit_lock"/>
+            </item>
+            <item row="12" column="0">
+             <widget class="QLabel" name="alarmEnabledLabel">
+              <property name="text">
+               <string>Alarm enabled:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="1">
+             <widget class="QCheckBox" name="edit_alarm"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_activity">
+         <attribute name="title">
+          <string>Data and weather</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>## Activity</string>
+            </property>
+            <property name="textFormat">
+             <enum>Qt::MarkdownText</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QFormLayout" name="formLayout">
+            <item row="0" column="0">
+             <widget class="QLabel" name="stepsLabel">
+              <property name="text">
+               <string>Steps:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QSpinBox" name="edit_steps">
+              <property name="maximum">
+               <number>15000</number>
+              </property>
+              <property name="singleStep">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>0</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="stepsTargetLabel">
+              <property name="text">
+               <string>Steps target:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QSpinBox" name="edit_target_steps">
+              <property name="maximum">
+               <number>15000</number>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="distanceLabel">
+              <property name="text">
+               <string>Distance</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QDoubleSpinBox" name="edit_distance">
+              <property name="suffix">
+               <string> km</string>
+              </property>
+              <property name="maximum">
+               <double>40.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.050000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="caloriesLabel">
+              <property name="text">
+               <string>Calories</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QSpinBox" name="edit_calories">
+              <property name="suffix">
+               <string> kcal</string>
+              </property>
+              <property name="maximum">
+               <number>4000</number>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="bPMLabel">
+              <property name="text">
+               <string>BPM:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QSpinBox" name="edit_bpm">
+              <property name="minimum">
+               <number>-1</number>
+              </property>
+              <property name="maximum">
+               <number>240</number>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="pAILabel">
+              <property name="text">
+               <string>PAI:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QSpinBox" name="edit_pai">
+              <property name="maximum">
+               <number>150</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>## Weather</string>
+            </property>
+            <property name="textFormat">
+             <enum>Qt::MarkdownText</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <layout class="QGridLayout" name="gridLayout_7">
+              <item row="0" column="2">
+               <widget class="QLabel" name="label_9">
+                <property name="text">
+                 <string>Night, C</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_8">
+                <property name="text">
+                 <string>Current, C</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_10">
+                <property name="text">
+                 <string>Day, C</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QDoubleSpinBox" name="edit_t_now"/>
+              </item>
+              <item row="1" column="1">
+               <widget class="QDoubleSpinBox" name="edit_t_day"/>
+              </item>
+              <item row="1" column="2">
+               <widget class="QDoubleSpinBox" name="edit_t_night"/>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QFormLayout" name="formLayout_3">
+              <property name="horizontalSpacing">
+               <number>16</number>
+              </property>
+              <property name="verticalSpacing">
+               <number>8</number>
+              </property>
+              <item row="0" column="0">
+               <widget class="QLabel" name="weatherIconLabel">
+                <property name="text">
+                 <string>Weather icon:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QComboBox" name="edit_w_icon">
+                <item>
+                 <property name="text">
+                  <string>Unknown</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Partaly Cloud</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Cloudy And Rain</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Cloudy And Snow</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Sunny</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Cloudy</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Light Rain</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Light Snow</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Rain</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Snow</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Heavy Snow</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Heavy Rain</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Sand Storm</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Snow And Rain</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Fog</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Haze</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Storm</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Very Heavy Snow</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Floating Dust</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Downpour</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Hail</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Hail Storm</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Heavy Downpour</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Blowing Dust</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Tornado</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Very Heavy Downpour</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="humidityLabel">
+                <property name="text">
+                 <string>Humidity:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="edit_humidity"/>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab">
+         <attribute name="title">
+          <string>Others</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>## Animation(s)</string>
+            </property>
+            <property name="textFormat">
+             <enum>Qt::MarkdownText</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="anim_root_0">
+            <item>
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>Anim. 0</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="anim_frame_0"/>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="anim_play_0">
+              <property name="text">
+               <string>Auto</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="anim_root_1">
+            <item>
+             <widget class="QLabel" name="label_12">
+              <property name="text">
+               <string>Anim. 0</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="anim_frame_1"/>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="anim_play_1">
+              <property name="text">
+               <string>Auto</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="anim_root_2">
+            <item>
+             <widget class="QLabel" name="label_13">
+              <property name="text">
+               <string>Anim. 0</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="anim_frame_2"/>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="anim_play_2">
+              <property name="text">
+               <string>Auto</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="anim_root_3">
+            <item>
+             <widget class="QLabel" name="label_14">
+              <property name="text">
+               <string>Anim. 0</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="anim_frame_3"/>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="anim_play_3">
+              <property name="text">
+               <string>Auto</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="anim_root_4">
+            <item>
+             <widget class="QLabel" name="label_15">
+              <property name="text">
+               <string>Anim. 0</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="anim_frame_4"/>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="anim_play_4">
+              <property name="text">
+               <string>Auto</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+       <widget class="QLabel" name="preview_host">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>1</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>520</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>600</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_file">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="action_open"/>
+    <addaction name="action_refresh"/>
+    <addaction name="separator"/>
+    <addaction name="target_mb4"/>
+    <addaction name="target_mb5"/>
+    <addaction name="target_mb6"/>
+    <addaction name="separator"/>
+    <addaction name="action_wipe"/>
+    <addaction name="action_exit"/>
+   </widget>
+   <widget class="QMenu" name="menu_about">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="action_about_app"/>
+    <addaction name="action_about_qt"/>
+    <addaction name="separator"/>
+    <addaction name="action_website"/>
+    <addaction name="action_github"/>
+   </widget>
+   <addaction name="menu_file"/>
+   <addaction name="menu_about"/>
+  </widget>
+  <action name="action_open">
+   <property name="text">
+    <string>Open Project</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="target_auto">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Auto detect device</string>
+   </property>
+  </action>
+  <action name="target_mb4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Mi Band 4</string>
+   </property>
+  </action>
+  <action name="target_mb5">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Mi Band 5</string>
+   </property>
+  </action>
+  <action name="target_mb6">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Mi Band 6</string>
+   </property>
+  </action>
+  <action name="action_wipe">
+   <property name="text">
+    <string>Reset settings</string>
+   </property>
+  </action>
+  <action name="action_exit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="action_about_app">
+   <property name="text">
+    <string>About Mi Band Preview</string>
+   </property>
+  </action>
+  <action name="action_about_qt">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
+  <action name="action_website">
+   <property name="text">
+    <string>Website</string>
+   </property>
+  </action>
+  <action name="action_github">
+   <property name="text">
+    <string>Github</string>
+   </property>
+  </action>
+  <action name="action_refresh">
+   <property name="text">
+    <string>Refresh preview</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

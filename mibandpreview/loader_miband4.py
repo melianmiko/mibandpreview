@@ -7,11 +7,11 @@ def draw_animation_layers(app, current_frame, img):
 
     if "Other" in config:
         if "Animation" in config["Other"]:
-            if current_frame[1] < config["Other"]["Animation"]["AnimationImage"]["ImagesCount"]:
+            if current_frame[0] < config["Other"]["Animation"]["AnimationImage"]["ImagesCount"]:
                 draw_static_object(
                     app, canvas, 
                     config["Other"]["Animation"]["AnimationImage"],
-                    value=current_frame[1]
+                    value=current_frame[0]
                     )
             else: state[1] = True
 

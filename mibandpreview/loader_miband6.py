@@ -1,11 +1,12 @@
 from tools import *
 from PIL import Image, ImageDraw
 
+
 def draw_animation_layers(app, current_frame, img):
     config = app.config
     state = [False, False, False, False, False]
 
-    n = 1
+    n = 0
     if "Other" in config:
         if "Animation" in config["Other"]:
             for a in config["Other"]["Animation"]:
