@@ -41,7 +41,7 @@ dpkg-buildpackage -b
 ## Building for Windows
 Install msys2 and update all packages (`pacman -Suy`). Then, install build and runtime dependsis:
 ```bash
-pacman -S git mingw-w64-x86_64-python3 mingw-w64-x86_64-python3-pip mingw-w64-x86_64-gtk3 mingw-w64-x86_64-python3-gobject mingw-w64-x86_64-python-pillow mingw-w64-x86_64-python3-watchdog mingw-w64-x86_64-nsis make intltool mingw-w64-x86_64-python-certifi
+pacman -S git mingw-w64-x86_64-python3 mingw-w64-x86_64-python3-pip mingw-w64-x86_64-python-pillow mingw-w64-x86_64-nsis make mingw-w64-x86_64-python-certifi mingw-w64-x86_64-python-pyqt5
 export PATH=$PATH:/mingw64/bin
 pip install pyinstaller
 ```

@@ -128,7 +128,6 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.rebuild()
 
     def on_file_change(self):
-        print("Files changed!")
         self.loader.load_data()
         self.rebuild()
 

@@ -35,24 +35,15 @@ uninstall:
 deb:
 	dpkg-buildpackage -sa
 
-windows:
-	export PATH=$(PATH):/mingw64/bin
+windows: qt
 	rm -rf dist/mibandpreview
-	pyinstaller --name mibandpreview --icon mibandpreview-gtk/res/icon.ico -w \
+	pyinstaller --name mibandpreview --icon mibandpreview-qt/res/icon.ico -w \
 		--add-data "mibandpreview/res;res" \
-		--path "mibandpreview" --path "mibandpreview-gtk" \
+		--add-data "mibandpreview-qt/res;res" \
+		--add-data "mibandpreview-qt/qt;qt" \
+		--path "mibandpreview" --path "mibandpreview-qt" \
 		--add-data "tools/gtk-3.0;etc/gtk-3.0" \
 		--add-data "dist/locale;share/locale" \
-		mibandpreview-gtk/__init__.py
-	cp -r mibandpreview-gtk/res/* dist/mibandpreview/res
-	cp -r /usr/share/themes/Windows-10 dist/mibandpreview/share/themes
-	rm -rf dist/mibandpreview/share/icons/Adwaita/48x48
-	rm -rf dist/mibandpreview/share/icons/Adwaita/64x64
-	rm -rf dist/mibandpreview/share/icons/Adwaita/96x96
-	rm -rf dist/mibandpreview/share/icons/Adwaita/256x256
-	rm -rf dist/mibandpreview/share/icons/Adwaita/512x512
-	rm -rf dist/mibandpreview/share/icons/Adwaita/cursors
-	rm -rf dist/mibandpreview/share/icons/Adwaita/scalable
-	rm -rf dist/mibandpreview/share/icons/Adwaita/scalable-up-to-32
+		mibandpreview-qt/mibandpreview-qt
 	cp tools/installer.nsi dist/installer.nsi
 	cd dist && makensis installer.nsi
