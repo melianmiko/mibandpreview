@@ -2,8 +2,7 @@
 debian/mibandpreview*
 debian/.debhelper
 debian/files
-src/locale/LC.pot
-src/app.glade.h
+mibandpreview-qt/MainWindow.py
 build
 dist
 *.spec
