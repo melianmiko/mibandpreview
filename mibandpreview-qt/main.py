@@ -62,6 +62,10 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.check_updates()
 
+    def save_image(self, path):
+        img, state = self.loader.render_with_animation_frame(self.frames)
+        img.save(path)
+
     def check_updates(self, *args):
         print(platform.system())
         try:
@@ -125,6 +129,7 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
                 self.loader.config_import(data["preview_data"])
                 self.bind_path(data["last_path"])
+                self.handler.set_user_settings()
 
         except Exception as e:
             print(e)

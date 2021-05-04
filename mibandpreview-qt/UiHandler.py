@@ -20,7 +20,9 @@ def create(context):
 
 # noinspection PyArgumentList
 def pil_to_qt(img):
-    im = img.tobytes("raw", "RGBA")
+    r, g, b, a = img.split()
+    im = Image.merge("RGBA", (b, g, r, a))
+    im = im.tobytes("raw", "RGBA")
     im = QImage(im, img.size[0], img.size[1], QImage.Format_ARGB32)
     im = QPixmap.fromImage(im)
     return im
@@ -37,7 +39,8 @@ class UIHandler:
         # File menu
         self.context.menu_file.aboutToShow.connect(self._on_file_menu_open)
         self.context.action_open.triggered.connect(self._on_project_open)
-        self.context.action_refresh.triggered.connect(lambda i: self.context.rebuild())
+        self.context.action_save.triggered.connect(self._on_save)
+        self.context.action_refresh.triggered.connect(lambda i: self.context.on_file_change())
         self.context.target_mb4.triggered.connect(lambda i: self._on_device_selected("miband4"))
         self.context.target_mb5.triggered.connect(lambda i: self._on_device_selected("miband5"))
         self.context.target_mb6.triggered.connect(lambda i: self._on_device_selected("miband6"))
@@ -206,6 +209,13 @@ class UIHandler:
         self.context.anim_play_2.setEnabled(c > 2)
         self.context.anim_play_3.setEnabled(c > 3)
         self.context.anim_play_4.setEnabled(c > 4)
+
+    def _on_save(self):
+        options = QFileDialog.Options()
+        # options |= QFileDialog.DontUseNativeDialog
+        path, _ = QFileDialog.getSaveFileName(self.context, "Save image",
+                                              str(Path.home()), "Image (*.png)", options=options)
+        self.context.save_image(path)
 
     def _on_gif_change(self):
         self.context.frames = [
