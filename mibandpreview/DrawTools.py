@@ -22,9 +22,9 @@ def add_to_canvas(target, img, xy):
 
 
 def draw_static_object(app, canvas, obj, value=0):
-    imgIndex = int(obj["ImageIndex"])
-    imgId = imgIndex + value
-    img = app.get_resource(imgId)
+    image_index = int(obj["ImageIndex"])
+    image_id = image_index + value
+    img = app.get_resource(image_id)
     add_to_canvas(canvas, img, (obj["X"], obj["Y"]))
     return (
         int(obj["X"]), int(obj["Y"]),
@@ -50,6 +50,12 @@ def draw_apos_number(app, canvas, obj, value=0,
         images += split_number_to_images(app, obj, math.floor(value), digits)
         if dot > -1:
             dot_img = app.get_resource(dot)
+            device = app.get_property("device", "miband4")
+            if device == "miband5" or device == "miband6":
+                if dot_img.size[1] < images[0].size[1]:
+                    new_image = Image.new("RGBA", (dot_img.size[0], images[0].size[1]))
+                    new_image.paste(dot_img, (0, images[0].size[1] - dot_img.size[1]))
+                    dot_img = new_image
             images.append(dot_img)
         n = int(str(value).split(".")[1])
         images += split_number_to_images(app, obj, n, digits)
@@ -63,18 +69,22 @@ def draw_apos_number(app, canvas, obj, value=0,
     y1 = int(obj["TopLeftY"])
     y2 = int(obj["BottomRightY"])
 
-    x = y = ox = oy = 0
+    ox = 0
+    oy = 0
 
     if "Spacing" in obj:
         ox = obj["Spacing"]
     elif "SpacingX" in obj:
         ox = obj["SpacingX"]
-    if "SpacingY":
+
+    if "SpacingY" in obj:
         oy = obj["SpacingY"]
 
     full_width = ox*len(images)
+    max_height = 0
     for a in images:
         full_width += a.size[0]
+        max_height = max(max_height, a.size[1])
 
     # Align (horizontal)
     if align[0] == "end":
@@ -86,28 +96,17 @@ def draw_apos_number(app, canvas, obj, value=0,
 
     # Align (vertical)
     if align[1] == "end":
-        y = max(y2-images[0].size[1], y1)
+        y = max(y2-max_height, y1)
     elif align[1] == "center":
-        y = round(max(y1, (y2-images[0].size[1])/2 ))
+        y = round(max(y1, (y2-max_height)/2))
     else:
         y = y1
 
     for i in images:
-        add_to_canvas(canvas, i, (x, y))
+        delta = 0
+        add_to_canvas(canvas, i, (x, y+delta))
         x += i.size[0] + ox
         y += oy
-
-    # device = app.get_property("device", 0)
-    # img = build_multipart_image(obj, images,
-    #                             fix_height=(device == "miband6" or device == "miband5"))
-    # xy = calculate_apos(obj, (img.size[0], images[0].size[1]), fix_y=fix_y)
-    # if "Bottom" in obj["Alignment"] and obj["SpacingY"] < 0:
-    #     xy[1] = xy[1] - img.size[1] + images[0].size[1]
-    # add_to_canvas(canvas, img, xy)
-    # return (
-    #     xy[0], xy[1],
-    #     xy[0] + img.size[0], xy[1] + img.size[1]
-    # )
 
 
 def draw_apos_date(app, canvas, obj, month, day, split, month_digits, day_digits, year=-1):
@@ -235,9 +234,9 @@ def build_multipart_image(data, images, fix_height=False):
 
 
 def decode_align(align):
-    if align == "TopLeft" or align == "Top":
+    if align == "TopLeft" or align == "Left":
         return ["start", "start"]
-    if align == "TopRight":
+    if align == "TopRight" or align == "Right":
         return ["end", "start"]
     if align == "TopCenter":
         return ["center", "start"]

@@ -60,7 +60,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tab_base">
          <attribute name="title">
@@ -468,13 +468,25 @@
                </widget>
               </item>
               <item row="1" column="0">
-               <widget class="QDoubleSpinBox" name="edit_t_now"/>
+               <widget class="QDoubleSpinBox" name="edit_t_now">
+                <property name="decimals">
+                 <number>0</number>
+                </property>
+               </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QDoubleSpinBox" name="edit_t_day"/>
+               <widget class="QDoubleSpinBox" name="edit_t_day">
+                <property name="decimals">
+                 <number>0</number>
+                </property>
+               </widget>
               </item>
               <item row="1" column="2">
-               <widget class="QDoubleSpinBox" name="edit_t_night"/>
+               <widget class="QDoubleSpinBox" name="edit_t_night">
+                <property name="decimals">
+                 <number>0</number>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
