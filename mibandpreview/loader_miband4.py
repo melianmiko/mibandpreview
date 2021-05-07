@@ -10,13 +10,15 @@ def draw_animation_layers(app, current_frame, img):
         if "Animation" in config["Other"]:
             if current_frame[0] < config["Other"]["Animation"]["AnimationImage"]["ImagesCount"]:
                 draw_static_object(
-                    app, canvas, 
+                    app, img,
                     config["Other"]["Animation"]["AnimationImage"],
                     value=current_frame[0]
-                    )
-            else: state[1] = True
+                )
+            else:
+                state[1] = True
 
-    return (img, state)
+    return img, state
+
 
 def render(app):
     # Spawn canvas, fill with black
@@ -27,7 +29,7 @@ def render(app):
     config = app.config
 
     # Background
-    if "Background" in config: 
+    if "Background" in config:
         if "Image" in config["Background"]:
             draw_static_object(
                 app, canvas,
@@ -37,14 +39,14 @@ def render(app):
     # Time
     if "Time" in config:
         if "Hours" in config["Time"]:
-            if "Tens" in config["Time"]["Hours"]: 
+            if "Tens" in config["Time"]["Hours"]:
                 draw_static_object(
                     app, canvas,
                     config["Time"]["Hours"]["Tens"],
                     value=app.get_property("hours", 12) // 10
                 )
 
-            if "Ones" in config["Time"]["Hours"]: 
+            if "Ones" in config["Time"]["Hours"]:
                 draw_static_object(
                     app, canvas,
                     config["Time"]["Hours"]["Ones"],
@@ -52,36 +54,36 @@ def render(app):
                 )
 
         if "Minutes" in config["Time"]:
-            if "Tens" in config["Time"]["Minutes"]: 
+            if "Tens" in config["Time"]["Minutes"]:
                 draw_static_object(
                     app, canvas,
                     config["Time"]["Minutes"]["Tens"],
                     value=app.get_property("minutes", 30) // 10
                 )
 
-            if "Ones" in config["Time"]["Minutes"]: 
+            if "Ones" in config["Time"]["Minutes"]:
                 draw_static_object(
                     app, canvas,
                     config["Time"]["Minutes"]["Ones"],
                     value=app.get_property("minutes", 30) % 10
                 )
 
-        if "DelimiterImage" in config["Time"]: 
+        if "DelimiterImage" in config["Time"]:
             draw_static_object(
-                app, canvas, 
+                app, canvas,
                 config["Time"]["DelimiterImage"]
             )
-    
+
     # Activity
     if "Activity" in config:
-        if "Steps" in config["Activity"]: 
+        if "Steps" in config["Activity"]:
             draw_apos_number(
                 app, canvas,
                 config["Activity"]["Steps"]["Number"],
                 value=app.get_property("steps", 12345)
             )
 
-        if "Pulse" in config["Activity"]: 
+        if "Pulse" in config["Activity"]:
             draw_apos_number(
                 app, canvas,
                 config["Activity"]["Pulse"]["Number"],
@@ -92,7 +94,7 @@ def render(app):
             dist = config["Activity"]["Distance"]
             draw_apos_number(
                 app, canvas, dist["Number"],
-                    value=app.get_property("distance", 14.25),
+                value=app.get_property("distance", 14.25),
                 dot=dist["DecimalPointImageIndex"],
                 posix=dist["SuffixImageIndex"]
             )
@@ -104,7 +106,7 @@ def render(app):
                 value=app.get_property("calories", 500),
                 posix=kcal["SuffixImageIndex"]
             )
-    
+
     # Date
     twoDMonth = False
     twoDDay = False
@@ -119,17 +121,17 @@ def render(app):
             if "OneLine" in config["Date"]["MonthAndDay"]:
                 date = config["Date"]["MonthAndDay"]["OneLine"]["Number"]
                 draw_apos_date(
-                    app, canvas, obj, 
+                    app, canvas, date,
                     app.get_property("month", 2),
-                    app.get_property("day", 15), date["DelimiterImageIndex"], 
+                    app.get_property("day", 15), date["DelimiterImageIndex"],
                     twoDMonth, twoDDay
                 )
 
             if "Separate" in config["Date"]["MonthAndDay"]:
                 if "Month" in config["Date"]["MonthAndDay"]["Separate"]:
-                    a = draw_apos_number(
+                    draw_apos_number(
                         app, canvas, config["Date"]["MonthAndDay"]["Separate"]["Month"],
-                            value=app.get_property("month", 12),
+                        value=app.get_property("month", 12),
                         digits=(2 if twoDMonth else 1))
                 if "Day" in config["Date"]["MonthAndDay"]["Separate"]:
                     draw_apos_number(
@@ -140,30 +142,36 @@ def render(app):
         if "WeekDay" in config["Date"]:
             draw_static_object(
                 app, canvas, config["Date"]["WeekDay"],
-                value=app.get_property("weekday", 3)-1+app.get_property("lang_weekday", 2)*7
+                value=app.get_property("weekday", 3) - 1 + app.get_property("lang_weekday", 2) * 7
             )
 
         if "DayAmPm" in config["Date"] and not app.get_property("24h", 0) == 1:
             apm = config["Date"]["DayAmPm"]
             val = app.get_property("ampm", 0)
             lang = app.get_property("lang_ampm", 0)
-            if val == 1 and lang == 1: index = apm["ImageIndexPMCN"]
-            elif val == 0 and lang == 1: index = apm["ImageIndexAMCN"]
-            elif val == 1 and lang == 0: index = apm["ImageIndexPMEN"]
-            elif val == 0 and lang == 0: index = apm["ImageIndexAMEN"]
+            if val == 1 and lang == 1:
+                index = apm["ImageIndexPMCN"]
+            elif val == 0 and lang == 1:
+                index = apm["ImageIndexAMCN"]
+            elif val == 1 and lang == 0:
+                index = apm["ImageIndexPMEN"]
+            elif val == 0 and lang == 0:
+                index = apm["ImageIndexAMEN"]
+            else:
+                raise Exception("Undefined AM/PM state")
             add_to_canvas(
-                canvas, 
-                app.get_resource(index), 
+                canvas,
+                app.get_resource(index),
                 (int(apm["X"]), int(apm["Y"]))
             )
-        
+
     # Indicators
     if "StepsProgress" in config:
         if "Linear" in config["StepsProgress"]:
             steps = app.get_property("steps", 6000)
             target = app.get_property("target_steps", 9000)
             draw_steps_bar(
-                app, canvas, 
+                app, canvas,
                 config["StepsProgress"]["Linear"],
                 min(1, steps / target)
             )
@@ -173,9 +181,9 @@ def render(app):
             index = config["Heart"]["Scale"]["StartImageIndex"]
             segments = config["Heart"]["Scale"]["Segments"]
             value = app.get_property("heartrate", 200)
-            i = int(max(0,min(1, value/202)*len(segments)-1))
+            i = int(max(0, min(1, value / 202) * len(segments) - 1))
             if i <= len(segments):
-                img = app.get_resource(index+i)
+                img = app.get_resource(index + i)
                 xy = (int(segments[i]["X"]), int(segments[i]["Y"]))
                 add_to_canvas(canvas, img, xy)
 
@@ -184,18 +192,18 @@ def render(app):
         if "DoNotDisturb" in config["Status"]:
             if "ImageIndexOn" in config["Status"]["DoNotDisturb"] and app.get_property("status_mute", 1):
                 add_to_canvas(
-                    canvas, 
+                    canvas,
                     app.get_resource(config["Status"]["DoNotDisturb"]["ImageIndexOn"]),
                     (config["Status"]["DoNotDisturb"]["Coordinates"]["X"],
-                    config["Status"]["DoNotDisturb"]["Coordinates"]["Y"])
+                     config["Status"]["DoNotDisturb"]["Coordinates"]["Y"])
                 )
 
             if "ImageIndexOff" in config["Status"]["DoNotDisturb"] and not app.get_property("status_mute", 1):
                 add_to_canvas(
-                    canvas, 
+                    canvas,
                     app.get_resource(config["Status"]["DoNotDisturb"]["ImageIndexOff"]),
                     (config["Status"]["DoNotDisturb"]["Coordinates"]["X"],
-                    config["Status"]["DoNotDisturb"]["Coordinates"]["Y"])
+                     config["Status"]["DoNotDisturb"]["Coordinates"]["Y"])
                 )
 
         if "Lock" in config["Status"]:
@@ -204,7 +212,7 @@ def render(app):
                     canvas,
                     app.get_resource(config["Status"]["Lock"]["ImageIndexOn"]),
                     (config["Status"]["Lock"]["Coordinates"]["X"],
-                    config["Status"]["Lock"]["Coordinates"]["Y"])
+                     config["Status"]["Lock"]["Coordinates"]["Y"])
                 )
 
             if "ImageIndexOff" in config["Status"]["Lock"] and not app.get_property("status_lock", 1):
@@ -212,7 +220,7 @@ def render(app):
                     canvas,
                     app.get_resource(config["Status"]["Lock"]["ImageIndexOff"]),
                     (config["Status"]["Lock"]["Coordinates"]["X"],
-                    config["Status"]["Lock"]["Coordinates"]["Y"])
+                     config["Status"]["Lock"]["Coordinates"]["Y"])
                 )
 
         if "Bluetooth" in config["Status"]:
@@ -221,7 +229,7 @@ def render(app):
                     canvas,
                     app.get_resource(config["Status"]["Bluetooth"]["ImageIndexOn"]),
                     (config["Status"]["Bluetooth"]["Coordinates"]["X"],
-                    config["Status"]["Bluetooth"]["Coordinates"]["Y"])
+                     config["Status"]["Bluetooth"]["Coordinates"]["Y"])
                 )
 
             if "ImageIndexOff" in config["Status"]["Bluetooth"] and not app.get_property("status_bluetooth", 1):
@@ -229,24 +237,24 @@ def render(app):
                     canvas,
                     app.get_resource(config["Status"]["Bluetooth"]["ImageIndexOff"]),
                     (config["Status"]["Bluetooth"]["Coordinates"]["X"],
-                    config["Status"]["Bluetooth"]["Coordinates"]["Y"])
+                     config["Status"]["Bluetooth"]["Coordinates"]["Y"])
                 )
 
         if "Battery" in config["Status"]:
             if "Text" in config["Status"]["Battery"]:
                 draw_apos_number(
-                    app, canvas, 
+                    app, canvas,
                     config["Status"]["Battery"]["Text"],
                     value=app.get_property("status_battery", 60)
                 )
 
             if "Icon" in config["Status"]["Battery"]:
                 value = app.get_property("status_battery", 60)
-                value = int(config["Status"]["Battery"]["Icon"]["ImagesCount"]*(value/100))
+                value = int(config["Status"]["Battery"]["Icon"]["ImagesCount"] * (value / 100))
                 if value >= config["Status"]["Battery"]["Icon"]["ImagesCount"]:
-                    value=config["Status"]["Battery"]["Icon"]["ImagesCount"]-1
+                    value = config["Status"]["Battery"]["Icon"]["ImagesCount"] - 1
                 draw_static_object(
-                    app, canvas, 
+                    app, canvas,
                     config["Status"]["Battery"]["Icon"],
                     value=value
                 )
@@ -260,12 +268,12 @@ def render(app):
             draw_analog_dial(
                 app, canvas,
                 config["AnalogDialFace"]["Hours"],
-                30*( hours + minutes /60 )
+                30 * (hours + minutes / 60)
             )
 
             if "CenterImage" in config["AnalogDialFace"]["Hours"]:
                 draw_static_object(
-                    app, canvas, 
+                    app, canvas,
                     config["AnalogDialFace"]["Hours"]["CenterImage"]
                 )
 
@@ -273,35 +281,35 @@ def render(app):
             draw_analog_dial(
                 app, canvas,
                 config["AnalogDialFace"]["Minutes"],
-                30*minutes
+                30 * minutes
             )
 
             if "CenterImage" in config["AnalogDialFace"]["Minutes"]:
                 draw_static_object(
-                    app, canvas, 
+                    app, canvas,
                     config["AnalogDialFace"]["Minutes"]["CenterImage"]
                 )
 
         if "Seconds" in config["AnalogDialFace"]:
             draw_analog_dial(
-                app, canvas, 
-                config["AnalogDialFace"]["Seconds"], 
-                30*seconds
+                app, canvas,
+                config["AnalogDialFace"]["Seconds"],
+                30 * seconds
             )
 
             if "CenterImage" in config["AnalogDialFace"]["Seconds"]:
                 draw_static_object(
-                    app, canvas, 
+                    app, canvas,
                     config["AnalogDialFace"]["Seconds"]["CenterImage"]
                 )
-    
+
     # Other
     if "Other" in config:
         if "Animation" in config["Other"]:
             frame = app.get_property("animation_frame", 0)
             if frame < config["Other"]["Animation"]["AnimationImage"]["ImagesCount"]:
                 draw_static_object(
-                    app, canvas, 
+                    app, canvas,
                     config["Other"]["Animation"]["AnimationImage"],
                     value=frame
                 )

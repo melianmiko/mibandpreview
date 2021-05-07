@@ -849,6 +849,7 @@
     </property>
     <addaction name="action_open"/>
     <addaction name="action_save"/>
+    <addaction name="separator"/>
     <addaction name="action_refresh"/>
     <addaction name="separator"/>
     <addaction name="target_mb4"/>
@@ -856,6 +857,7 @@
     <addaction name="target_mb6"/>
     <addaction name="separator"/>
     <addaction name="action_wipe"/>
+    <addaction name="separator"/>
     <addaction name="action_exit"/>
    </widget>
    <widget class="QMenu" name="menu_about">

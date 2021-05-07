@@ -33,6 +33,7 @@ class UIHandler:
 
     def __init__(self, context):
         self.context = context  # type: main.MiBandPreviewApp
+        self.preview_ready = False
         self._init_qt_connections()
 
     def _init_qt_connections(self):
@@ -101,12 +102,15 @@ class UIHandler:
             webbrowser.open(url)
 
     def set_no_preview(self):
+        self.preview_ready = False
         self.context.preview_host.setPixmap(pil_to_qt(Image.open(RES_NO_IMAGE)))
 
     def set_error_preview(self):
+        self.preview_ready = False
         self.context.preview_host.setPixmap(pil_to_qt(Image.open(RES_ERROR_IMAGE)))
 
     def set_preview(self, img):
+        self.preview_ready = True
         self.context.preview_host.setPixmap(pil_to_qt(img))
 
     def get_user_settings(self):
@@ -253,6 +257,7 @@ class UIHandler:
 
     def _on_file_menu_open(self):
         device = self.context.loader.get_property("device", "auto")
+        self.context.action_save.setEnabled(self.preview_ready)
         self.context.target_mb4.setChecked(device == "miband4")
         self.context.target_mb5.setChecked(device == "miband5")
         self.context.target_mb6.setChecked(device == "miband6")
