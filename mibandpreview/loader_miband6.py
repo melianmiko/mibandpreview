@@ -27,7 +27,6 @@ def render(app):
         if "BackgroundColor" in config["Background"]:
             d = ImageDraw.Draw(canvas)
             color = "#"+config["Background"]["BackgroundColor"][2:]
-            print(color)
             d.rectangle((0, 0, canvas.size[0], canvas.size[1]), fill=color)
         if "Image" in config["Background"]:
             draw_static_object(

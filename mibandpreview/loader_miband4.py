@@ -24,7 +24,7 @@ def render(app):
     # Spawn canvas, fill with black
     canvas = Image.new("RGBA", (120, 240))
     draw = ImageDraw.Draw(canvas)
-    draw.rectangle((0, 0, 120, 240), fill="#000000")
+    #draw.rectangle((0, 0, 120, 240), fill="#000000")
 
     config = app.config
 
@@ -120,10 +120,14 @@ def render(app):
 
             if "OneLine" in config["Date"]["MonthAndDay"]:
                 date = config["Date"]["MonthAndDay"]["OneLine"]["Number"]
+                dot = -1
+                if "DelimiterImageIndex" in date:
+                    dot = date["DelimiterImageIndex"]
+
                 draw_apos_date(
-                    app, canvas, date,
+                    app, canvas, date, 
                     app.get_property("month", 2),
-                    app.get_property("day", 15), date["DelimiterImageIndex"],
+                    app.get_property("day", 15), dot,
                     twoDMonth, twoDDay
                 )
 

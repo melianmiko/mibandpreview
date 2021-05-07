@@ -21,7 +21,7 @@ def render(app):
     # Spawn canvas, fill with black
     canvas = Image.new("RGBA", (126, 294))
     draw = ImageDraw.Draw(canvas)
-    draw.rectangle((0, 0, 126, 294), fill="#000000")
+    #draw.rectangle((0, 0, 126, 294), fill="#000000")
 
     config = app.config
 
