@@ -8,6 +8,7 @@ My dictionary:
 import math, os
 from PIL import Image, ImageDraw
 
+
 def add_to_canvas(target, img, xy):
     x, y = xy
     sx = sy = 0
@@ -19,48 +20,95 @@ def add_to_canvas(target, img, xy):
         y = 0
     target.alpha_composite(img, (x, y), (sx, sy))
 
+
 def draw_static_object(app, canvas, obj, value=0):
     imgIndex = int(obj["ImageIndex"])
-    imgId = imgIndex+value
+    imgId = imgIndex + value
     img = app.get_resource(imgId)
-    add_to_canvas(canvas, img, ( obj["X"], obj["Y"] ) )
+    add_to_canvas(canvas, img, (obj["X"], obj["Y"]))
     return (
-        int(obj["X"]), int(obj["Y"]), 
-        int(obj["X"])+img.size[0], int(obj["Y"])+img.size[1]
+        int(obj["X"]), int(obj["Y"]),
+        int(obj["X"]) + img.size[0], int(obj["Y"]) + img.size[1]
     )
 
-def draw_apos_number(app, canvas, obj, value=0, 
-        digits=1, digits_after_dot=1, dot=-1, 
-        posix=-1, prefix=-1, minus=-1, fix_y=False):
 
+def draw_apos_number(app, canvas, obj, value=0,
+                     digits=1, digits_after_dot=1, dot=-1,
+                     posix=-1, prefix=-1, minus=-1, fix_y=False):
     images = []
-    if prefix > -1: images.append(app.get_resource(prefix))
+    if prefix > -1:
+        images.append(app.get_resource(prefix))
 
     if value < 0:
         value = -value
-        if minus > -1: images.append(app.get_resource(minus))
+        if minus > -1:
+            images.append(app.get_resource(minus))
 
     if isinstance(value, int):
         images += split_number_to_images(app, obj, value, digits)
     else:
         images += split_number_to_images(app, obj, math.floor(value), digits)
-        if dot > -1: 
+        if dot > -1:
             dot_img = app.get_resource(dot)
             images.append(dot_img)
         n = int(str(value).split(".")[1])
         images += split_number_to_images(app, obj, n, digits)
-    
-    if posix > -1: images.append(app.get_resource(posix))
 
-    device = app.get_property("device", 0)
-    img = build_multipart_image(obj, images,
-        fix_height=(device == "miband6" or device == "miband5") )
-    xy = calculate_apos(obj, img.size, fix_y=fix_y)
-    add_to_canvas(canvas, img, xy)
-    return (
-        xy[0], xy[1],
-        xy[0]+img.size[0], xy[1]+img.size[1]
-    )
+    if posix > -1:
+        images.append(app.get_resource(posix))
+
+    align = decode_align(obj["Alignment"])
+    x1 = int(obj["TopLeftX"])
+    x2 = int(obj["BottomRightX"])
+    y1 = int(obj["TopLeftY"])
+    y2 = int(obj["BottomRightY"])
+
+    x = y = ox = oy = 0
+
+    if "Spacing" in obj:
+        ox = obj["Spacing"]
+    elif "SpacingX" in obj:
+        ox = obj["SpacingX"]
+    if "SpacingY":
+        oy = obj["SpacingY"]
+
+    full_width = ox*len(images)
+    for a in images:
+        full_width += a.size[0]
+
+    # Align (horizontal)
+    if align[0] == "end":
+        x = max(x2-full_width, x1)
+    elif align[0] == "center":
+        x = round(max(x1, (x2-full_width) / 2))
+    else:
+        x = x1
+
+    # Align (vertical)
+    if align[1] == "end":
+        y = max(y2-images[0].size[1], y1)
+    elif align[1] == "center":
+        y = round(max(y1, (y2-images[0].size[1])/2 ))
+    else:
+        y = y1
+
+    for i in images:
+        add_to_canvas(canvas, i, (x, y))
+        x += i.size[0] + ox
+        y += oy
+
+    # device = app.get_property("device", 0)
+    # img = build_multipart_image(obj, images,
+    #                             fix_height=(device == "miband6" or device == "miband5"))
+    # xy = calculate_apos(obj, (img.size[0], images[0].size[1]), fix_y=fix_y)
+    # if "Bottom" in obj["Alignment"] and obj["SpacingY"] < 0:
+    #     xy[1] = xy[1] - img.size[1] + images[0].size[1]
+    # add_to_canvas(canvas, img, xy)
+    # return (
+    #     xy[0], xy[1],
+    #     xy[0] + img.size[0], xy[1] + img.size[1]
+    # )
+
 
 def draw_apos_date(app, canvas, obj, month, day, split, month_digits, day_digits, year=-1):
     images = []
@@ -77,8 +125,9 @@ def draw_apos_date(app, canvas, obj, month, day, split, month_digits, day_digits
 
     return (
         xy[0], xy[1],
-        xy[0]+i.size[0], xy[1]+i.size[1]
+        xy[0] + i.size[0], xy[1] + i.size[1]
     )
+
 
 def draw_steps_bar(app, canvas, config, progress):
     index = config["StartImageIndex"]
@@ -87,14 +136,15 @@ def draw_steps_bar(app, canvas, config, progress):
     x = y = 1024
     x2 = y2 = 0
     for i in range(curSegment):
-        img = app.get_resource(index+i)
+        img = app.get_resource(index + i)
         xy = (int(segments[i]["X"]), int(segments[i]["Y"]))
         add_to_canvas(canvas, img, xy)
         x = min(x, xy[0])
         y = min(y, xy[1])
-        x2 = max(x2, xy[0]+img.size[0])
-        y2 = max(x2, xy[1]+img.size[1])
+        x2 = max(x2, xy[0] + img.size[0])
+        y2 = max(x2, xy[1] + img.size[1])
     return (x, y, x2, y2)
+
 
 def draw_analog_dial(app, canvas, obj, angle):
     cx = obj["Center"]["X"]
@@ -103,23 +153,27 @@ def draw_analog_dial(app, canvas, obj, angle):
     border = obj["OnlyBorder"]
     shape = obj["Shape"]
     draw = ImageDraw.Draw(canvas)
-    angle = (angle-360 if angle > 360 else angle)
+    angle = (angle - 360 if angle > 360 else angle)
 
     points = []
     for dot in shape:
-        angle2 = angle+90
+        angle2 = angle + 90
 
-        x = cx+(dot["X"]*radsin(angle))+(dot["Y"]*radsin(angle+90))
-        y = cy-(dot["X"]*radcos(angle))-(dot["Y"]*radcos(angle+90))
+        x = cx + (dot["X"] * radsin(angle)) + (dot["Y"] * radsin(angle + 90))
+        y = cy - (dot["X"] * radcos(angle)) - (dot["Y"] * radcos(angle + 90))
 
-        points.append((x,y))
+        points.append((x, y))
 
-    if border: draw.polygon(points, outline=color)
-    else: draw.polygon(points, outline=color, fill=color)
+    if border:
+        draw.polygon(points, outline=color)
+    else:
+        draw.polygon(points, outline=color, fill=color)
 
     return (0, 0, 0, 0)
 
+
 # ---------------------------------------------------------------------------
+
 
 def split_number_to_images(app, obj, value, digits):
     index_start = obj["ImageIndex"]
@@ -127,7 +181,8 @@ def split_number_to_images(app, obj, value, digits):
 
     # Split number to litters
     images = []
-    if value == 0: images.append(numimgs[0])
+    if value == 0:
+        images.append(numimgs[0])
     else:
         while value > 0:
             images.append(numimgs[value % 10])
@@ -137,8 +192,10 @@ def split_number_to_images(app, obj, value, digits):
     images = images[::-1]
     return images
 
+
 def build_number_image(app, obj, value, digits):
     return build_multipart_image(obj, split_number_to_images(app, obj, value, digits))
+
 
 def build_multipart_image(data, images, fix_height=False):
     # Load spacings
@@ -146,8 +203,6 @@ def build_multipart_image(data, images, fix_height=False):
     spacing_y = 0
     if "SpacingY" in data:
         spacing_y = data["SpacingY"]
-        if "Right" in data["Alignment"]:
-            spacing_y = -spacing_y
 
     if "Spacing" in data:
         spacing_x = data["Spacing"]
@@ -158,8 +213,8 @@ def build_multipart_image(data, images, fix_height=False):
     w = h = 0
     mh = 0
     for n in images:
-        w += n.size[0]+abs(spacing_x)
-        h = max(h, n.size[1])+abs(spacing_y)
+        w += n.size[0] + abs(spacing_x)
+        h = max(h, n.size[1]) + abs(spacing_y)
         mh = max(mh, n.size[1])
     if w < 0: w = 0
     if h < 0: h = 0
@@ -167,16 +222,39 @@ def build_multipart_image(data, images, fix_height=False):
     # Build image
     img = Image.new("RGBA", (w, h))
     x = 0
-    y = 0 if spacing_y >= 0 else -spacing_y*(len(images))
+    y = 0 if spacing_y >= 0 else -spacing_y * (len(images))
     for n in images:
         offset = 0
         if n.size[1] < mh and fix_height:
-            offset = mh-n.size[1]
-        add_to_canvas(img, n, (x, y+offset))
-        x += n.size[0]+spacing_x
+            offset = mh - n.size[1]
+        add_to_canvas(img, n, (x, y + offset))
+        x += n.size[0] + spacing_x
         y += spacing_y
 
     return img
+
+
+def decode_align(align):
+    if align == "TopLeft" or align == "Top":
+        return ["start", "start"]
+    if align == "TopRight":
+        return ["end", "start"]
+    if align == "TopCenter":
+        return ["center", "start"]
+    if align == "BottomLeft":
+        return ["start", "end"]
+    if align == "BottomRight":
+        return ["end", "end"]
+    if align == "BottomCenter":
+        return ["center", "end"]
+    if align == "CenterLeft":
+        return ["start", "center"]
+    if align == "CenterRight":
+        return ["end", "center"]
+    if align == "Center":
+        return ["center", "center"]
+    raise Exception("Undefined align mode "+align)
+
 
 def calculate_apos(data, size, fix_y=False):
     x1 = int(data["TopLeftX"])
@@ -191,41 +269,44 @@ def calculate_apos(data, size, fix_y=False):
     if "SpacingY" in data and fix_y:
         y_offset = -abs(data["SpacingY"])
 
-    pcw = x2-x1
-    pch = y2-y1
-    rp = x2-w if x2-w >= x1 else x1
-    bp = y2-h if y2-h >= y1 else y1
-    cx = int(max(x1+(x2-x1-w)/2, x1))
-    cy = int(max(y1+(y2-y1-h)/2, y1))
+    pcw = x2 - x1
+    pch = y2 - y1
+    rp = x2 - w if x2 - w >= x1 else x1
+    bp = y2 - h if y2 - h >= y1 else y1
+    cx = int(max(x1 + (x2 - x1 - w) / 2, x1))
+    cy = int(max(y1 + (y2 - y1 - h) / 2, y1))
 
     align = data["Alignment"]
     if align == "TopLeft" or align == "Top" or align == "Left":
-        return [x1, y1+y_offset]
+        return [x1, y1 + y_offset]
     elif align == "BottomRight":
-        return [rp, bp+y_offset]
+        return [rp, bp + y_offset]
     elif align == "BottomLeft" or align == "Bottom":
-        return [x1, bp+y_offset]
+        return [x1, bp + y_offset]
     elif align == "TopRight" or align == "Right":
-        return [rp, y1+y_offset]
+        return [rp, y1 + y_offset]
     elif align == "TopCenter" or align == "HCenter":
-        return [ cx, y1+y_offset ]
+        return [cx, y1 + y_offset]
     elif align == "BottomCenter":
-        return [ cx, bp+y_offset ]
+        return [cx, bp + y_offset]
     elif align == "CenterLeft" or align == "VCenter":
-        return [ x1, cy+y_offset ]
+        return [x1, cy + y_offset]
     elif align == "CenterRight":
-        return [ rp, cy+y_offset ]
+        return [rp, cy + y_offset]
     elif align == "Center":
-        return [ cx, cy+y_offset ]
+        return [cx, cy + y_offset]
     else:
         print("Align mode unsupported!!!!!")
         return [x1, y1]
 
+
 def radsin(angle):
-	return math.sin(math.radians(angle))
+    return math.sin(math.radians(angle))
+
 
 def radcos(angle):
-	return math.cos(math.radians(angle))
+    return math.cos(math.radians(angle))
+
 
 def get_root():
     return os.path.dirname(os.path.abspath(__file__))
