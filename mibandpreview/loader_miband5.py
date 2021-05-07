@@ -126,11 +126,15 @@ def render(app):
 
         if "Distance" in config["Activity"]:
             dist = config["Activity"]["Distance"]
+            posix = -1
+            if "KmSoffixImageIndex" in dist:
+                posix = dist["KmSuffixImageIndex"]
+
             draw_apos_number(
                 app, canvas, dist["Number"],
                     value=app.get_property("distance", 14.2),
                 dot=dist["DecimalPointImageIndex"],
-                posix=dist["KmSuffixImageIndex"]
+                posix=posix
             )
 
         if "Calories" in config["Activity"]:
