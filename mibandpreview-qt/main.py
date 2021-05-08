@@ -18,7 +18,7 @@ from MainWindow import Ui_MainWindow
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 SETTINGS_PATH = str(Path.home())+"/.mi_band_preview.json"
 SETTINGS_VER = 3
-APP_VERSION = "0.7"
+APP_VERSION = "0.7.2"
 
 LINK_GITHUB = "https://gitlab.com/melianmiko/mibandpreview"
 LINK_WEBSITE = "https://melianmiko.ru/mibandpreview"
