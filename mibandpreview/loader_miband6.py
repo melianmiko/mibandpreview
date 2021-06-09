@@ -553,6 +553,8 @@ def render(app):
                         value=frame
                     )
 
-    m = Image.open(get_root()+"/res/mb6_mask.png").convert("L")
-    canvas.putalpha(m)
+    if not app.no_mask:
+        m = Image.open(get_root()+"/res/mb6_mask.png").convert("L")
+        canvas.putalpha(m)
+
     return canvas

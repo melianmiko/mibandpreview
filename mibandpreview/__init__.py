@@ -12,8 +12,9 @@ def create():
     return MiBandPreview()
 
 class MiBandPreview:
-    def __init__(self, target="", device="auto", fixmissing=False):
+    def __init__(self, target="", device="auto", fixmissing=False, no_mask=False):
         self.fix_missing = fixmissing
+        self.no_mask = no_mask
         self.properties = {"device": device}
         self.placeholder = Image.new("RGBA", (0,0))
         self.target = ""
