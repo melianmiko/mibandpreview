@@ -216,9 +216,12 @@ class UIHandler:
 
     def _on_save(self):
         options = QFileDialog.Options()
-        # options |= QFileDialog.DontUseNativeDialog
         path, _ = QFileDialog.getSaveFileName(self.context, "Save image",
                                               str(Path.home()), "Image (*.png)", options=options)
+
+        if not path.endswith(".png"):
+            path += ".png"
+
         self.context.save_image(path)
 
     def _on_gif_change(self):
