@@ -149,11 +149,11 @@ class UIHandler:
         loader.set_property("pai", self.context.edit_pai.value())
 
         # Weather
-        loader.set_property("weather_current", self.context.edit_t_now.value())
-        loader.set_property("weather_day", self.context.edit_t_day.value())
-        loader.set_property("weather_night", self.context.edit_t_night.value())
+        loader.set_property("weather_current", int(self.context.edit_t_now.value()))
+        loader.set_property("weather_day", int(self.context.edit_t_day.value()))
+        loader.set_property("weather_night", int(self.context.edit_t_night.value()))
         loader.set_property("weather_icon", self.context.edit_w_icon.currentIndex())
-        loader.set_property("humidity", self.context.edit_humidity.value())
+        loader.set_property("weather_humidity", int(self.context.edit_humidity.value()))
 
     def set_user_settings(self):
         self.allow_interaction = False

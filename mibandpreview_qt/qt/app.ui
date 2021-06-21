@@ -60,7 +60,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tab_base">
          <attribute name="title">
@@ -472,6 +472,9 @@
                 <property name="decimals">
                  <number>0</number>
                 </property>
+                <property name="minimum">
+                 <double>-100.000000000000000</double>
+                </property>
                </widget>
               </item>
               <item row="1" column="1">
@@ -479,12 +482,18 @@
                 <property name="decimals">
                  <number>0</number>
                 </property>
+                <property name="minimum">
+                 <double>-100.000000000000000</double>
+                </property>
                </widget>
               </item>
               <item row="1" column="2">
                <widget class="QDoubleSpinBox" name="edit_t_night">
                 <property name="decimals">
                  <number>0</number>
+                </property>
+                <property name="minimum">
+                 <double>-100.000000000000000</double>
                 </property>
                </widget>
               </item>
