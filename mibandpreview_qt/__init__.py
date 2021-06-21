@@ -19,7 +19,7 @@ from mibandpreview_qt import UiHandler
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 SETTINGS_PATH = str(Path.home())+"/.mi_band_preview.json"
 SETTINGS_VER = 3
-APP_VERSION = "0.7.2"
+APP_VERSION = "v0.7.3"
 
 
 class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
