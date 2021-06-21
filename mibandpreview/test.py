@@ -78,7 +78,7 @@ def main(test_root):
     for a in failed_templates:
         print("  - "+a)
 
-if __name__ == "__main__":
+if __name__ == "__main__.py":
     if len(sys.argv) < 2:
         print("Usage: ./test.py [WF_LIBRARY]")
         raise SystemExit()

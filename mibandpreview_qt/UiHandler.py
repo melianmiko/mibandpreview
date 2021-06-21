@@ -7,7 +7,7 @@ from pathlib import Path
 from PIL import Image
 import os
 
-import main
+import __init__
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 RES_NO_IMAGE = APP_ROOT+"/res/no_file.png"
@@ -32,7 +32,7 @@ class UIHandler:
     allow_interaction = True
 
     def __init__(self, context):
-        self.context = context  # type: main.MiBandPreviewApp
+        self.context = context  # type: __init__.MiBandPreviewApp
         self.preview_ready = False
         self._init_qt_connections()
 
@@ -49,8 +49,8 @@ class UIHandler:
         self.context.action_exit.triggered.connect(lambda i: self.context.exit())
 
         # About
-        self.context.action_about_app.triggered.connect(lambda i: webbrowser.open(main.LINK_WEBSITE))
-        self.context.action_github.triggered.connect(lambda i: webbrowser.open(main.LINK_GITHUB))
+        self.context.action_about_app.triggered.connect(lambda i: webbrowser.open(__init__.LINK_WEBSITE))
+        self.context.action_github.triggered.connect(lambda i: webbrowser.open(__init__.LINK_GITHUB))
 
         # Settings
         self.context.edit_time.userTimeChanged.connect(self._on_change)

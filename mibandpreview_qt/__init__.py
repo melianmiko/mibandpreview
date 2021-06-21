@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import json
 import os.path
 import platform
@@ -11,9 +10,10 @@ from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator
 from PyQt5.QtGui import QIcon
 import mibandpreview
-import use_certifi # Fix SSL issue on Windows
-import UiHandler
-from MainWindow import Ui_MainWindow
+import mibandpreview_qt.use_certifi # Fix SSL issue on Windows
+from mibandpreview_qt.MainWindow import Ui_MainWindow
+from mibandpreview_qt import UiHandler
+
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 SETTINGS_PATH = str(Path.home())+"/.mi_band_preview.json"
@@ -226,7 +226,3 @@ def start():
     window = MiBandPreviewApp(app)
     window.show()
     app.exec_()
-
-
-if __name__ == "__main__":
-    start()

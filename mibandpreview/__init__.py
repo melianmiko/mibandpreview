@@ -123,5 +123,5 @@ class MiBandPreview:
         if self.get_property("device", "auto") == "miband4": return 1
         return len(self.config["Other"]["Animation"])
 
-if __name__ == "__main__":
+if __name__ == "__main__.py":
     open_dir(sys.argv[1]).render().show()
