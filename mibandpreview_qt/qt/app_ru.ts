@@ -105,7 +105,7 @@
     </message>
     <message>
         <source>Battery</source>
-        <translation>Батарея:</translation>
+        <translation>Батарея</translation>
     </message>
     <message>
         <source>Bluetooth:</source>
@@ -317,7 +317,7 @@
     </message>
     <message>
         <source>Open Project</source>
-        <translation>Открыть проект</translation>
+        <translation type="vanished">Открыть проект</translation>
     </message>
     <message>
         <source>Ctrl+O</source>
@@ -381,7 +381,7 @@
     </message>
     <message>
         <source>&lt;h2&gt;Device state&lt;/h2&gt;</source>
-        <translation type="unfinished">&lt;h2&gt;Состояние&lt;/h2&gt;</translation>
+        <translation>&lt;h2&gt;Состояние&lt;/h2&gt;</translation>
     </message>
     <message>
         <source>&lt;h2&gt;Activity&lt;/h2&gt;</source>
@@ -394,6 +394,22 @@
     <message>
         <source>&lt;h2&gt;Animations&lt;/h2&gt;</source>
         <translation>&lt;h2&gt;Анимация&lt;/h2&gt;</translation>
+    </message>
+    <message>
+        <source>UV Index</source>
+        <translation>УФ-индекс</translation>
+    </message>
+    <message>
+        <source>Open Project....</source>
+        <translation>Открыть проект...</translation>
+    </message>
+    <message>
+        <source>Save preview image...</source>
+        <translation>Сохранить как изображение...</translation>
+    </message>
+    <message>
+        <source>Ctrl+S</source>
+        <translation></translation>
     </message>
 </context>
 </TS>
