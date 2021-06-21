@@ -75,6 +75,7 @@ class UIHandler:
         self.context.edit_t_night.valueChanged.connect(self._on_change)
         self.context.edit_w_icon.currentIndexChanged.connect(self._on_change)
         self.context.edit_humidity.valueChanged.connect(self._on_change)
+        self.context.edit_uv_index.valueChanged.connect(self._on_change)
 
         # GIF
         self.context.anim_frame_0.valueChanged.connect(self._on_gif_change)
@@ -154,6 +155,7 @@ class UIHandler:
         loader.set_property("weather_night", int(self.context.edit_t_night.value()))
         loader.set_property("weather_icon", self.context.edit_w_icon.currentIndex())
         loader.set_property("weather_humidity", int(self.context.edit_humidity.value()))
+        loader.set_property("weather_uv", int(self.context.edit_uv_index.value()))
 
     def set_user_settings(self):
         self.allow_interaction = False
@@ -195,6 +197,7 @@ class UIHandler:
         self.context.edit_t_night.setValue(loader.get_property("weather_night", 10))
         self.context.edit_w_icon.setCurrentIndex(loader.get_property("weather_icon", 0))
         self.context.edit_humidity.setValue(loader.get_property("weather_humidity", 40))
+        self.context.edit_uv_index.setValue(loader.get_property("weather_uv", 10))
 
         self.allow_interaction = True
 
