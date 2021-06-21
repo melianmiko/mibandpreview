@@ -2,7 +2,7 @@
 debian/mibandpreview*
 debian/.debhelper
 debian/files
-mibandpreview-qt/MainWindow.py
+mibandpreview_qt/MainWindow.py
 build
 dist
 *.spec

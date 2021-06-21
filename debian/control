@@ -2,7 +2,7 @@ Source: mibandpreview
 Section: utils
 Priority: optional
 Maintainer: MelianMiko <mikigaru@zohomail.com>
-Build-Depends: debhelper-compat (= 12), qttools5-dev-tools, qt5-default, pyqt5-dev-tools, python3-pip
+Build-Depends: debhelper-compat (= 12), qttools5-dev-tools, pyqt5-dev-tools, python3-pip, qt5-qmake
 Standards-Version: 4.4.1
 Homepage: https://github.com/melianmiko/MiBandPreview4Linux
 

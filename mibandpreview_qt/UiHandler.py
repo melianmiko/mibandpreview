@@ -7,7 +7,7 @@ from pathlib import Path
 from PIL import Image
 import os
 
-import main
+import __init__
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 RES_NO_IMAGE = APP_ROOT+"/res/no_file.png"
@@ -32,7 +32,7 @@ class UIHandler:
     allow_interaction = True
 
     def __init__(self, context):
-        self.context = context  # type: main.MiBandPreviewApp
+        self.context = context  # type: __init__.MiBandPreviewApp
         self.preview_ready = False
         self._init_qt_connections()
 
@@ -49,8 +49,8 @@ class UIHandler:
         self.context.action_exit.triggered.connect(lambda i: self.context.exit())
 
         # About
-        self.context.action_about_app.triggered.connect(lambda i: webbrowser.open(main.LINK_WEBSITE))
-        self.context.action_github.triggered.connect(lambda i: webbrowser.open(main.LINK_GITHUB))
+        self.context.action_about_app.triggered.connect(lambda i: webbrowser.open(__init__.LINK_WEBSITE))
+        self.context.action_github.triggered.connect(lambda i: webbrowser.open(__init__.LINK_GITHUB))
 
         # Settings
         self.context.edit_time.userTimeChanged.connect(self._on_change)
@@ -128,7 +128,7 @@ class UIHandler:
 
         # Date-time (extra)
         loader.set_property("24h", 1 if self.context.edit_24h.isChecked() else 0)
-        loader.set_property("lang_ampm", 1 if self.context.edit_ampm.currentIndex() < 2 else 0)
+        loader.set_property("lang_ampm", 1 if self.context.edit_ampm.currentIndex() > 1 else 0)
         loader.set_property("ampm", 1 if self.context.edit_ampm.currentIndex() % 2 == 1 else 0)
         loader.set_property("weekday", self.context.edit_weekday.currentIndex()+1)
         loader.set_property("lang_weekday", self.context.edit_wd_lang.currentIndex())
@@ -149,11 +149,11 @@ class UIHandler:
         loader.set_property("pai", self.context.edit_pai.value())
 
         # Weather
-        loader.set_property("weather_current", self.context.edit_t_now.value())
-        loader.set_property("weather_day", self.context.edit_t_day.value())
-        loader.set_property("weather_night", self.context.edit_t_night.value())
+        loader.set_property("weather_current", int(self.context.edit_t_now.value()))
+        loader.set_property("weather_day", int(self.context.edit_t_day.value()))
+        loader.set_property("weather_night", int(self.context.edit_t_night.value()))
         loader.set_property("weather_icon", self.context.edit_w_icon.currentIndex())
-        loader.set_property("humidity", self.context.edit_humidity.value())
+        loader.set_property("weather_humidity", int(self.context.edit_humidity.value()))
 
     def set_user_settings(self):
         self.allow_interaction = False
@@ -216,9 +216,12 @@ class UIHandler:
 
     def _on_save(self):
         options = QFileDialog.Options()
-        # options |= QFileDialog.DontUseNativeDialog
         path, _ = QFileDialog.getSaveFileName(self.context, "Save image",
                                               str(Path.home()), "Image (*.png)", options=options)
+
+        if not path.endswith(".png"):
+            path += ".png"
+
         self.context.save_image(path)
 
     def _on_gif_change(self):
