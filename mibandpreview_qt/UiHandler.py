@@ -8,6 +8,7 @@ from PIL import Image
 import os
 
 import __init__
+import app_info
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 RES_NO_IMAGE = APP_ROOT+"/res/no_file.png"
@@ -49,8 +50,8 @@ class UIHandler:
         self.context.action_exit.triggered.connect(lambda i: self.context.exit())
 
         # About
-        self.context.action_about_app.triggered.connect(lambda i: webbrowser.open(__init__.LINK_WEBSITE))
-        self.context.action_github.triggered.connect(lambda i: webbrowser.open(__init__.LINK_GITHUB))
+        self.context.action_about_app.triggered.connect(lambda i: webbrowser.open(app_info.LINK_WEBSITE))
+        self.context.action_github.triggered.connect(lambda i: webbrowser.open(app_info.LINK_GITHUB))
 
         # Settings
         self.context.edit_time.userTimeChanged.connect(self._on_change)

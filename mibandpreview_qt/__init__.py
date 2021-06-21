@@ -9,19 +9,17 @@ from PIL import Image
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator
 from PyQt5.QtGui import QIcon
+
+import app_info
 import mibandpreview
 import mibandpreview_qt.use_certifi # Fix SSL issue on Windows
 from mibandpreview_qt.MainWindow import Ui_MainWindow
 from mibandpreview_qt import UiHandler
 
-
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 SETTINGS_PATH = str(Path.home())+"/.mi_band_preview.json"
 SETTINGS_VER = 3
 APP_VERSION = "0.7.2"
-
-LINK_GITHUB = "https://gitlab.com/melianmiko/mibandpreview"
-LINK_WEBSITE = "https://melianmiko.ru/mibandpreview"
 
 
 class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -77,7 +75,7 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 res = json.loads(res.read())[0]
                 if not res["tag_name"] == APP_VERSION:
                     print("New version: "+APP_VERSION+" != "+res["tag_name"])
-                    url = LINK_WEBSITE
+                    url = app_info.LINK_WEBSITE
                     for a in res["assets"]["links"]:
                         if a["name"] == "windows_installer":
                             url = a["url"]
