@@ -29,8 +29,8 @@ windows: qt
 	rm -rf dist/mibandpreview
 	pyinstaller --name mibandpreview --icon mibandpreview_qt/res/icon.ico -w \
 		--add-data "mibandpreview/res;res" \
-		--add-data "mibandpreview_qt/res;res" \
-		--add-data "mibandpreview_qt/qt;qt" \
+		--add-data "mibandpreview_qt/res;mibandpreview_qt/res" \
+		--add-data "mibandpreview_qt/qt;mibandpreview_qt/qt" \
 		--path "mibandpreview" --path "mibandpreview_qt" \
 		__main__.py
 	cp tools/installer.nsi dist/installer.nsi
