@@ -85,7 +85,7 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
             print(e)
 
     def rebuild(self):
-        if self.path == "":
+        if self.path == "" or not os.path.isdir(self.path):
             self.handler.set_no_preview()
             return
 
