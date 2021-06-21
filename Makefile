@@ -16,7 +16,7 @@ install:
 	cp tools/mibandpreview-qt.desktop $(DESTDIR)/usr/share/applications/mibandpreview-qt.desktop
 	cp -r mibandpreview $(DESTDIR)/opt/mibandpreview
 	cp -r mibandpreview_qt $(DESTDIR)/opt/mibandpreview
-	cp __main__.py $(DESTDIR)/opt/mibandpreview
+	cp *.py $(DESTDIR)/opt/mibandpreview
 
 uninstall:
 	rm $(DESTDIR)/usr/share/applications/mibandpreview-qt.desktop
