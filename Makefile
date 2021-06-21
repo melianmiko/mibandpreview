@@ -5,7 +5,7 @@ all: qt clean
 
 qt:
 	cd mibandpreview_qt && pyuic5 qt/app.ui -o MainWindow.py
-	cd mibandpreview_qt/qt && lrelease app.pro
+	cd mibandpreview_qt/qt && lupdate app.pro && lrelease app.pro
 
 clean:
 	rm -rf build
