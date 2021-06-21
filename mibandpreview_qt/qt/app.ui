@@ -60,7 +60,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab_base">
          <attribute name="title">
@@ -141,22 +141,22 @@
              <widget class="QComboBox" name="edit_ampm">
               <item>
                <property name="text">
-                <string>AM (Chinese)</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>PM (Chinese)</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
                 <string>AM (International)</string>
                </property>
               </item>
               <item>
                <property name="text">
                 <string>PM (International)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>AM (Chinese)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>PM (Chinese)</string>
                </property>
               </item>
              </widget>
@@ -840,7 +840,7 @@
      <x>0</x>
      <y>0</y>
      <width>600</width>
-     <height>30</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_file">

@@ -128,7 +128,7 @@ class UIHandler:
 
         # Date-time (extra)
         loader.set_property("24h", 1 if self.context.edit_24h.isChecked() else 0)
-        loader.set_property("lang_ampm", 1 if self.context.edit_ampm.currentIndex() < 2 else 0)
+        loader.set_property("lang_ampm", 1 if self.context.edit_ampm.currentIndex() > 1 else 0)
         loader.set_property("ampm", 1 if self.context.edit_ampm.currentIndex() % 2 == 1 else 0)
         loader.set_property("weekday", self.context.edit_weekday.currentIndex()+1)
         loader.set_property("lang_weekday", self.context.edit_wd_lang.currentIndex())

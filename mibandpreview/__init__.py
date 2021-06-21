@@ -5,11 +5,14 @@ sys.path.append(os.path.dirname(__file__))
 import loader_miband4, loader_miband5, loader_miband6
 from PIL import Image
 
+
 def open_dir(dir):
     return MiBandPreview(target=dir)
 
+
 def create():
     return MiBandPreview()
+
 
 class MiBandPreview:
     def __init__(self, target="", device="auto", fixmissing=False):
