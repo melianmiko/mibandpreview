@@ -12,7 +12,6 @@ from PyQt5.QtGui import QIcon
 
 import app_info
 import mibandpreview
-import mibandpreview_qt.use_certifi # Fix SSL issue on Windows
 from mibandpreview_qt.MainWindow import Ui_MainWindow
 from mibandpreview_qt import UiHandler
 
@@ -67,20 +66,23 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def check_updates(self, *args):
         print(platform.system())
         try:
-            if platform.system() == "Windows":
+            # if platform.system() == "Windows":
+            if True:
                 res = urllib.request.urlopen(
-                    "https://gitlab.com/api/v4/projects/melianmiko%2Fmibandpreview/releases",
+                    "https://api.github.com/repos/melianmiko/mibandpreview/releases",
                     timeout=3
                     )
                 res = json.loads(res.read())[0]
                 if not res["tag_name"] == APP_VERSION:
                     print("New version: "+APP_VERSION+" != "+res["tag_name"])
                     url = app_info.LINK_WEBSITE
-                    for a in res["assets"]["links"]:
-                        if a["name"] == "windows_installer":
-                            url = a["url"]
+                    for a in res["assets"]:
+                        print(a)
+                        if a["name"].endswith(".exe"):
+                            url = a["browser_download_url"]
                             print("Download url: "+url)
                     self.handler.show_update_dialog(url)
+
         except Exception as e:
             print(e)
 
