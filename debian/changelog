@@ -1,11 +1,5 @@
-mibandpreview (0.7.3-1) hirsute; urgency=medium
+mibandpreview (0.7.3.1-1) hirsute; urgency=medium
 
-  * Fix: No error if target folder was removed
-  * Fix: Fixed links in help menu
-  * Fix: Temperature bellow zero
-  * Fix: Temperature and humidity display
-  * Fix: AM\PM picker
-  * Fix: Image save option
-  * Improvement: Added UV index property
+  * Moved to GitHub
 
  -- MelianMiko <melianmiko@gmail.com>  Sun, 01 Nov 2020 18:49:00 +0700

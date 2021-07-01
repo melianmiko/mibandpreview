@@ -5,6 +5,8 @@ debian/files
 mibandpreview_qt/MainWindow.py
 build
 dist
+.idea
 *.spec
 *~
 .vscode
+venv
