@@ -28,6 +28,7 @@ deb:
 windows: qt
 	rm -rf dist/mibandpreview
 	pyinstaller --name mibandpreview --icon mibandpreview_qt/res/icon.ico -w \
+		--hidden-import=certifi \
 		--add-data "mibandpreview/res;res" \
 		--add-data "mibandpreview_qt/res;mibandpreview_qt/res" \
 		--add-data "mibandpreview_qt/qt;mibandpreview_qt/qt" \
