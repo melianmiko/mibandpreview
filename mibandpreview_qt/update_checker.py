@@ -138,7 +138,7 @@ class UpdateCheckerThread(QThread):
                 timeout=3
             )
         except Exception:
-            print("Update check failed")
+            print("Update check failed", flush=True)
             return
 
         res = json.loads(res.read())[0]
@@ -154,3 +154,5 @@ class UpdateCheckerThread(QThread):
 
             # noinspection PyUnresolvedReferences
             self.has_updates.emit(url, res["tag_name"])
+        else:
+            print("Already latest: " + app_info.APP_VERSION)
