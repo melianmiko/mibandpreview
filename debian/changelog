@@ -1,5 +1,6 @@
-mibandpreview (0.7.3.1-1) hirsute; urgency=medium
+mibandpreview (0.7.4-1) hirsute; urgency=medium
 
-  * Moved to GitHub
+  * New update checker: works async, have disable option, available on Linux
+  * Some UI fixes
 
  -- MelianMiko <melianmiko@gmail.com>  Sun, 01 Nov 2020 18:49:00 +0700

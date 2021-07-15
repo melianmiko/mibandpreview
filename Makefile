@@ -33,6 +33,6 @@ windows: qt
 		--add-data "mibandpreview_qt/res;mibandpreview_qt/res" \
 		--add-data "mibandpreview_qt/qt;mibandpreview_qt/qt" \
 		--path "mibandpreview" --path "mibandpreview_qt" \
-		__main__.py
+		mibandpreview_qt/__main__.py
 	cp tools/installer.nsi dist/installer.nsi
 	cd dist && makensis installer.nsi
