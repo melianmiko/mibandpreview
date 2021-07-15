@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Mi Band Preview (QT5)</string>
+   <string notr="true">Mi Band Preview</string>
   </property>
   <property name="windowIcon">
    <iconset>

@@ -3,7 +3,7 @@ import threading
 
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow
-from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator, pyqtSignal
+from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator, pyqtSignal, QLibraryInfo
 from PyQt5.QtGui import QIcon
 
 import mibandpreview
@@ -25,11 +25,20 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
         Load QT translation file, if available
         :return: void
         """
-        locale = QLocale.system().name()[0:2]
+        locale = QLocale.system().name()
+        locale_short = locale[0:2]
+
+        # Qt Translator
         translator = QTranslator(self.app)
-        if os.path.isfile(app_info.APP_ROOT+"/qt/app_"+locale+".qm"):
+        translator.load("qtbase_" + locale,
+                        QLibraryInfo.location(QLibraryInfo.TranslationsPath))
+        self.app.installTranslator(translator)
+
+        # App translator
+        translator = QTranslator(self.app)
+        if os.path.isfile(app_info.APP_ROOT+"/qt/app_"+locale_short+".qm"):
             print("Loading translation "+str(locale))
-            translator.load(app_info.APP_ROOT+"/qt/app_"+locale+".qm")
+            translator.load(app_info.APP_ROOT+"/qt/app_"+locale_short+".qm")
             self.app.installTranslator(translator)
 
     def __init__(self, context_app):

@@ -127,6 +127,7 @@ class UpdateCheckerThread(QThread):
     """
     has_updates = pyqtSignal(str, str)
 
+    # noinspection PyBroadException
     def run(self):
         """
         Check updates via GitHub API
