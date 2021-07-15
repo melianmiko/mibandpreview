@@ -8,7 +8,7 @@ dist
 .idea
 *.spec
 mibandpreview.egg-info
-files.txt
+.files.txt
 *~
 .vscode
 venv

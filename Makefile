@@ -8,24 +8,22 @@ qt:
 	cd mibandpreview_qt/qt && lupdate app.pro && lrelease app.pro
 
 clean:
-	rm -rf build dist mibandpreview.egg-info files.txt
+	rm -rf build dist mibandpreview.egg-info .files.txt
 
 install:
-	python3 setup.py install --record files.txt \
-		--root $(DESTDIR) \
-		--install-lib /usr/lib/python3/dist-packages \
-		--install-scripts /usr/bin
+	python3 setup.py install --record .files.txt \
+		--root $(DESTDIR) $(SETUP_PROPS)
 	mkdir -p $(DESTDIR)/usr/share/icons/hicolor/96x96/apps
 	mkdir -p $(DESTDIR)/usr/share/applications
 	cp mibandpreview_qt/res/mibandpreview-qt.png $(DESTDIR)/usr/share/icons/hicolor/96x96/apps
 	cp mibandpreview_qt/res/mibandpreview-qt.desktop $(DESTDIR)/usr/share/applications
 
 uninstall:
-	xargs rm -rfv < files.txt
+	xargs rm -rfv < .files.txt
 	rm -f /usr/share/applications/mibandpreview-qt.desktop
 	rm -f /usr/share/icons/hicolor/96x96/apps/mibandpreview-qt.png
 
-windows: qt
+windows:
 	rm -rf dist/mibandpreview
 	pyinstaller --name mibandpreview --icon mibandpreview_qt/res/icon.ico -w \
 		--hidden-import=certifi \
@@ -36,3 +34,4 @@ windows: qt
 		mibandpreview_qt/__main__.py
 	cp tools/installer.nsi dist/installer.nsi
 	cd dist && makensis installer.nsi
+
