@@ -30,10 +30,10 @@ def pil_to_qt(img):
 
 class UIHandler:
     allow_interaction = True
+    preview_ready = False
 
     def __init__(self, context):
         self.context = context  # type: main.MiBandPreviewApp
-        self.preview_ready = False
         self._init_qt_connections()
 
     def _init_qt_connections(self):
@@ -46,7 +46,7 @@ class UIHandler:
         self.context.target_mb5.triggered.connect(lambda i: self._on_device_selected("miband5"))
         self.context.target_mb6.triggered.connect(lambda i: self._on_device_selected("miband6"))
         self.context.action_wipe.triggered.connect(self.context.config.wipe)
-        self.context.action_exit.triggered.connect(lambda i: self.context.exit())
+        self.context.action_exit.triggered.connect(lambda i: self.context.close())
 
         # About
         self.context.action_about_app.triggered.connect(lambda i: webbrowser.open(app_info.LINK_WEBSITE))

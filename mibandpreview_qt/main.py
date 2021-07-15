@@ -1,14 +1,14 @@
 import os.path
 import threading
-from PIL import Image
+
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow
-from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator
+from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator, pyqtSignal
 from PyQt5.QtGui import QIcon
 
 import mibandpreview
 from .MainWindow import Ui_MainWindow
-from . import UiHandler, app_info, UpdateCheckerUI, ConfigManager
+from . import UiHandler, app_info, UpdateCheckerUI, ConfigManager, PreviewThread
 
 
 class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
@@ -17,6 +17,8 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
     player_toggle = [False, False, False, False, False]
     player_state = [False, False, False, False, False]
     player_started = False
+
+    rebuild_required = pyqtSignal()
 
     def load_translation(self):
         """
@@ -47,6 +49,7 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
 
         self.updater = UpdateCheckerUI(self)                # Update checker module
         self.config = ConfigManager(self)                   # Config manager module
+        self.generator = PreviewThread(self)
 
         self.loader = mibandpreview.MiBandPreview()         # type: mibandpreview.MiBandPreview
         self.watcher = QFileSystemWatcher()                 # type: QFileSystemWatcher
@@ -70,6 +73,8 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
         """
         self.watcher.directoryChanged.connect(self.on_file_change)
         self.watcher.fileChanged.connect(self.on_file_change)
+        self.generator.image_ready.connect(self.handler.set_preview)
+        self.generator.image_missing.connect(self.handler.set_no_preview)
 
     def save_image(self, path):
         """
@@ -85,36 +90,7 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
         Rebuild preview
         :return: void
         """
-        if self.path == "" or not os.path.isdir(self.path):
-            self.handler.set_no_preview()
-            return
-
-        try:
-            img, state = self.loader.render_with_animation_frame(self.frames)
-            sf = self.get_scale_factor(img.size)
-            img = img.resize((round(img.size[0] * sf), round(img.size[1] * sf)), resample=Image.BOX)
-
-            self.player_state = state
-            self.handler.set_preview(img)
-        except Exception as e:
-            print("RENDER ERROR: "+str(e))
-            self.handler.set_error_preview()
-
-    def exit(self):
-        """
-        Close application
-        :return: void
-        """
-        self.on_exit()
-        self.app.exit(0)
-
-    def on_exit(self):
-        """
-        Some actions to call on app exit
-        :return: void
-        """
-        self.player_started = False
-        self.config.save()
+        self.generator.run()
 
     def bind_path(self, path):
         """
@@ -164,7 +140,7 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
         else:
             self.player_started = False
 
-    def autoplay_handler(self):
+    def autoplay_handler(self, a0=0):
         """
         Change GIF frame handler
         :return: void
@@ -191,23 +167,13 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
         self.rebuild()                              # Rebuild with new scale value
         return QMainWindow.resizeEvent(self, a0)
 
-    def get_scale_factor(self, size):
-        """
-        Calculate image scaling factor, fit to screen
-        :param size: Image size data
-        :return: integer
-        """
-        w = self.width() - self.tabWidget.width() - 20
-        h = self.height() - 40
-        ratio = min(w / size[0], h / size[1])
-        ratio = round(ratio, 1)
-        return ratio
-
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
         """
         Window close event handler
         :param a0: some argument
         :return: void
         """
-        self.on_exit()              # Call exit handlers
+        self.player_started = False
+        self.config.save()
+
         return QMainWindow.closeEvent(self, a0)
