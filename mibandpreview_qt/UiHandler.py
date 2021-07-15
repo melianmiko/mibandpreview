@@ -209,6 +209,9 @@ class UIHandler:
         path, _ = QFileDialog.getSaveFileName(self.context, "Save image",
                                               str(Path.home()), "Image (*.png)", options=options)
 
+        if path == "":
+            return
+
         if not path.endswith(".png"):
             path += ".png"
 
