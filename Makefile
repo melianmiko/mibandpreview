@@ -30,8 +30,7 @@ windows:
 		--add-data "mibandpreview/res;res" \
 		--add-data "mibandpreview_qt/res;mibandpreview_qt/res" \
 		--add-data "mibandpreview_qt/qt;mibandpreview_qt/qt" \
-		--path "mibandpreview" --path "mibandpreview_qt" \
-		mibandpreview_qt/__main__.py
+		scripts/win32-entrypoint.py
 	cp tools/installer.nsi dist/installer.nsi
 	cd dist && makensis installer.nsi
 
