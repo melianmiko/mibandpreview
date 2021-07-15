@@ -1,14 +1,10 @@
 import json
 import os.path
-import platform
 import threading
-import urllib.request
-import webbrowser
 from PIL import Image
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QMessageBox
 
 import mibandpreview
 from .MainWindow import Ui_MainWindow
@@ -21,7 +17,6 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
     player_toggle = [False, False, False, False, False]
     player_state = [False, False, False, False, False]
     player_started = False
-    update_checker_enabled = True
 
     def load_translation(self):
         locale = QLocale.system().name()[0:2]
@@ -45,7 +40,7 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setWindowIcon(QIcon(app_info.APP_ROOT + "/res/mibandpreview-qt.png"))
         self.tabWidget.setCurrentIndex(0)
 
-        self.update_thread = update_checker.UpdateChecker()
+        self.updater = update_checker.UpdateCheckerUI(self)
         self.bind_signals()
 
         self.handler.set_user_settings()
@@ -53,57 +48,13 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.handler.set_no_preview()
         self.load_data()
 
-        if self.should_check_updates():
-            self.update_thread.start()
-
-    def on_update_available(self, url, version):
-        qm = QMessageBox()
-        qm.setModal(True)
-
-        locale = QLocale.system().name()[0:2]
-        message = "New version available {}. Download now?"
-        if locale == "ru":
-            message = "Доступна новая версия {}. Скачать?"
-
-        r = qm.question(self,
-                        'Update checker',
-                        message.replace("{}", version),
-                        qm.Yes | qm.No | qm.Ignore)
-
-        if r == qm.Ignore:
-            self.cfg_updater()
-
-        if r == qm.Yes:
-            webbrowser.open(url)
+        if self.updater.should_check_updates():
+            self.updater.start()
 
     # noinspection PyUnresolvedReferences
     def bind_signals(self):
         self.watcher.directoryChanged.connect(self.on_file_change)
         self.watcher.fileChanged.connect(self.on_file_change)
-        self.update_thread.has_updates.connect(self.on_update_available)
-
-    def cfg_updater(self):
-        self.update_checker_enabled = None
-        self.should_check_updates()
-
-    def should_check_updates(self):
-        if self.update_checker_enabled is not None:
-            return self.update_checker_enabled
-
-        qm = QMessageBox()
-        qm.setModal(True)
-
-        locale = QLocale.system().name()[0:2]
-        if locale == "ru":
-            message = "Проверять наличие обновлений при запуске программы?"
-        else:
-            message = "Check for updates on app start?"
-
-        answer = qm.question(self, "Update checker", message, qm.Yes | qm.No) == qm.Yes
-        print("New update checker state: " + str(answer))
-        self.update_checker_enabled = answer
-
-        return answer
 
     def save_image(self, path):
         img, state = self.loader.render_with_animation_frame(self.frames)
@@ -153,7 +104,7 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.loader.config_import(data["preview_data"])
                 self.bind_path(data["last_path"])
                 self.handler.set_user_settings()
-                self.update_checker_enabled = data["update_checker_enabled"]
+                self.updater.update_checker_enabled = data["update_checker_enabled"]
 
         except Exception as e:
             print(e)
@@ -166,7 +117,7 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 "preview_data": self.loader.config_export(),
                 "last_path": self.path,
                 "version": app_info.SETTINGS_VER,
-                "update_checker_enabled": self.update_checker_enabled
+                "update_checker_enabled": self.updater.update_checker_enabled
             }
 
             with open(app_info.SETTINGS_PATH, "w") as f:

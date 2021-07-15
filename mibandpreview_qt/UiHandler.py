@@ -47,7 +47,6 @@ class UIHandler:
         self.context.target_mb6.triggered.connect(lambda i: self._on_device_selected("miband6"))
         self.context.action_wipe.triggered.connect(self.context.wipe)
         self.context.action_exit.triggered.connect(lambda i: self.context.exit())
-        self.context.action_configure_updater.triggered.connect(self.context.cfg_updater)
 
         # About
         self.context.action_about_app.triggered.connect(lambda i: webbrowser.open(app_info.LINK_WEBSITE))
