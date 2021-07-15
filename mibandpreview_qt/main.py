@@ -235,10 +235,10 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
         return QtWidgets.QMainWindow.resizeEvent(self, a0)
 
     def get_scale_factor(self, size):
-        w = self.width() / 3
-        h = self.height() - 10
+        w = self.width() - self.tabWidget.width() - 20
+        h = self.height() - 40
         ratio = min(w / size[0], h / size[1])
-        ratio = round(max(1, ratio), 1)
+        ratio = round(ratio, 1)
         return ratio
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
