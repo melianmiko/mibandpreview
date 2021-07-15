@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>510</height>
+    <width>800</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,8 +18,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>600</width>
-    <height>480</height>
+    <width>800</width>
+    <height>700</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -43,24 +43,24 @@
        <widget class="QTabWidget" name="tabWidget">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>2</horstretch>
+          <horstretch>1</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>0</width>
+          <width>480</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>16777215</width>
+          <width>600</width>
           <height>16777215</height>
          </size>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab_base">
          <attribute name="title">
@@ -840,7 +840,7 @@
         </property>
         <property name="maximumSize">
          <size>
-          <width>520</width>
+          <width>720</width>
           <height>16777215</height>
          </size>
         </property>
@@ -858,8 +858,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>600</width>
-     <height>24</height>
+     <width>800</width>
+     <height>32</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_file">
@@ -875,7 +875,6 @@
     <addaction name="target_mb5"/>
     <addaction name="target_mb6"/>
     <addaction name="separator"/>
-    <addaction name="action_wipe"/>
     <addaction name="separator"/>
     <addaction name="action_exit"/>
    </widget>
@@ -886,7 +885,16 @@
     <addaction name="action_about_app"/>
     <addaction name="action_github"/>
    </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="action_configure_updater"/>
+    <addaction name="separator"/>
+    <addaction name="action_wipe"/>
+   </widget>
    <addaction name="menu_file"/>
+   <addaction name="menuSettings"/>
    <addaction name="menu_about"/>
   </widget>
   <action name="action_open">
@@ -931,7 +939,7 @@
   </action>
   <action name="action_wipe">
    <property name="text">
-    <string>Reset settings</string>
+    <string>Resotre defaults</string>
    </property>
   </action>
   <action name="action_exit">
@@ -976,6 +984,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_configure_updater">
+   <property name="text">
+    <string>Configure update checker</string>
    </property>
   </action>
  </widget>

@@ -3,20 +3,16 @@ import os.path
 import platform
 import threading
 import urllib.request
-from pathlib import Path
+import webbrowser
 from PIL import Image
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator
 from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QMessageBox
 
 import mibandpreview
 from .MainWindow import Ui_MainWindow
-from . import UiHandler, app_info
-
-APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-SETTINGS_PATH = str(Path.home())+"/.mi_band_preview.json"
-SETTINGS_VER = 3
-APP_VERSION = "v0.7.3.1"
+from . import UiHandler, app_info, update_checker
 
 
 class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -25,13 +21,14 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
     player_toggle = [False, False, False, False, False]
     player_state = [False, False, False, False, False]
     player_started = False
+    update_checker_enabled = True
 
     def load_translation(self):
         locale = QLocale.system().name()[0:2]
         translator = QTranslator(self.app)
-        if os.path.isfile(APP_ROOT+"/qt/app_"+locale+".qm"):
+        if os.path.isfile(app_info.APP_ROOT+"/qt/app_"+locale+".qm"):
             print("Loading translation "+str(locale))
-            translator.load(APP_ROOT+"/qt/app_"+locale+".qm")
+            translator.load(app_info.APP_ROOT+"/qt/app_"+locale+".qm")
             self.app.installTranslator(translator)
 
     def __init__(self, context_app):
@@ -45,44 +42,72 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.watcher = QFileSystemWatcher()                 # type: QFileSystemWatcher
         self.handler = UiHandler.create(self)               # type: UiHandler
 
-        self.setWindowIcon(QIcon(APP_ROOT+"/res/mibandpreview-qt.png"))
+        self.setWindowIcon(QIcon(app_info.APP_ROOT + "/res/mibandpreview-qt.png"))
         self.tabWidget.setCurrentIndex(0)
-        self.watcher.directoryChanged.connect(self.on_file_change)
-        self.watcher.fileChanged.connect(self.on_file_change)
+
+        self.update_thread = update_checker.UpdateChecker()
+        self.bind_signals()
 
         self.handler.set_user_settings()
         self.handler.get_user_settings()
         self.handler.set_no_preview()
         self.load_data()
 
-        self.check_updates()
+        if self.should_check_updates():
+            self.update_thread.start()
+
+    def on_update_available(self, url, version):
+        qm = QMessageBox()
+        qm.setModal(True)
+
+        locale = QLocale.system().name()[0:2]
+        message = "New version available {}. Download now?"
+        if locale == "ru":
+            message = "Доступна новая версия {}. Скачать?"
+
+        r = qm.question(self,
+                        'Update checker',
+                        message.replace("{}", version),
+                        qm.Yes | qm.No | qm.Ignore)
+
+        if r == qm.Ignore:
+            self.cfg_updater()
+
+        if r == qm.Yes:
+            webbrowser.open(url)
+
+    # noinspection PyUnresolvedReferences
+    def bind_signals(self):
+        self.watcher.directoryChanged.connect(self.on_file_change)
+        self.watcher.fileChanged.connect(self.on_file_change)
+        self.update_thread.has_updates.connect(self.on_update_available)
+
+    def cfg_updater(self):
+        self.update_checker_enabled = None
+        self.should_check_updates()
+
+    def should_check_updates(self):
+        if self.update_checker_enabled is not None:
+            return self.update_checker_enabled
+
+        qm = QMessageBox()
+        qm.setModal(True)
+
+        locale = QLocale.system().name()[0:2]
+        if locale == "ru":
+            message = "Проверять наличие обновлений при запуске программы?"
+        else:
+            message = "Check for updates on app start?"
+
+        answer = qm.question(self, "Update checker", message, qm.Yes | qm.No) == qm.Yes
+        print("New update checker state: " + str(answer))
+        self.update_checker_enabled = answer
+
+        return answer
 
     def save_image(self, path):
         img, state = self.loader.render_with_animation_frame(self.frames)
         img.save(path)
-
-    def check_updates(self):
-        print(platform.system())
-        if platform.system() != "Windows":
-            return
-
-        try:
-            res = urllib.request.urlopen(
-                "https://api.github.com/repos/melianmiko/mibandpreview/releases",
-                timeout=3
-                )
-            res = json.loads(res.read())[0]
-            if not res["tag_name"] == APP_VERSION:
-                print("New version: "+APP_VERSION+" != "+res["tag_name"])
-                url = app_info.LINK_WEBSITE
-                for a in res["assets"]:
-                    print(a)
-                    if a["name"].endswith(".exe"):
-                        url = a["browser_download_url"]
-                        print("Download url: "+url)
-                self.handler.show_update_dialog(url)
-        except Exception as e:
-            print(e)
 
     def rebuild(self):
         if self.path == "" or not os.path.isdir(self.path):
@@ -105,7 +130,7 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.app.exit(0)
 
     def wipe(self):
-        with open(SETTINGS_PATH, "w") as f:
+        with open(app_info.SETTINGS_PATH, "w") as f:
             f.write("{}")
         self.app.exit(0)
 
@@ -114,20 +139,21 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.save_data()
 
     def load_data(self):
-        if not os.path.isfile(SETTINGS_PATH):
+        if not os.path.isfile(app_info.SETTINGS_PATH):
             return
 
         try:
-            with open(SETTINGS_PATH, "r") as f:
+            with open(app_info.SETTINGS_PATH, "r") as f:
                 data = json.loads(f.read())
 
-                if data["version"] != SETTINGS_VER:
+                if data["version"] != app_info.SETTINGS_VER:
                     print("Ignoring settings file, version mismatch")
                     return
 
                 self.loader.config_import(data["preview_data"])
                 self.bind_path(data["last_path"])
                 self.handler.set_user_settings()
+                self.update_checker_enabled = data["update_checker_enabled"]
 
         except Exception as e:
             print(e)
@@ -139,12 +165,13 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
             settings = {
                 "preview_data": self.loader.config_export(),
                 "last_path": self.path,
-                "version": SETTINGS_VER
+                "version": app_info.SETTINGS_VER,
+                "update_checker_enabled": self.update_checker_enabled
             }
 
-            with open(SETTINGS_PATH, "w") as f:
+            with open(app_info.SETTINGS_PATH, "w") as f:
                 f.write(json.dumps(settings))
-            print("Settings saved to "+SETTINGS_PATH)
+            print("Settings saved to " + app_info.SETTINGS_PATH)
 
         except Exception as e:
             print(e)

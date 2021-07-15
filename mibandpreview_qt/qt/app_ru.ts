@@ -341,7 +341,7 @@
     </message>
     <message>
         <source>Reset settings</source>
-        <translation>Сбросить настройки</translation>
+        <translation type="vanished">Сбросить настройки</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -410,6 +410,18 @@
     <message>
         <source>Ctrl+S</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Параметры</translation>
+    </message>
+    <message>
+        <source>Resotre defaults</source>
+        <translation>Сбросить настройки</translation>
+    </message>
+    <message>
+        <source>Configure update checker</source>
+        <translation>Настроить проверку обновлений</translation>
     </message>
 </context>
 </TS>

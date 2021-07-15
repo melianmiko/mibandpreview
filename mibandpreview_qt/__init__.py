@@ -1,6 +1,8 @@
 import sys
 
 from PyQt5.QtWidgets import QApplication
+
+from . import update_checker
 from .main import MiBandPreviewApp
 
 

@@ -4,9 +4,6 @@ setup(
     name='mibandpreview',
     version='0.7.4',
     packages=['mibandpreview', 'mibandpreview_qt'],
-    scripts=[
-        "scripts/mibandpreview-qt"
-    ],
     url='https://melianmiko.ru/en/mibandpreview',
     license='Apache 2.0',
     author='MelianMiko',

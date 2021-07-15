@@ -1,8 +1,8 @@
 import webbrowser
 
-from PyQt5.QtCore import QTime, QDate, QLocale
+from PyQt5.QtCore import QTime, QDate
 from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtWidgets import QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QFileDialog
 from pathlib import Path
 from PIL import Image
 import os
@@ -47,6 +47,7 @@ class UIHandler:
         self.context.target_mb6.triggered.connect(lambda i: self._on_device_selected("miband6"))
         self.context.action_wipe.triggered.connect(self.context.wipe)
         self.context.action_exit.triggered.connect(lambda i: self.context.exit())
+        self.context.action_configure_updater.triggered.connect(self.context.cfg_updater)
 
         # About
         self.context.action_about_app.triggered.connect(lambda i: webbrowser.open(app_info.LINK_WEBSITE))
@@ -88,19 +89,6 @@ class UIHandler:
         self.context.anim_play_2.stateChanged.connect(self._on_gif_change)
         self.context.anim_play_3.stateChanged.connect(self._on_gif_change)
         self.context.anim_play_4.stateChanged.connect(self._on_gif_change)
-
-    def show_update_dialog(self, url):
-        qm = QMessageBox()
-        qm.setModal(True)
-
-        locale = QLocale.system().name()[0:2]
-        message = "New version available. Download now?"
-        if locale == "ru":
-            message = "Доступна новая версия. Скачать?"
-
-        r = qm.question(self.context, '', message, qm.Yes | qm.No)
-        if r == qm.Yes:
-            webbrowser.open(url)
 
     def set_no_preview(self):
         self.preview_ready = False
