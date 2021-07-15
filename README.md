@@ -1,7 +1,7 @@
+# Mi Band Preview
 [Homepage](https://melianmiko.ru/mibandpreview) | [Donate](https://melianmiko.ru/donate)
 
-# MiBandPreview4Linux
-Mi Band watchface preview tool (written with Python and GTK3).
+Mi Band watchface preview tool (written with Python and QT5).
 This app created as an FOSS-alternative for WF_Preview app for Windows.
 
 Features:

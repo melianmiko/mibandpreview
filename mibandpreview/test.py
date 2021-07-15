@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 import imgcompare
-import sys, os, tools
+import sys
+import os
+from . import tools
+
 from PIL import Image
-from __init__ import *
+from . import *
 
 failed_templates = []
-mb6_mask = Image.open(tools.get_root()+"/res/mb6_mask.png").convert("L")
+mb6_mask = Image.open(tools.get_root() + "/res/mb6_mask.png").convert("L")
 
 app_config = {
     "hours": 0, "minutes": 0,
@@ -21,62 +24,67 @@ app_config = {
     "status_alarm": 0, "status_timezone": 0
 }
 
+
 def compare_images(a, b):
     return imgcompare.image_diff_percent(a, b)
+
 
 def get_valid_preview(path):
     for a in os.listdir(path):
         if "_animated" in a:
-            return path+"/"+a
+            return path + "/" + a
     raise Exception("Preview not found")
 
+
 def process_wf(path, root, name):
-    print("---- processing "+path)
+    print("---- processing " + path)
 
     # Get valid preview
     valid = get_valid_preview(path)
-    print("- Valid preview file "+valid)
+    print("- Valid preview file " + valid)
     valid = Image.open(valid)
     valid.seek(0)
     valid = valid.convert("RGBA")
 
     # Spawn our preview
-    l = open_dir(path)
-    l.config_import(app_config)
-    print("- detected device model: "+l.get_property("device", "auto"))
-    our = l.render()
+    loader = open_dir(path)
+    loader.config_import(app_config)
+    print("- detected device model: " + loader.get_property("device", "auto"))
+    our = loader.render()
 
     # Round corners on valid preview (mb6 only)
-    if l.get_property("device", "auto") == "miband6":
+    if loader.get_property("device", "auto") == "miband6":
         print("- Rounding corners for valid preview...")
         valid.putalpha(mb6_mask)
 
     # Compare
     diff = compare_images(valid, our)
-    print("- diff "+str(diff))
+    print("- diff " + str(diff))
     if diff > 4:
         failed_templates.append(name)
 
     # Build user_preview
-    p = Image.new("RGBA", ( valid.size[0]+our.size[0], valid.size[1] ))
+    p = Image.new("RGBA", (valid.size[0] + our.size[0], valid.size[1]))
     tools.add_to_canvas(p, valid, (0, 0))
     tools.add_to_canvas(p, our, (valid.size[0], 0))
-    p.save(root+"/"+name+"_test.png")
+    p.save(root + "/" + name + "_test.png")
 
     print("")
+
 
 def main(test_root):
     path = os.path.realpath(test_root)
     for a in os.listdir(path):
-        if os.path.isdir(path+"/"+a):
-            process_wf(path+"/"+a, path, a)
-    
+        if os.path.isdir(path + "/" + a):
+            process_wf(path + "/" + a, path, a)
+
     # Print failed
     print("===========================")
     print("")
     print("Failed templates")
     for a in failed_templates:
-        print("  - "+a)
+        print("  - " + a)
+
 
 if __name__ == "__main__.py":
     if len(sys.argv) < 2:

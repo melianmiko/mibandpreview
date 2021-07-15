@@ -7,6 +7,8 @@ build
 dist
 .idea
 *.spec
+mibandpreview.egg-info
+files.txt
 *~
 .vscode
 venv

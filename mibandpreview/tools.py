@@ -5,7 +5,8 @@ My dictionary:
 - apos - Advanced position (object with "Alignment" property)
 """
 
-import math, os
+import math
+import os
 from PIL import Image, ImageDraw
 
 

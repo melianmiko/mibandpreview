@@ -8,22 +8,22 @@ qt:
 	cd mibandpreview_qt/qt && lupdate app.pro && lrelease app.pro
 
 clean:
-	rm -rf build
+	rm -rf build dist mibandpreview.egg-info files.txt
 
 install:
-	mkdir -p $(DESTDIR)/opt/mibandpreview
+	python3 setup.py install --record files.txt \
+		--root $(DESTDIR) \
+		--install-lib /usr/lib/python3/dist-packages \
+		--install-scripts /usr/bin
+	mkdir -p $(DESTDIR)/usr/share/icons/hicolor/96x96/apps
 	mkdir -p $(DESTDIR)/usr/share/applications
-	cp tools/mibandpreview-qt.desktop $(DESTDIR)/usr/share/applications/mibandpreview-qt.desktop
-	cp -r mibandpreview $(DESTDIR)/opt/mibandpreview
-	cp -r mibandpreview_qt $(DESTDIR)/opt/mibandpreview
-	cp *.py $(DESTDIR)/opt/mibandpreview
+	cp mibandpreview_qt/res/mibandpreview-qt.png $(DESTDIR)/usr/share/icons/hicolor/96x96/apps
+	cp mibandpreview_qt/res/mibandpreview-qt.desktop $(DESTDIR)/usr/share/applications
 
 uninstall:
-	rm $(DESTDIR)/usr/share/applications/mibandpreview-qt.desktop
-	rm -rf $(DESTDIR)/opt/mibandpreview
-
-deb:
-	dpkg-buildpackage -sa
+	xargs rm -rfv < files.txt
+	rm -f /usr/share/applications/mibandpreview-qt.desktop
+	rm -f /usr/share/icons/hicolor/96x96/apps/mibandpreview-qt.png
 
 windows: qt
 	rm -rf dist/mibandpreview

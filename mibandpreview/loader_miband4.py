@@ -1,4 +1,4 @@
-from DrawTools import *
+from .tools import *
 from PIL import Image, ImageDraw
 
 
