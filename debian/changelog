@@ -1,6 +1,7 @@
-mibandpreview (0.7.4-1) hirsute; urgency=medium
+mibandpreview (0.7.4.1-1) hirsute; urgency=medium
 
   * New update checker: works async, have disable option, available on Linux
   * Some UI fixes
+  * Fixed offline app crash
 
- -- MelianMiko <melianmiko@gmail.com>  Sun, 01 Nov 2020 18:49:00 +0700
+ -- MelianMiko <melianmiko@gmail.com>  Tue, 15 Jul 2021 19:59:00 +0700

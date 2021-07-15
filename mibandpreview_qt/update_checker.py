@@ -132,10 +132,14 @@ class UpdateCheckerThread(QThread):
         Check updates via GitHub API
         :return: void
         """
-        res = urllib.request.urlopen(
-            "https://api.github.com/repos/melianmiko/mibandpreview/releases",
-            timeout=3
-        )
+        try:
+            res = urllib.request.urlopen(
+                "https://api.github.com/repos/melianmiko/mibandpreview/releases",
+                timeout=3
+            )
+        except Exception:
+            print("Update check failed")
+            return
 
         res = json.loads(res.read())[0]
 
