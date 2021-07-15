@@ -6,7 +6,7 @@ import webbrowser
 from PyQt5.QtCore import QThread, pyqtSignal, QLocale
 from PyQt5.QtWidgets import QMessageBox
 
-from mibandpreview_qt import app_info
+from . import app_info
 
 
 class UpdateCheckerUI:

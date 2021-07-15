@@ -3,6 +3,8 @@ import sys
 from PyQt5.QtWidgets import QApplication
 
 from . import update_checker
+from .update_checker import UpdateCheckerUI
+from .config_manager import ConfigManager
 from .main import MiBandPreviewApp
 
 

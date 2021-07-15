@@ -1,17 +1,17 @@
-import json
 import os.path
 import threading
 from PIL import Image
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtGui
+from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator
 from PyQt5.QtGui import QIcon
 
 import mibandpreview
 from .MainWindow import Ui_MainWindow
-from . import UiHandler, app_info, update_checker
+from . import UiHandler, app_info, UpdateCheckerUI, ConfigManager
 
 
-class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
+class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
     path = ""
     frames = [0, 0, 0, 0, 0]
     player_toggle = [False, False, False, False, False]
@@ -19,6 +19,10 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
     player_started = False
 
     def load_translation(self):
+        """
+        Load QT translation file, if available
+        :return: void
+        """
         locale = QLocale.system().name()[0:2]
         translator = QTranslator(self.app)
         if os.path.isfile(app_info.APP_ROOT+"/qt/app_"+locale+".qm"):
@@ -27,40 +31,60 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.app.installTranslator(translator)
 
     def __init__(self, context_app):
+        """
+        Default constructor
+        :param context_app: Qt Application object
+        """
         super().__init__()
+        self.app = context_app                              # type: QApplication
 
-        self.app = context_app                              # type: QtWidgets.QApplication
         self.load_translation()
         self.setupUi(self)
+
+        self.setWindowIcon(QIcon(app_info.APP_ROOT + "/res/mibandpreview-qt.png"))
+        self.setWindowTitle(self.windowTitle() + " ({})".format(app_info.APP_VERSION))
+        self.tabWidget.setCurrentIndex(0)
+
+        self.updater = UpdateCheckerUI(self)                # Update checker module
+        self.config = ConfigManager(self)                   # Config manager module
 
         self.loader = mibandpreview.MiBandPreview()         # type: mibandpreview.MiBandPreview
         self.watcher = QFileSystemWatcher()                 # type: QFileSystemWatcher
         self.handler = UiHandler.create(self)               # type: UiHandler
 
-        self.setWindowIcon(QIcon(app_info.APP_ROOT + "/res/mibandpreview-qt.png"))
-        self.tabWidget.setCurrentIndex(0)
-
-        self.updater = update_checker.UpdateCheckerUI(self)
         self.bind_signals()
 
-        self.handler.set_user_settings()
-        self.handler.get_user_settings()
+        self.handler.load_config()
+        self.handler.read_ui()
         self.handler.set_no_preview()
-        self.load_data()
+        self.config.load()
 
         if self.updater.should_check_updates():
             self.updater.start()
 
     # noinspection PyUnresolvedReferences
     def bind_signals(self):
+        """
+        Bind signal listeners
+        :return: void
+        """
         self.watcher.directoryChanged.connect(self.on_file_change)
         self.watcher.fileChanged.connect(self.on_file_change)
 
     def save_image(self, path):
+        """
+        Save current GUI image to file
+        :param path: Target path
+        :return: void
+        """
         img, state = self.loader.render_with_animation_frame(self.frames)
         img.save(path)
 
     def rebuild(self):
+        """
+        Rebuild preview
+        :return: void
+        """
         if self.path == "" or not os.path.isdir(self.path):
             self.handler.set_no_preview()
             return
@@ -77,58 +101,29 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.handler.set_error_preview()
 
     def exit(self):
+        """
+        Close application
+        :return: void
+        """
         self.on_exit()
         self.app.exit(0)
 
-    def wipe(self):
-        with open(app_info.SETTINGS_PATH, "w") as f:
-            f.write("{}")
-        self.app.exit(0)
-
     def on_exit(self):
+        """
+        Some actions to call on app exit
+        :return: void
+        """
         self.player_started = False
-        self.save_data()
-
-    def load_data(self):
-        if not os.path.isfile(app_info.SETTINGS_PATH):
-            return
-
-        try:
-            with open(app_info.SETTINGS_PATH, "r") as f:
-                data = json.loads(f.read())
-
-                if data["version"] != app_info.SETTINGS_VER:
-                    print("Ignoring settings file, version mismatch")
-                    return
-
-                self.loader.config_import(data["preview_data"])
-                self.bind_path(data["last_path"])
-                self.handler.set_user_settings()
-                self.updater.update_checker_enabled = data["update_checker_enabled"]
-
-        except Exception as e:
-            print(e)
-            print("Can't load settings")
-
-    def save_data(self):
-        try:
-
-            settings = {
-                "preview_data": self.loader.config_export(),
-                "last_path": self.path,
-                "version": app_info.SETTINGS_VER,
-                "update_checker_enabled": self.updater.update_checker_enabled
-            }
-
-            with open(app_info.SETTINGS_PATH, "w") as f:
-                f.write(json.dumps(settings))
-            print("Settings saved to " + app_info.SETTINGS_PATH)
-
-        except Exception as e:
-            print(e)
-            print("Can't save settings")
+        self.config.save()
 
     def bind_path(self, path):
+        """
+        Bind project path to application
+        :param path: Target path
+        :return: void
+        """
+        self.path = path
+
         if path == "":
             self.handler.set_no_preview()
             return
@@ -136,25 +131,27 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
         for a in self.watcher.directories():
             self.watcher.removePath(a)
 
-        self.path = path
         self.watcher.addPath(path)
         self.loader.set_property("device", "auto")
         self.loader.bind_path(path)
         print("Using path: "+path)
 
         self.handler.setup_gif_ui()
-
         self.rebuild()
 
     def on_file_change(self):
+        """
+        On file change event handler
+        :return:
+        """
         self.loader.load_data()
         self.rebuild()
 
-    def on_ui_change(self):
-        self.handler.get_user_settings()
-        self.rebuild()
-
     def autoplay_init(self):
+        """
+        Initialize GIF autoplay
+        :return:
+        """
         self.handler.setup_gif_ui()
         if self.player_started and True in self.player_toggle:
             # Already started, ignoring
@@ -168,6 +165,10 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.player_started = False
 
     def autoplay_handler(self):
+        """
+        Change GIF frame handler
+        :return: void
+        """
         if not self.player_started:
             return
 
@@ -182,10 +183,20 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
         threading.Timer(0.05, self.autoplay_handler, args=(self,)).start()
 
     def resizeEvent(self, a0: QtGui.QResizeEvent) -> None:
-        self.rebuild()
-        return QtWidgets.QMainWindow.resizeEvent(self, a0)
+        """
+        Window resized event handler
+        :param a0: some argument?
+        :return: void
+        """
+        self.rebuild()                              # Rebuild with new scale value
+        return QMainWindow.resizeEvent(self, a0)
 
     def get_scale_factor(self, size):
+        """
+        Calculate image scaling factor, fit to screen
+        :param size: Image size data
+        :return: integer
+        """
         w = self.width() - self.tabWidget.width() - 20
         h = self.height() - 40
         ratio = min(w / size[0], h / size[1])
@@ -193,5 +204,10 @@ class MiBandPreviewApp(QtWidgets.QMainWindow, Ui_MainWindow):
         return ratio
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
-        self.on_exit()
-        return QtWidgets.QMainWindow.closeEvent(self, a0)
+        """
+        Window close event handler
+        :param a0: some argument
+        :return: void
+        """
+        self.on_exit()              # Call exit handlers
+        return QMainWindow.closeEvent(self, a0)

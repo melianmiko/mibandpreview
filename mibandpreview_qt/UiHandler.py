@@ -45,7 +45,7 @@ class UIHandler:
         self.context.target_mb4.triggered.connect(lambda i: self._on_device_selected("miband4"))
         self.context.target_mb5.triggered.connect(lambda i: self._on_device_selected("miband5"))
         self.context.target_mb6.triggered.connect(lambda i: self._on_device_selected("miband6"))
-        self.context.action_wipe.triggered.connect(self.context.wipe)
+        self.context.action_wipe.triggered.connect(self.context.config.wipe)
         self.context.action_exit.triggered.connect(lambda i: self.context.exit())
 
         # About
@@ -101,7 +101,7 @@ class UIHandler:
         self.preview_ready = True
         self.context.preview_host.setPixmap(pil_to_qt(img))
 
-    def get_user_settings(self):
+    def read_ui(self):
         loader = self.context.loader
 
         # Date-time
@@ -144,7 +144,7 @@ class UIHandler:
         loader.set_property("weather_humidity", int(self.context.edit_humidity.value()))
         loader.set_property("weather_uv", int(self.context.edit_uv_index.value()))
 
-    def set_user_settings(self):
+    def load_config(self):
         self.allow_interaction = False
         loader = self.context.loader
 
@@ -234,7 +234,8 @@ class UIHandler:
 
     def _on_change(self):
         if self.allow_interaction:
-            self.context.on_ui_change()
+            self.read_ui()
+            self.context.rebuild()
 
     def _on_project_open(self):
         path = QFileDialog.getExistingDirectory(None,

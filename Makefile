@@ -8,7 +8,7 @@ qt:
 	cd mibandpreview_qt/qt && lupdate app.pro && lrelease app.pro
 
 clean:
-	rm -rf build dist mibandpreview.egg-info .files.txt
+	rm -rf build dist mibandpreview.egg-info .files.txt debian/mibandpreview/
 
 install:
 	python3 setup.py install --record .files.txt \
