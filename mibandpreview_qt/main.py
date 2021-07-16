@@ -2,13 +2,14 @@ import os.path
 import threading
 
 from PyQt5 import QtGui
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator, pyqtSignal, QLibraryInfo
 from PyQt5.QtGui import QIcon
 
 import mibandpreview
 from .MainWindow import Ui_MainWindow
-from . import UiHandler, app_info, UpdateCheckerUI, ConfigManager, PreviewThread
+from . import UiHandler, app_info, UpdateCheckerUI, ConfigManager
+from .preview_thread import PreviewThread
 
 
 class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
@@ -23,6 +24,7 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
     def load_translation(self):
         """
         Load QT translation file, if available
+
         :return: void
         """
         locale = QLocale.system().name()
@@ -47,7 +49,7 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
         :param context_app: Qt Application object
         """
         super().__init__()
-        self.app = context_app                              # type: QApplication
+        self.app = context_app
 
         self.load_translation()
         self.setupUi(self)
@@ -92,8 +94,8 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
         :param path: Target path
         :return: void
         """
-        img, state = self.loader.render_with_animation_frame(self.frames)
-        img.save(path)
+        data = self.loader.render_with_animation_frame(self.frames)
+        data[0].save(path)
 
     def rebuild(self):
         """
@@ -154,6 +156,7 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
         else:
             self.player_started = False
 
+    # noinspection PyUnusedLocal
     def autoplay_handler(self, a0=0):
         """
         Change GIF frame handler

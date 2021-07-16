@@ -7,7 +7,7 @@ from pathlib import Path
 from PIL import Image
 import os
 
-from . import app_info, main
+from . import app_info
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 RES_NO_IMAGE = APP_ROOT+"/res/no_file.png"
@@ -33,7 +33,7 @@ class UIHandler:
     preview_ready = False
 
     def __init__(self, context):
-        self.context = context  # type: main.MiBandPreviewApp
+        self.context = context
         self._init_qt_connections()
 
     def _init_qt_connections(self):

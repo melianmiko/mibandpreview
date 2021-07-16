@@ -15,6 +15,13 @@ class MiBandPreview:
     target = ""
 
     def __init__(self, target="", device="auto", fix_missing=False, no_mask=False):
+        """
+        Default constructor
+        :param target: target watchface DIR path
+        :param device: device, auto detect by default
+        :param fix_missing: ignore missing files flag
+        :param no_mask: don't use Mi Band 6 maask flag
+        """
         self.fix_missing = fix_missing
         self.no_mask = no_mask
         self.properties = {"device": device}

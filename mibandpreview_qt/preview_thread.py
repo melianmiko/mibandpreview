@@ -10,6 +10,10 @@ class PreviewThread(QThread):
     image_missing = pyqtSignal()
 
     def __init__(self, app):
+        """
+        Default constructor
+        :param app: context app class
+        """
         super().__init__()
         self.app = app
 

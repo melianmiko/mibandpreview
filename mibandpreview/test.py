@@ -2,10 +2,9 @@
 import imgcompare
 import sys
 import os
-from . import tools
+from . import tools, open_dir
 
 from PIL import Image
-from . import *
 
 failed_templates = []
 mb6_mask = Image.open(tools.get_root() + "/res/mb6_mask.png").convert("L")

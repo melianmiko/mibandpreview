@@ -1,5 +1,4 @@
-from . import loader_miband5
-from .tools import *
+from . import loader_miband5, tools
 from PIL import Image
 
 
@@ -24,7 +23,7 @@ def render(app):
     loader_miband5.render_animation(config, canvas, app)
 
     if not app.no_mask:
-        m = Image.open(get_root()+"/res/mb6_mask.png").convert("L")
+        m = Image.open(tools.get_root()+"/res/mb6_mask.png").convert("L")
         canvas.putalpha(m)
 
     return canvas
