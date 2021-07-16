@@ -1,18 +1,23 @@
 # Mi Band Preview
-[Homepage](https://melianmiko.ru/mibandpreview) | [Donate](https://melianmiko.ru/donate)
+
+![Last release](https://img.shields.io/github/v/release/melianmiko/mibandpreview)
+![Release date](https://img.shields.io/github/release-date/melianmiko/mibandpreview)
+![Downloads](https://img.shields.io/github/downloads/melianmiko/mibandpreview/total)
+[![AUR last update](https://img.shields.io/aur/last-modified/mibandpreview-git?label=AUR%20Updated)](https://aur.archlinux.org/packages/mibandpreview-git/)
 
 Mi Band watchface preview tool (written with Python and QT5).
 This app created as an FOSS-alternative for WF_Preview app for Windows.
 
+- [Homepage](https://melianmiko.ru/mibandpreview)
+- [Make a small donation](https://melianmiko.ru/donate)
+
 Features:
 - Preview your Mi Band 4-6 watchfaces without building them (Mi Band 5 support is experimental)
 - Set custom date/time/activity/status values for preview
-- Preview updates automaticly when some file inside project dir is changed
-- Opened path and current settings saves automaticly
+- Preview updates automatically when some file inside project dir is changed
+- Opened path and current settings saves automatically
 
-## Instalation
-You can download prebuild packages here: https://gitlab.com/melianmiko/mibandpreview/-/releases
-
+## Installation
 ### Ubuntu ppa
 ```bash
 sudo add-apt-repository ppa:melianmiko/software
