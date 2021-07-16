@@ -55,7 +55,7 @@ class UIHandler:
         # Settings
         self.context.edit_time.userTimeChanged.connect(self._on_change)
         self.context.edit_date.userDateChanged.connect(self._on_change)
-        self.context.edit_ampm.currentIndexChanged.connect(self._on_change)
+        self.context.edit_am_pm.currentIndexChanged.connect(self._on_change)
         self.context.edit_24h.stateChanged.connect(self._on_change)
         self.context.edit_weekday.currentIndexChanged.connect(self._on_change)
         self.context.edit_wd_lang.currentIndexChanged.connect(self._on_change)
@@ -116,8 +116,8 @@ class UIHandler:
 
         # Date-time (extra)
         loader.set_property("24h", 1 if self.context.edit_24h.isChecked() else 0)
-        loader.set_property("lang_ampm", 1 if self.context.edit_ampm.currentIndex() > 1 else 0)
-        loader.set_property("ampm", 1 if self.context.edit_ampm.currentIndex() % 2 == 1 else 0)
+        loader.set_property("lang_am_pm", 1 if self.context.edit_am_pm.currentIndex() > 1 else 0)
+        loader.set_property("am_pm", 1 if self.context.edit_am_pm.currentIndex() % 2 == 1 else 0)
         loader.set_property("weekday", self.context.edit_weekday.currentIndex()+1)
         loader.set_property("lang_weekday", self.context.edit_wd_lang.currentIndex())
 
@@ -133,7 +133,7 @@ class UIHandler:
         loader.set_property("target_steps", self.context.edit_target_steps.value())
         loader.set_property("distance", self.context.edit_distance.value())
         loader.set_property("calories", self.context.edit_calories.value())
-        loader.set_property("heartrate", self.context.edit_bpm.value())
+        loader.set_property("heart_rate", self.context.edit_bpm.value())
         loader.set_property("pai", self.context.edit_pai.value())
 
         # Weather
@@ -159,7 +159,9 @@ class UIHandler:
 
         # Date-time (extra)
         self.context.edit_24h.setChecked(loader.get_property("24h", 0) == 1)
-        self.context.edit_ampm.setCurrentIndex(loader.get_property("lang_ampm", 0) * 2 + loader.get_property("ampm", 0))
+        self.context.edit_am_pm.setCurrentIndex(
+            loader.get_property("lang_am_pm", 0) * 2 + loader.get_property("am_pm", 0)
+        )
         self.context.edit_weekday.setCurrentIndex(loader.get_property("weekday", 2)-1)
         self.context.edit_wd_lang.setCurrentIndex(loader.get_property("lang_weekday", 2))
 
@@ -175,7 +177,7 @@ class UIHandler:
         self.context.edit_target_steps.setValue(loader.get_property("target_steps", 9000))
         self.context.edit_distance.setValue(loader.get_property("distance", 12.1))
         self.context.edit_calories.setValue(loader.get_property("calories", 600))
-        self.context.edit_bpm.setValue(loader.get_property("heartrate", 90))
+        self.context.edit_bpm.setValue(loader.get_property("heart_rate", 90))
         self.context.edit_pai.setValue(loader.get_property("pai", 88))
 
         # Weather

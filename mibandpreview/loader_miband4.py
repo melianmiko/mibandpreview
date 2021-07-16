@@ -1,5 +1,5 @@
 from .tools import *
-from PIL import Image, ImageDraw
+from PIL import Image
 
 
 def draw_animation_layers(app, current_frame, img):
@@ -23,9 +23,6 @@ def draw_animation_layers(app, current_frame, img):
 def render(app):
     # Spawn canvas, fill with black
     canvas = Image.new("RGBA", (120, 240))
-    draw = ImageDraw.Draw(canvas)
-    #draw.rectangle((0, 0, 120, 240), fill="#000000")
-
     config = app.config
 
     # Background
@@ -87,7 +84,7 @@ def render(app):
             draw_apos_number(
                 app, canvas,
                 config["Activity"]["Pulse"]["Number"],
-                value=app.get_property("heartrate", 120)
+                value=app.get_property("heart_rate", 120)
             )
 
         if "Distance" in config["Activity"]:
@@ -151,8 +148,8 @@ def render(app):
 
         if "DayAmPm" in config["Date"] and not app.get_property("24h", 0) == 1:
             apm = config["Date"]["DayAmPm"]
-            val = app.get_property("ampm", 0)
-            lang = app.get_property("lang_ampm", 0)
+            val = app.get_property("am_pm", 0)
+            lang = app.get_property("lang_am_pm", 0)
             if val == 1 and lang == 1:
                 index = apm["ImageIndexPMCN"]
             elif val == 0 and lang == 1:
@@ -184,7 +181,7 @@ def render(app):
         if "Scale" in config["Heart"]:
             index = config["Heart"]["Scale"]["StartImageIndex"]
             segments = config["Heart"]["Scale"]["Segments"]
-            value = app.get_property("heartrate", 200)
+            value = app.get_property("heart_rate", 200)
             i = int(max(0, min(1, value / 202) * len(segments) - 1))
             if i <= len(segments):
                 img = app.get_resource(index + i)

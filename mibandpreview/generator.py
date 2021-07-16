@@ -9,14 +9,19 @@ from . import loader_miband6
 
 
 class MiBandPreview:
+    config = {}
+    images = {}
+    dir = ""
+    target = ""
+
     def __init__(self, target="", device="auto", fix_missing=False, no_mask=False):
         self.fix_missing = fix_missing
         self.no_mask = no_mask
         self.properties = {"device": device}
         self.placeholder = Image.new("RGBA", (0, 0))
-        self.target = ""
 
-        if not target == "": self.bind_path(target)
+        if not target == "":
+            self.bind_path(target)
 
     def bind_path(self, target):
         self.dir = target
@@ -46,7 +51,7 @@ class MiBandPreview:
                         self.images[int(fn)] = img
 
     def get_property(self, key, default_value):
-        if not key in self.properties:
+        if key not in self.properties:
             return default_value
         return self.properties[key]
 
@@ -63,7 +68,7 @@ class MiBandPreview:
     def get_resource(self, index):
         index = int(index)
 
-        if not index in self.images:
+        if index not in self.images:
             if self.fix_missing:
                 return self.placeholder
             else:
@@ -116,7 +121,13 @@ class MiBandPreview:
         return loader.draw_animation_layers(self, current_frame, img)
 
     def get_animations_count(self):
-        if not "Other" in self.config: return 0
-        if not "Animation" in self.config["Other"]: return 0
-        if self.get_property("device", "auto") == "miband4": return 1
+        if "Other" not in self.config:
+            return 0
+
+        if "Animation" not in self.config["Other"]:
+            return 0
+
+        if self.get_property("device", "auto") == "miband4":
+            return 1
+
         return len(self.config["Other"]["Animation"])

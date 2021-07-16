@@ -13,7 +13,7 @@ mb6_mask = Image.open(tools.get_root() + "/res/mb6_mask.png").convert("L")
 app_config = {
     "hours": 0, "minutes": 0,
     "weekday": 3, "day": 6, "month": 1,
-    "heartrate": -1, "steps": 500, "pai": 3,
+    "heart_rate": -1, "steps": 500, "pai": 3,
     "status_battery": 100, "status_mute": 1,
     "status_bluetooth": 1, "status_lock": 0,
     "calories": 34, "distance": 0.75,
