@@ -1,10 +1,3 @@
-"""
-This file contain a lot of canvas draw functions
-
-My dictionary:
-- apos - Advanced position (object with "Alignment" property)
-"""
-
 import math
 import os
 from PIL import Image, ImageDraw
@@ -33,9 +26,7 @@ def draw_static_object(app, canvas, obj, value=0):
     )
 
 
-def draw_apos_number(app, canvas, obj, value=0,
-                     digits=1, digits_after_dot=1, dot=-1,
-                     posix=-1, prefix=-1, minus=-1, fix_y=False):
+def draw_adv_number(app, canvas, obj, value=0, digits=1, dot=-1, posix=-1, prefix=-1, minus=-1):
     images = []
     if prefix > -1:
         images.append(app.get_resource(prefix))
@@ -110,17 +101,21 @@ def draw_apos_number(app, canvas, obj, value=0,
         y += oy
 
 
-def draw_apos_date(app, canvas, obj, month, day, split, month_digits, day_digits, year=-1):
+def draw_date(app, canvas, obj, month, day, split, month_digits, day_digits, year=-1):
     images = []
     if year > -1:
         images += split_number_to_images(app, obj, year, digits=4)
-        if split > -1: images.append(app.get_resource(split))
+        if split > -1:
+            images.append(app.get_resource(split))
+
     images += split_number_to_images(app, obj, month, digits=(2 if month_digits else 1))
-    if split > -1: images.append(app.get_resource(split))
+    if split > -1:
+        images.append(app.get_resource(split))
+
     images += split_number_to_images(app, obj, day, digits=(2 if day_digits else 1))
 
     i = build_multipart_image(obj, images)
-    xy = calculate_apos(obj, i.size, fix_y=True)
+    xy = calculate_adv_position(obj, i.size, fix_y=True)
     add_to_canvas(canvas, i, xy)
 
     return (
@@ -143,10 +138,10 @@ def draw_steps_bar(app, canvas, config, progress):
         y = min(y, xy[1])
         x2 = max(x2, xy[0] + img.size[0])
         y2 = max(x2, xy[1] + img.size[1])
-    return (x, y, x2, y2)
+    return x, y, x2, y2
 
 
-def draw_analog_dial(app, canvas, obj, angle):
+def draw_analog_dial(canvas, obj, angle):
     cx = obj["Center"]["X"]
     cy = obj["Center"]["Y"]
     color = obj["Color"].replace("0x", "#")
@@ -157,10 +152,8 @@ def draw_analog_dial(app, canvas, obj, angle):
 
     points = []
     for dot in shape:
-        angle2 = angle + 90
-
-        x = cx + (dot["X"] * radsin(angle)) + (dot["Y"] * radsin(angle + 90))
-        y = cy - (dot["X"] * radcos(angle)) - (dot["Y"] * radcos(angle + 90))
+        x = cx + (dot["X"] * radian_sin(angle)) + (dot["Y"] * radian_sin(angle + 90))
+        y = cy - (dot["X"] * radian_cos(angle)) - (dot["Y"] * radian_cos(angle + 90))
 
         points.append((x, y))
 
@@ -169,26 +162,24 @@ def draw_analog_dial(app, canvas, obj, angle):
     else:
         draw.polygon(points, outline=color, fill=color)
 
-    return (0, 0, 0, 0)
-
 
 # ---------------------------------------------------------------------------
 
 
 def split_number_to_images(app, obj, value, digits):
     index_start = obj["ImageIndex"]
-    numimgs = app.get_resources_set(index_start, obj["ImagesCount"])
+    num_images = app.get_resources_set(index_start, obj["ImagesCount"])
 
     # Split number to litters
     images = []
     if value == 0:
-        images.append(numimgs[0])
+        images.append(num_images[0])
     else:
         while value > 0:
-            images.append(numimgs[value % 10])
+            images.append(num_images[value % 10])
             value = value // 10
     while len(images) < digits:
-        images.append(numimgs[0])
+        images.append(num_images[0])
     images = images[::-1]
     return images
 
@@ -216,8 +207,9 @@ def build_multipart_image(data, images, fix_height=False):
         w += n.size[0] + abs(spacing_x)
         h = max(h, n.size[1]) + abs(spacing_y)
         mh = max(mh, n.size[1])
-    if w < 0: w = 0
-    if h < 0: h = 0
+
+    w = max(0, w)
+    h = max(0, h)
 
     # Build image
     img = Image.new("RGBA", (w, h))
@@ -256,7 +248,7 @@ def decode_align(align):
     raise Exception("Undefined align mode "+align)
 
 
-def calculate_apos(data, size, fix_y=False):
+def calculate_adv_position(data, size, fix_y=False):
     x1 = int(data["TopLeftX"])
     x2 = int(data["BottomRightX"])
     y1 = int(data["TopLeftY"])
@@ -269,12 +261,10 @@ def calculate_apos(data, size, fix_y=False):
     if "SpacingY" in data and fix_y:
         y_offset = -abs(data["SpacingY"])
 
-    pcw = x2 - x1
-    pch = y2 - y1
     rp = x2 - w if x2 - w >= x1 else x1
     bp = y2 - h if y2 - h >= y1 else y1
-    cx = int(max(x1 + (x2 - x1 - w) / 2, x1))
-    cy = int(max(y1 + (y2 - y1 - h) / 2, y1))
+    cx = int(max(x1/2 + x2/2 - w/2, x1))
+    cy = int(max(y1/2 + y2/2 - h/2, y1))
 
     align = data["Alignment"]
     if align == "TopLeft" or align == "Top" or align == "Left":
@@ -300,11 +290,11 @@ def calculate_apos(data, size, fix_y=False):
         return [x1, y1]
 
 
-def radsin(angle):
+def radian_sin(angle):
     return math.sin(math.radians(angle))
 
 
-def radcos(angle):
+def radian_cos(angle):
     return math.cos(math.radians(angle))
 
 

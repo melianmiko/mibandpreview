@@ -93,24 +93,16 @@ def render_time(config, canvas, app):
 
         if "TimeZone1" in config["Time"] and app.get_property("status_timezone", 1) == 1:
             a = round(app.get_property("hours", 12) + app.get_property("minutes", 30) / 100, 2)
-            draw_apos_number(
-                app, canvas,
-                config["Time"]["TimeZone1"],
-                value=a, dot=config["Time"]["TimeZone1DelimiterImage"],
-                digits=2, digits_after_dot=2
-            )
+            draw_adv_number(app, canvas, config["Time"]["TimeZone1"], value=a, digits=2,
+                            dot=config["Time"]["TimeZone1DelimiterImage"])
 
         if "TimeZone1NoTime" in config["Time"] and app.get_property("status_timezone", 1) == 0:
             draw_static_object(app, canvas, config["Time"]["TimeZone1NoTime"])
 
         if "TimeZone2" in config["Time"] and app.get_property("status_timezone", 1) == 1:
             a = round(app.get_property("hours", 12) + app.get_property("minutes", 30) / 100, 2)
-            draw_apos_number(
-                app, canvas,
-                config["Time"]["TimeZone2"],
-                value=a, dot=config["Time"]["TimeZone1DelimiterImage"],
-                digits=2, digits_after_dot=2
-            )
+            draw_adv_number(app, canvas, config["Time"]["TimeZone2"], value=a, digits=2,
+                            dot=config["Time"]["TimeZone1DelimiterImage"])
 
         if "TimeZone2NoTime" in config["Time"] and app.get_property("status_timezone", 1) == 0:
             draw_static_object(app, canvas, config["Time"]["TimeZone2NoTime"])
@@ -130,12 +122,8 @@ def render_activity(config, canvas, app):
             if "PrefixImageIndex" in config["Activity"]["Steps"]:
                 prefix = config["Activity"]["Steps"]["PrefixImageIndex"]
 
-            draw_apos_number(
-                app, canvas,
-                config["Activity"]["Steps"]["Number"],
-                value=app.get_property("steps", 12345),
-                prefix=prefix
-            )
+            draw_adv_number(app, canvas, config["Activity"]["Steps"]["Number"], value=app.get_property("steps", 12345),
+                            prefix=prefix)
 
         if "Pulse" in config["Activity"]:
             prefix = -1
@@ -143,15 +131,11 @@ def render_activity(config, canvas, app):
                 prefix = config["Activity"]["Pulse"]["PrefixImageIndex"]
 
             if app.get_property("heart_rate", 120) > 0:
-                draw_apos_number(
-                    app, canvas,
-                    config["Activity"]["Pulse"]["Number"],
-                    value=app.get_property("heart_rate", 120),
-                    prefix=prefix
-                )
+                draw_adv_number(app, canvas, config["Activity"]["Pulse"]["Number"],
+                                value=app.get_property("heart_rate", 120), prefix=prefix)
             elif "NoDataImageIndex" in config["Activity"]["Pulse"]:
                 img = app.get_resource(config["Activity"]["Pulse"]["NoDataImageIndex"])
-                xy = calculate_apos(config["Activity"]["Pulse"]["Number"], img.size)
+                xy = calculate_adv_position(config["Activity"]["Pulse"]["Number"], img.size)
                 add_to_canvas(canvas, img, xy)
 
         if "Distance" in config["Activity"]:
@@ -160,32 +144,18 @@ def render_activity(config, canvas, app):
             if "KmSuffixImageIndex" in dist:
                 posix = dist["KmSuffixImageIndex"]
 
-            draw_apos_number(
-                app,
-                canvas,
-                dist["Number"],
-                value=app.get_property("distance", 14.2),
-                dot=dist["DecimalPointImageIndex"],
-                posix=posix
-            )
+            draw_adv_number(app, canvas, dist["Number"], value=app.get_property("distance", 14.2),
+                            dot=dist["DecimalPointImageIndex"], posix=posix)
 
         if "Calories" in config["Activity"]:
             kcal = config["Activity"]["Calories"]
             posix = -1
             if "SuffixImageIndex" in kcal:
                 posix = kcal["SuffixImageIndex"]
-            draw_apos_number(
-                app, canvas, kcal["Text"],
-                value=app.get_property("calories", 500),
-                posix=posix
-            )
+            draw_adv_number(app, canvas, kcal["Text"], value=app.get_property("calories", 500), posix=posix)
 
         if "PAI" in config["Activity"]:
-            draw_apos_number(
-                app, canvas,
-                config["Activity"]["PAI"]["Number"],
-                value=app.get_property("pai", 88)
-            )
+            draw_adv_number(app, canvas, config["Activity"]["PAI"]["Number"], value=app.get_property("pai", 88))
 
 
 def render_date(config, canvas, app):
@@ -212,7 +182,7 @@ def render_date(config, canvas, app):
                 if "DelimiterImageIndex" in date:
                     dot = date["DelimiterImageIndex"]
 
-                draw_apos_date(
+                draw_date(
                     app, canvas, date["Number"],
                     app.get_property("month", 2),
                     app.get_property("day", 15),
@@ -226,7 +196,7 @@ def render_date(config, canvas, app):
                 if "DelimiterImageIndex" in date:
                     dot = date["DelimiterImageIndex"]
 
-                draw_apos_date(
+                draw_date(
                     app, canvas, date["Number"],
                     app.get_property("month", 2),
                     app.get_property("day", 15),
@@ -237,13 +207,8 @@ def render_date(config, canvas, app):
 
             if "Separate" in config["Date"]["MonthAndDayAndYear"]:
                 if "Month" in config["Date"]["MonthAndDayAndYear"]["Separate"]:
-                    draw_apos_number(
-                        app, canvas,
-                        config["Date"]["MonthAndDayAndYear"]["Separate"]["Month"],
-                        value=app.get_property("month", 2),
-                        digits=(2 if twoDMonth else 1),
-                        fix_y=True
-                    )
+                    draw_adv_number(app, canvas, config["Date"]["MonthAndDayAndYear"]["Separate"]["Month"],
+                                    value=app.get_property("month", 2), digits=(2 if twoDMonth else 1))
 
                 if "MonthsEN" in config["Date"]["MonthAndDayAndYear"]["Separate"]:
                     draw_static_object(
@@ -253,13 +218,8 @@ def render_date(config, canvas, app):
                     )
 
                 if "Day" in config["Date"]["MonthAndDayAndYear"]["Separate"]:
-                    draw_apos_number(
-                        app, canvas,
-                        config["Date"]["MonthAndDayAndYear"]["Separate"]["Day"],
-                        value=app.get_property("day", 15),
-                        digits=(2 if twoDDay else 1),
-                        fix_y=True
-                    )
+                    draw_adv_number(app, canvas, config["Date"]["MonthAndDayAndYear"]["Separate"]["Day"],
+                                    value=app.get_property("day", 15), digits=(2 if twoDDay else 1))
 
         if "ENWeekDays" in config["Date"] and app.get_property("lang_weekday", 2) == 2:
             draw_static_object(
@@ -445,12 +405,8 @@ def render_battery(config, canvas, app):
             posix = -1
             if "SuffixImageIndex" in config["Battery"]["BatteryText"]:
                 posix = config["Battery"]["BatteryText"]["SuffixImageIndex"]
-            draw_apos_number(
-                app, canvas,
-                config["Battery"]["BatteryText"]["Coordinates"],
-                value=app.get_property("status_battery", 60),
-                posix=posix
-            )
+            draw_adv_number(app, canvas, config["Battery"]["BatteryText"]["Coordinates"],
+                            value=app.get_property("status_battery", 60), posix=posix)
 
         if "BatteryIcon" in config["Battery"]:
             value = app.get_property("status_battery", 60)
@@ -489,11 +445,7 @@ def render_time_extra(config, canvas, app):
         minutes = app.get_property("minutes", 30)
         seconds = app.get_property("seconds", 40)
         if "Hours" in config["AnalogDialFace"]:
-            draw_analog_dial(
-                app, canvas,
-                config["AnalogDialFace"]["Hours"],
-                30 * (hours + minutes / 60)
-            )
+            draw_analog_dial(canvas, config["AnalogDialFace"]["Hours"], 30 * (hours + minutes / 60))
 
             if "CenterImage" in config["AnalogDialFace"]["Hours"]:
                 draw_static_object(
@@ -502,11 +454,7 @@ def render_time_extra(config, canvas, app):
                 )
 
         if "Minutes" in config["AnalogDialFace"]:
-            draw_analog_dial(
-                app, canvas,
-                config["AnalogDialFace"]["Minutes"],
-                30 * minutes
-            )
+            draw_analog_dial(canvas, config["AnalogDialFace"]["Minutes"], 30 * minutes)
 
             if "CenterImage" in config["AnalogDialFace"]["Minutes"]:
                 draw_static_object(
@@ -515,11 +463,7 @@ def render_time_extra(config, canvas, app):
                 )
 
         if "Seconds" in config["AnalogDialFace"]:
-            draw_analog_dial(
-                app, canvas,
-                config["AnalogDialFace"]["Seconds"],
-                30 * seconds
-            )
+            draw_analog_dial(canvas, config["AnalogDialFace"]["Seconds"], 30 * seconds)
 
             if "CenterImage" in config["AnalogDialFace"]["Seconds"]:
                 draw_static_object(
@@ -532,13 +476,8 @@ def render_time_extra(config, canvas, app):
         alarm_enabled = app.get_property("status_alarm", 1)
         if "Text" in config["Alarm"] and alarm_enabled:
             value = round(app.get_property("hours", 12) + app.get_property("minutes", 30) / 100, 2)
-            draw_apos_number(
-                app, canvas,
-                config["Alarm"]["Text"],
-                value=value,
-                dot=config["Alarm"]["DelimiterImageIndex"],
-                digits=2, digits_after_dot=2
-            )
+            draw_adv_number(app, canvas, config["Alarm"]["Text"], value=value, digits=2,
+                            dot=config["Alarm"]["DelimiterImageIndex"])
 
         if "ImageOn" in config["Alarm"] and alarm_enabled:
             draw_static_object(app, canvas, config["Alarm"]["ImageOn"])
@@ -560,12 +499,9 @@ def render_weather(config, canvas, app):
     """
     if "Weather" in config:
         if "Humidity" in config["Weather"]:
-            draw_apos_number(
-                app, canvas,
-                config["Weather"]["Humidity"]["Text"],
-                value=app.get_property("weather_humidity", 60),
-                posix=config["Weather"]["Humidity"]["SuffixImageIndex"]
-            )
+            draw_adv_number(app, canvas, config["Weather"]["Humidity"]["Text"],
+                            value=app.get_property("weather_humidity", 60),
+                            posix=config["Weather"]["Humidity"]["SuffixImageIndex"])
 
         if "Icon" in config["Weather"]:
             if "CustomIcon" in config["Weather"]["Icon"]:
@@ -585,30 +521,19 @@ def render_weather(config, canvas, app):
             elif wind_language == 2 and "ImageSuffixEN" in config["Weather"]["Wind"]:
                 posix = config["Weather"]["Wind"]["ImageSuffixEN"]
 
-            draw_apos_number(
-                app, canvas,
-                config["Weather"]["Wind"]["Text"],
-                value=app.get_property("weather_wind", 25),
-                posix=posix
-            )
+            draw_adv_number(app, canvas, config["Weather"]["Wind"]["Text"], value=app.get_property("weather_wind", 25),
+                            posix=posix)
 
         if "UVIndex" in config["Weather"]:
-            draw_apos_number(
-                app, canvas,
-                config["Weather"]["UVIndex"]["UV"]["Text"],
-                value=app.get_property("weather_uv", 4)
-            )
+            draw_adv_number(app, canvas, config["Weather"]["UVIndex"]["UV"]["Text"],
+                            value=app.get_property("weather_uv", 4))
 
         if "Temperature" in config["Weather"]:
             if "Current" in config["Weather"]["Temperature"] and app.get_property("weather_current", -5) > -100:
-                draw_apos_number(
-                    app, canvas,
-                    config["Weather"]["Temperature"]["Current"]["Number"],
-                    value=app.get_property("weather_current", -5),
-                    posix=config["Weather"]["Temperature"]["Current"]["DegreesImageIndex"],
-                    minus=config["Weather"]["Temperature"]["Current"]["MinusImageIndex"],
-                    fix_y=True
-                )
+                draw_adv_number(app, canvas, config["Weather"]["Temperature"]["Current"]["Number"],
+                                value=app.get_property("weather_current", -5),
+                                posix=config["Weather"]["Temperature"]["Current"]["DegreesImageIndex"],
+                                minus=config["Weather"]["Temperature"]["Current"]["MinusImageIndex"])
 
             if "Today" in config["Weather"]["Temperature"]:
                 if "Separate" in config["Weather"]["Temperature"]["Today"]:
@@ -616,25 +541,13 @@ def render_weather(config, canvas, app):
 
                     if "Day" in config["Weather"]["Temperature"]["Today"]["Separate"] \
                             and app.get_property("weather_day", 10) > -100:
-                        draw_apos_number(
-                            app, canvas,
-                            c["Day"]["Number"],
-                            value=app.get_property("weather_day", 10),
-                            posix=c["Day"]["DegreesImageIndex"],
-                            minus=c["Day"]["MinusImageIndex"],
-                            fix_y=True
-                        )
+                        draw_adv_number(app, canvas, c["Day"]["Number"], value=app.get_property("weather_day", 10),
+                                        posix=c["Day"]["DegreesImageIndex"], minus=c["Day"]["MinusImageIndex"])
 
                     if "Night" in config["Weather"]["Temperature"]["Today"]["Separate"] \
                             and app.get_property("weather_night", -15) > -100:
-                        draw_apos_number(
-                            app, canvas,
-                            c["Night"]["Number"],
-                            value=app.get_property("weather_night", -15),
-                            posix=c["Night"]["DegreesImageIndex"],
-                            minus=c["Night"]["MinusImageIndex"],
-                            fix_y=True
-                        )
+                        draw_adv_number(app, canvas, c["Night"]["Number"], value=app.get_property("weather_night", -15),
+                                        posix=c["Night"]["DegreesImageIndex"], minus=c["Night"]["MinusImageIndex"])
 
                 if "OneLine" in config["Weather"]["Temperature"]["Today"]:
                     c = config["Weather"]["Temperature"]["Today"]["OneLine"]
@@ -651,7 +564,7 @@ def render_weather(config, canvas, app):
                     images.append(build_number_image(app, c["Number"], val_n, 1))
 
                     img = build_multipart_image(c["Number"], images)
-                    xy = calculate_apos(c["Number"], img.size, fix_y=True)
+                    xy = calculate_adv_position(c["Number"], img.size, fix_y=True)
                     add_to_canvas(canvas, img, xy)
 
 

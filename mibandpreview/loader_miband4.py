@@ -74,35 +74,21 @@ def render(app):
     # Activity
     if "Activity" in config:
         if "Steps" in config["Activity"]:
-            draw_apos_number(
-                app, canvas,
-                config["Activity"]["Steps"]["Number"],
-                value=app.get_property("steps", 12345)
-            )
+            draw_adv_number(app, canvas, config["Activity"]["Steps"]["Number"], value=app.get_property("steps", 12345))
 
         if "Pulse" in config["Activity"]:
-            draw_apos_number(
-                app, canvas,
-                config["Activity"]["Pulse"]["Number"],
-                value=app.get_property("heart_rate", 120)
-            )
+            draw_adv_number(app, canvas, config["Activity"]["Pulse"]["Number"],
+                            value=app.get_property("heart_rate", 120))
 
         if "Distance" in config["Activity"]:
             dist = config["Activity"]["Distance"]
-            draw_apos_number(
-                app, canvas, dist["Number"],
-                value=app.get_property("distance", 14.25),
-                dot=dist["DecimalPointImageIndex"],
-                posix=dist["SuffixImageIndex"]
-            )
+            draw_adv_number(app, canvas, dist["Number"], value=app.get_property("distance", 14.25),
+                            dot=dist["DecimalPointImageIndex"], posix=dist["SuffixImageIndex"])
 
         if "Calories" in config["Activity"]:
             kcal = config["Activity"]["Calories"]
-            draw_apos_number(
-                app, canvas, kcal["Number"],
-                value=app.get_property("calories", 500),
-                posix=kcal["SuffixImageIndex"]
-            )
+            draw_adv_number(app, canvas, kcal["Number"], value=app.get_property("calories", 500),
+                            posix=kcal["SuffixImageIndex"])
 
     # Date
     twoDMonth = False
@@ -121,7 +107,7 @@ def render(app):
                 if "DelimiterImageIndex" in date:
                     dot = date["DelimiterImageIndex"]
 
-                draw_apos_date(
+                draw_date(
                     app, canvas, date, 
                     app.get_property("month", 2),
                     app.get_property("day", 15), dot,
@@ -130,15 +116,11 @@ def render(app):
 
             if "Separate" in config["Date"]["MonthAndDay"]:
                 if "Month" in config["Date"]["MonthAndDay"]["Separate"]:
-                    draw_apos_number(
-                        app, canvas, config["Date"]["MonthAndDay"]["Separate"]["Month"],
-                        value=app.get_property("month", 12),
-                        digits=(2 if twoDMonth else 1))
+                    draw_adv_number(app, canvas, config["Date"]["MonthAndDay"]["Separate"]["Month"],
+                                    value=app.get_property("month", 12), digits=(2 if twoDMonth else 1))
                 if "Day" in config["Date"]["MonthAndDay"]["Separate"]:
-                    draw_apos_number(
-                        app, canvas, config["Date"]["MonthAndDay"]["Separate"]["Day"],
-                        value=app.get_property("day", 15),
-                        digits=(2 if twoDDay else 1))
+                    draw_adv_number(app, canvas, config["Date"]["MonthAndDay"]["Separate"]["Day"],
+                                    value=app.get_property("day", 15), digits=(2 if twoDDay else 1))
 
         if "WeekDay" in config["Date"]:
             draw_static_object(
@@ -243,11 +225,8 @@ def render(app):
 
         if "Battery" in config["Status"]:
             if "Text" in config["Status"]["Battery"]:
-                draw_apos_number(
-                    app, canvas,
-                    config["Status"]["Battery"]["Text"],
-                    value=app.get_property("status_battery", 60)
-                )
+                draw_adv_number(app, canvas, config["Status"]["Battery"]["Text"],
+                                value=app.get_property("status_battery", 60))
 
             if "Icon" in config["Status"]["Battery"]:
                 value = app.get_property("status_battery", 60)
@@ -266,11 +245,7 @@ def render(app):
         minutes = app.get_property("minutes", 30)
         seconds = app.get_property("seconds", 40)
         if "Hours" in config["AnalogDialFace"]:
-            draw_analog_dial(
-                app, canvas,
-                config["AnalogDialFace"]["Hours"],
-                30 * (hours + minutes / 60)
-            )
+            draw_analog_dial(canvas, config["AnalogDialFace"]["Hours"], 30 * (hours + minutes / 60))
 
             if "CenterImage" in config["AnalogDialFace"]["Hours"]:
                 draw_static_object(
@@ -279,11 +254,7 @@ def render(app):
                 )
 
         if "Minutes" in config["AnalogDialFace"]:
-            draw_analog_dial(
-                app, canvas,
-                config["AnalogDialFace"]["Minutes"],
-                30 * minutes
-            )
+            draw_analog_dial(canvas, config["AnalogDialFace"]["Minutes"], 30 * minutes)
 
             if "CenterImage" in config["AnalogDialFace"]["Minutes"]:
                 draw_static_object(
@@ -292,11 +263,7 @@ def render(app):
                 )
 
         if "Seconds" in config["AnalogDialFace"]:
-            draw_analog_dial(
-                app, canvas,
-                config["AnalogDialFace"]["Seconds"],
-                30 * seconds
-            )
+            draw_analog_dial(canvas, config["AnalogDialFace"]["Seconds"], 30 * seconds)
 
             if "CenterImage" in config["AnalogDialFace"]["Seconds"]:
                 draw_static_object(
