@@ -84,6 +84,7 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
         self.watcher.fileChanged.connect(self.on_file_change)
         self.generator.image_ready.connect(self.handler.set_preview)
         self.generator.image_missing.connect(self.handler.set_no_preview)
+        self.generator.image_failed.connect(self.handler.set_error_preview)
 
     def save_image(self, path):
         """
@@ -129,8 +130,12 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
         On file change event handler
         :return:
         """
-        self.loader.load_data()
-        self.rebuild()
+        try:
+            self.loader.load_data()
+            self.rebuild()
+        except Exception as e:
+            print("RELOAD ERROR: " + str(e))
+            self.handler.set_error_preview()
 
     def autoplay_init(self):
         """
