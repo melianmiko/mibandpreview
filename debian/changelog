@@ -1,4 +1,4 @@
-mibandpreview (0.8-1) hirsute; urgency=medium
+mibandpreview (0.8-2) hirsute; urgency=medium
 
   * QtGui: render moved to another thread
   * QtGui: fixed app crash on save dialog dismiss
