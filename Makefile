@@ -11,8 +11,7 @@ clean:
 	rm -rf build dist mibandpreview.egg-info .files.txt debian/mibandpreview/
 
 install:
-	python3 setup.py install --record .files.txt \
-		--root $(DESTDIR) $(SETUP_PROPS)
+	python3 setup.py install --record .files.txt --root $(DESTDIR) $(SETUP_PROPS)
 	mkdir -p $(DESTDIR)/usr/share/icons/hicolor/96x96/apps
 	mkdir -p $(DESTDIR)/usr/share/applications
 	cp mibandpreview_qt/res/mibandpreview-qt.png $(DESTDIR)/usr/share/icons/hicolor/96x96/apps
