@@ -1,7 +1,10 @@
-mibandpreview (0.7.4.1-2) hirsute; urgency=medium
+mibandpreview (0.8-1) hirsute; urgency=medium
 
-  * New update checker: works async, have disable option, available on Linux
-  * Some UI fixes
-  * Fixed offline app crash
+  * QtGui: render moved to another thread
+  * QtGui: fixed app crash on save dialog dismiss
+  * QtGui: added translations for system dialog
+  * QtGui: russian translation fixed
+  * Lib: support of mi band 5 HeartProgress object
+  * Lib: code deduplication and misc fixes
 
- -- MelianMiko <melianmiko@gmail.com>  Tue, 15 Jul 2021 19:59:00 +0700
+ -- MelianMiko <melianmiko@gmail.com>  Sat, 17 Jul 2021 11:49:00 +0700
