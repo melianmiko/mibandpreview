@@ -1,8 +1,9 @@
 from setuptools import setup
+from mibandpreview_qt import app_info
 
 setup(
     name='mibandpreview',
-    version='0.7.4',
+    version=app_info.VERSION,
     packages=['mibandpreview', 'mibandpreview_qt'],
     url='https://melianmiko.ru/en/mibandpreview',
     license='Apache 2.0',
