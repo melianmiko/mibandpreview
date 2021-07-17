@@ -49,8 +49,9 @@ def draw_adv_number(app, canvas, obj, value=0, digits=1, dot=-1, posix=-1, prefi
                     new_image.paste(dot_img, (0, images[0].size[1] - dot_img.size[1]))
                     dot_img = new_image
             images.append(dot_img)
-        n = int(str(value).split(".")[1])
-        images += split_number_to_images(app, obj, n, digits)
+        after_dot = str(value).split(".")[1]
+        after_dot_len = max(digits, len(after_dot))
+        images += split_number_to_images(app, obj, int(after_dot), after_dot_len)
 
     if posix > -1:
         images.append(app.get_resource(posix))

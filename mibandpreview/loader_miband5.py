@@ -140,13 +140,16 @@ def render_activity(config, canvas, app):
                 tools.add_to_canvas(canvas, img, xy)
 
         if "Distance" in config["Activity"]:
+            value = app.get_property("distance", 14.2)
             dist = config["Activity"]["Distance"]
             posix = -1
             if "KmSuffixImageIndex" in dist:
                 posix = dist["KmSuffixImageIndex"]
 
-            tools.draw_adv_number(app, canvas, dist["Number"], value=app.get_property("distance", 14.2),
-                                  dot=dist["DecimalPointImageIndex"], posix=posix)
+            tools.draw_adv_number(app, canvas, dist["Number"],
+                                  value=round(value, 2),
+                                  dot=dist["DecimalPointImageIndex"],
+                                  posix=posix)
 
         if "Calories" in config["Activity"]:
             kcal = config["Activity"]["Calories"]
