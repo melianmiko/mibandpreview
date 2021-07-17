@@ -4,6 +4,7 @@ mibandpreview (0.8-1) hirsute; urgency=medium
   * QtGui: fixed app crash on save dialog dismiss
   * QtGui: added translations for system dialog
   * QtGui: russian translation fixed
+  * Both: Use one property for language select
   * Lib: support of mi band 5 HeartProgress object
   * Lib: code deduplication and misc fixes
 
