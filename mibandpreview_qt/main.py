@@ -8,7 +8,9 @@ from PyQt5.QtGui import QIcon
 
 import mibandpreview
 from .MainWindow import Ui_MainWindow
-from . import UiHandler, app_info, UpdateCheckerUI, ConfigManager
+from . import UiHandler, app_info
+from .update_checker import UpdateCheckerUI
+from .config_manager import ConfigManager
 from .preview_thread import PreviewThread
 
 
