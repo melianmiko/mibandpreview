@@ -5,7 +5,8 @@ setup(
     name='mibandpreview',
     version=app_info.VERSION,
     packages=['mibandpreview', 'mibandpreview_qt'],
-    url='https://melianmiko.ru/en/mibandpreview',
+    url='https://github.com/melianmiko/mibandpreview',
+    download_url="https://github.com/melianmiko/mibandpreview/archive/refs/tags/" + app_info.APP_VERSION + ".tar.gz",
     license='Apache 2.0',
     install_requires=[
         "Pillow"
