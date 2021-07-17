@@ -116,7 +116,6 @@ class UIHandler:
 
         # Date-time (extra)
         loader.set_property("24h", 1 if self.context.edit_am_pm.currentIndex() == 2 else 0)
-        loader.set_property("lang_am_pm", 1 if self.context.edit_language.currentIndex() < 2 else 0)
         loader.set_property("am_pm", self.context.edit_am_pm.currentIndex())
         loader.set_property("weekday", self.context.edit_weekday.currentIndex()+1)
 
@@ -144,8 +143,7 @@ class UIHandler:
         loader.set_property("weather_uv", int(self.context.edit_uv_index.value()))
         loader.set_property("weather_wind", int(self.context.edit_wind.value()))
 
-        loader.set_property("lang_wind", int(self.context.edit_language.currentIndex()))
-        loader.set_property("lang_weekday", self.context.edit_language.currentIndex())
+        loader.set_property("language", int(self.context.edit_language.currentIndex()))
 
     def load_config(self):
         self.allow_interaction = False
@@ -166,8 +164,7 @@ class UIHandler:
             am_pm = loader.get_property("am_pm", 0)
         self.context.edit_am_pm.setCurrentIndex(am_pm)
         self.context.edit_weekday.setCurrentIndex(loader.get_property("weekday", 2)-1)
-
-        self.context.edit_language.setCurrentIndex(loader.get_property("lang_weekday", 2))
+        self.context.edit_language.setCurrentIndex(loader.get_property("language", 2))
 
         # Status
         self.context.edit_battery.setValue(loader.get_property("status_battery", 60))

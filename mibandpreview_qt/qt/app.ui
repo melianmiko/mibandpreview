@@ -167,7 +167,7 @@
              <widget class="QComboBox" name="edit_weekday">
               <item>
                <property name="text">
-                <string>Monay</string>
+                <string>Monday</string>
                </property>
               </item>
               <item>

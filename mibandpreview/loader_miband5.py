@@ -225,19 +225,19 @@ def render_date(config, canvas, app):
                     tools.draw_adv_number(app, canvas, config["Date"]["MonthAndDayAndYear"]["Separate"]["Day"],
                                           value=app.get_property("day", 15), digits=(2 if twoDDay else 1))
 
-        if "ENWeekDays" in config["Date"] and app.get_property("lang_weekday", 2) == 2:
+        if "ENWeekDays" in config["Date"] and app.get_property("language", 2) == 2:
             tools.draw_static_object(
                 app, canvas, config["Date"]["ENWeekDays"],
                 value=app.get_property("weekday", 3) - 1
             )
 
-        if "CN1WeekDays" in config["Date"] and app.get_property("lang_weekday", 2) == 0:
+        if "CN1WeekDays" in config["Date"] and app.get_property("language", 2) == 0:
             tools.draw_static_object(
                 app, canvas, config["Date"]["CN1WeekDays"],
                 value=app.get_property("weekday", 3) - 1
             )
 
-        if "CN2WeekDays" in config["Date"] and app.get_property("lang_weekday", 2) == 1:
+        if "CN2WeekDays" in config["Date"] and app.get_property("language", 2) == 1:
             tools.draw_static_object(
                 app, canvas, config["Date"]["CN2WeekDays"],
                 value=app.get_property("weekday", 3) - 1
@@ -246,7 +246,7 @@ def render_date(config, canvas, app):
         if "DayAmPm" in config["Date"] and not app.get_property("24h", 0) == 1:
             apm = config["Date"]["DayAmPm"]
             val = app.get_property("am_pm", 0)
-            lang = app.get_property("lang_am_pm", 0)
+            lang = 1 if app.get_property("language", 0) < 2 else 0
             if val == 1 and lang == 1:
                 index = apm["ImageIndexPMCN"]
             elif val == 0 and lang == 1:
@@ -517,7 +517,7 @@ def render_weather(config, canvas, app):
 
         if "Wind" in config["Weather"]:
             posix = -1
-            wind_language = app.get_property("lang_wind", 2)
+            wind_language = app.get_property("language", 2)
             if wind_language == 0 and "ImageSuffixCN1" in config["Weather"]["Wind"]:
                 posix = config["Weather"]["Wind"]["ImageSuffixCN1"]
             elif wind_language == 1 and "ImageSuffixCN2" in config["Weather"]["Wind"]:

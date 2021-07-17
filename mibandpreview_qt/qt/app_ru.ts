@@ -60,7 +60,8 @@
     </message>
     <message>
         <location filename="app.ui" line="170"/>
-        <source>Monay</source>
+        <source>Monday</source>
+        <oldsource>Monay</oldsource>
         <translation>Понедельник</translation>
     </message>
     <message>
@@ -116,12 +117,12 @@
     <message>
         <location filename="app.ui" line="144"/>
         <source>Hidden</source>
-        <translation type="unfinished"></translation>
+        <translation>Скрыт</translation>
     </message>
     <message>
         <location filename="app.ui" line="226"/>
         <source>Other</source>
-        <translation type="unfinished"></translation>
+        <translation>Другой</translation>
     </message>
     <message>
         <location filename="app.ui" line="234"/>
@@ -226,7 +227,7 @@
     <message>
         <location filename="app.ui" line="498"/>
         <source>Weather icon:</source>
-        <translation>Значок погоды</translation>
+        <translation>Значок погоды:</translation>
     </message>
     <message>
         <location filename="app.ui" line="506"/>

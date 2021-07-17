@@ -173,13 +173,13 @@ def render_date(app, canvas, config):
         if "WeekDay" in config["Date"]:
             tools.draw_static_object(
                 app, canvas, config["Date"]["WeekDay"],
-                value=app.get_property("weekday", 3) - 1 + app.get_property("lang_weekday", 2) * 7
+                value=app.get_property("weekday", 3) - 1 + app.get_property("language", 2) * 7
             )
 
         if "DayAmPm" in config["Date"] and not app.get_property("24h", 0) == 1:
             apm = config["Date"]["DayAmPm"]
             val = app.get_property("am_pm", 0)
-            lang = app.get_property("lang_am_pm", 0)
+            lang = 1 if app.get_property("language", 0) < 2 else 0
             if val == 1 and lang == 1:
                 index = apm["ImageIndexPMCN"]
             elif val == 0 and lang == 1:
