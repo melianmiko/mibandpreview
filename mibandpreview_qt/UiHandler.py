@@ -56,9 +56,8 @@ class UIHandler:
         self.context.edit_time.userTimeChanged.connect(self._on_change)
         self.context.edit_date.userDateChanged.connect(self._on_change)
         self.context.edit_am_pm.currentIndexChanged.connect(self._on_change)
-        self.context.edit_24h.stateChanged.connect(self._on_change)
         self.context.edit_weekday.currentIndexChanged.connect(self._on_change)
-        self.context.edit_wd_lang.currentIndexChanged.connect(self._on_change)
+        self.context.edit_language.currentIndexChanged.connect(self._on_change)
         self.context.edit_battery.valueChanged.connect(self._on_change)
         self.context.edit_bluetooth.stateChanged.connect(self._on_change)
         self.context.edit_lock.stateChanged.connect(self._on_change)
@@ -76,6 +75,7 @@ class UIHandler:
         self.context.edit_w_icon.currentIndexChanged.connect(self._on_change)
         self.context.edit_humidity.valueChanged.connect(self._on_change)
         self.context.edit_uv_index.valueChanged.connect(self._on_change)
+        self.context.edit_wind.valueChanged.connect(self._on_change)
 
         # GIF
         self.context.anim_frame_0.valueChanged.connect(self._on_gif_change)
@@ -115,11 +115,10 @@ class UIHandler:
         loader.set_property("day", date.day())
 
         # Date-time (extra)
-        loader.set_property("24h", 1 if self.context.edit_24h.isChecked() else 0)
-        loader.set_property("lang_am_pm", 1 if self.context.edit_am_pm.currentIndex() > 1 else 0)
-        loader.set_property("am_pm", 1 if self.context.edit_am_pm.currentIndex() % 2 == 1 else 0)
+        loader.set_property("24h", 1 if self.context.edit_am_pm.currentIndex() == 2 else 0)
+        loader.set_property("lang_am_pm", 1 if self.context.edit_language.currentIndex() < 2 else 0)
+        loader.set_property("am_pm", self.context.edit_am_pm.currentIndex())
         loader.set_property("weekday", self.context.edit_weekday.currentIndex()+1)
-        loader.set_property("lang_weekday", self.context.edit_wd_lang.currentIndex())
 
         # Status
         loader.set_property("status_battery", self.context.edit_battery.value())
@@ -143,6 +142,10 @@ class UIHandler:
         loader.set_property("weather_icon", self.context.edit_w_icon.currentIndex())
         loader.set_property("weather_humidity", int(self.context.edit_humidity.value()))
         loader.set_property("weather_uv", int(self.context.edit_uv_index.value()))
+        loader.set_property("weather_wind", int(self.context.edit_wind.value()))
+
+        loader.set_property("lang_wind", int(self.context.edit_language.currentIndex()))
+        loader.set_property("lang_weekday", self.context.edit_language.currentIndex())
 
     def load_config(self):
         self.allow_interaction = False
@@ -158,12 +161,13 @@ class UIHandler:
         self.context.edit_date.setDate(date)
 
         # Date-time (extra)
-        self.context.edit_24h.setChecked(loader.get_property("24h", 0) == 1)
-        self.context.edit_am_pm.setCurrentIndex(
-            loader.get_property("lang_am_pm", 0) * 2 + loader.get_property("am_pm", 0)
-        )
+        am_pm = 2
+        if loader.get_property("24h", 0) == 0:
+            am_pm = loader.get_property("am_pm", 0)
+        self.context.edit_am_pm.setCurrentIndex(am_pm)
         self.context.edit_weekday.setCurrentIndex(loader.get_property("weekday", 2)-1)
-        self.context.edit_wd_lang.setCurrentIndex(loader.get_property("lang_weekday", 2))
+
+        self.context.edit_language.setCurrentIndex(loader.get_property("lang_weekday", 2))
 
         # Status
         self.context.edit_battery.setValue(loader.get_property("status_battery", 60))
@@ -187,6 +191,7 @@ class UIHandler:
         self.context.edit_w_icon.setCurrentIndex(loader.get_property("weather_icon", 0))
         self.context.edit_humidity.setValue(loader.get_property("weather_humidity", 40))
         self.context.edit_uv_index.setValue(loader.get_property("weather_uv", 10))
+        self.context.edit_wind.setValue(loader.get_property("weather_wind", 25))
 
         self.allow_interaction = True
 
