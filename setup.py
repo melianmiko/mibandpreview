@@ -1,12 +1,12 @@
 from setuptools import setup
-from mibandpreview_qt import app_info
+from mibandpreview_qt.app_info import VERSION, APP_VERSION
 
 setup(
     name='mibandpreview',
-    version=app_info.VERSION + ".1",
+    version=VERSION + ".1.2",
     packages=['mibandpreview', 'mibandpreview_qt'],
     url='https://github.com/melianmiko/mibandpreview',
-    download_url="https://github.com/melianmiko/mibandpreview/archive/refs/tags/" + app_info.APP_VERSION + ".tar.gz",
+    download_url="https://github.com/melianmiko/mibandpreview/archive/refs/tags/" + APP_VERSION + ".tar.gz",
     license='Apache 2.0',
     install_requires=[
         "Pillow"
