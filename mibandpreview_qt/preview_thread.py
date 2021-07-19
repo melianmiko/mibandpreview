@@ -1,5 +1,5 @@
 import os
-
+import traceback
 import PIL.Image
 from PyQt5.QtCore import QThread, pyqtSignal
 
@@ -49,5 +49,6 @@ class PreviewThread(QThread):
             self.image_ready.emit(img)
         except Exception as e:
             print("RENDER ERROR: "+str(e))
+            traceback.print_exc()
             # noinspection PyUnresolvedReferences
             self.image_failed.emit()
