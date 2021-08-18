@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-VERSION = "0.8"
+VERSION = "0.8.1"
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 SETTINGS_PATH = str(Path.home())+"/.mi_band_preview.json"

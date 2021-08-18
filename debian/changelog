@@ -1,11 +1,5 @@
-mibandpreview (0.8-2) hirsute; urgency=medium
+mibandpreview (0.8.1-1) hirsute; urgency=medium
 
-  * QtGui: render moved to another thread
-  * QtGui: fixed app crash on save dialog dismiss
-  * QtGui: added translations for system dialog
-  * QtGui: russian translation fixed
-  * Both: Use one property for language select
-  * Lib: support of mi band 5 HeartProgress object
-  * Lib: code deduplication and misc fixes
+  * Fix: analog clock on Mi Band 5/6
 
- -- MelianMiko <melianmiko@gmail.com>  Sat, 17 Jul 2021 11:49:00 +0700
+ -- MelianMiko <melianmiko@gmail.com>  Wed, 18 Aug 2021 15:29:00 +0700
