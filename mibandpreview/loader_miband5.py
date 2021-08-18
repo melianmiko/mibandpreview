@@ -609,5 +609,6 @@ def render(app):
     render_status_icons(config, canvas, app)
     render_weather(config, canvas, app)
     render_animation(config, canvas, app)
+    render_time_extra(config, canvas, app)
 
     return canvas

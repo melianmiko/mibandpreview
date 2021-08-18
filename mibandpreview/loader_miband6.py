@@ -21,6 +21,7 @@ def render(app):
     loader_miband5.render_status_icons(config, canvas, app)
     loader_miband5.render_weather(config, canvas, app)
     loader_miband5.render_animation(config, canvas, app)
+    loader_miband5.render_time_extra(config, canvas, app)
 
     if not app.no_mask:
         m = Image.open(tools.get_root()+"/res/mb6_mask.png").convert("L")
