@@ -3,7 +3,7 @@ from mibandpreview_qt.app_info import VERSION, APP_VERSION
 
 setup(
     name='mibandpreview',
-    version=VERSION + ".1.2",
+    version=VERSION,
     packages=['mibandpreview', 'mibandpreview_qt'],
     url='https://github.com/melianmiko/mibandpreview',
     download_url="https://github.com/melianmiko/mibandpreview/archive/refs/tags/" + APP_VERSION + ".tar.gz",
