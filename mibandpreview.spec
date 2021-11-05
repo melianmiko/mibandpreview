@@ -2,7 +2,7 @@
 
 Name: mibandpreview
 Version: 0.8.1
-Release: 0%{?dist}
+Release: 1%{?dist}
 License: Apache-2.0
 Summary: Mi Band 4/5/6 watchface preview tool
 Url: https://github.com/melianmiko/mibandpreview
@@ -14,7 +14,8 @@ BuildRequires: python3-devel
 BuildRequires: python3-setuptools
 BuildRequires: qt5-qtbase-devel
 BuildRequires: qt5-linguist
-Requires: python3-pyqt5-sip
+BuildRequires: python3-qt5-base
+Requires: python3-qt5-base
 Requires: python3-pillow
 Requires: python3-certifi
 Requires: python3
@@ -43,4 +44,7 @@ make install DESTDIR=%{buildroot}
 
 #-- CHANGELOG -----------------------------------------------------------------#
 %changelog
+* Fri Nov 05 2021 MelianMiko <melianmiko@gmail.com> 0.8.1-1
+- new package built with tito
+
 
