@@ -6,7 +6,6 @@ mibandpreview_qt/MainWindow.py
 build
 dist
 .idea
-*.spec
 mibandpreview.egg-info
 .files.txt
 *~
