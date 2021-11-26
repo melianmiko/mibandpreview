@@ -1,4 +1,4 @@
-from . import tools
+from . import tools, loader_miband4
 from PIL import Image, ImageDraw
 
 
@@ -47,50 +47,9 @@ def render_background(config, canvas, app):
 
 
 def render_time(config, canvas, app):
-    """
-    Render time module
-    :param config: watchface config
-    :param canvas: target canvas
-    :param app: generator app context
-    :return: void
-    """
+    loader_miband4.render_time(app, canvas, config)
+
     if "Time" in config:
-        if "Hours" in config["Time"]:
-            if "Tens" in config["Time"]["Hours"]:
-                tools.draw_static_object(
-                    app, canvas,
-                    config["Time"]["Hours"]["Tens"],
-                    value=app.get_property("hours", 12) // 10
-                )
-
-            if "Ones" in config["Time"]["Hours"]:
-                tools.draw_static_object(
-                    app, canvas,
-                    config["Time"]["Hours"]["Ones"],
-                    value=app.get_property("hours", 12) % 10
-                )
-
-        if "Minutes" in config["Time"]:
-            if "Tens" in config["Time"]["Minutes"]:
-                tools.draw_static_object(
-                    app, canvas,
-                    config["Time"]["Minutes"]["Tens"],
-                    value=app.get_property("minutes", 30) // 10
-                )
-
-            if "Ones" in config["Time"]["Minutes"]:
-                tools.draw_static_object(
-                    app, canvas,
-                    config["Time"]["Minutes"]["Ones"],
-                    value=app.get_property("minutes", 30) % 10
-                )
-
-        if "DelimiterImage" in config["Time"]:
-            tools.draw_static_object(
-                app, canvas,
-                config["Time"]["DelimiterImage"]
-            )
-
         if "TimeZone1" in config["Time"] and app.get_property("status_timezone", 1) == 1:
             a = round(app.get_property("hours", 12) + app.get_property("minutes", 30) / 100, 2)
             tools.draw_adv_number(app, canvas, config["Time"]["TimeZone1"], value=a, digits=2,
@@ -170,15 +129,15 @@ def render_date(config, canvas, app):
     :param app: generator app context
     :return: void
     """
-    twoDMonth = False
-    twoDDay = False
+    month_leading_zero = False
+    day_leading_zero = False
     if "Date" in config:
         if "MonthAndDayAndYear" in config["Date"]:
             if "TwoDigitsDay" in config["Date"]["MonthAndDayAndYear"]:
-                twoDDay = config["Date"]["MonthAndDayAndYear"]["TwoDigitsDay"]
+                day_leading_zero = config["Date"]["MonthAndDayAndYear"]["TwoDigitsDay"]
 
             if "TwoDigitsMonth" in config["Date"]["MonthAndDayAndYear"]:
-                twoDMonth = config["Date"]["MonthAndDayAndYear"]["TwoDigitsMonth"]
+                month_leading_zero = config["Date"]["MonthAndDayAndYear"]["TwoDigitsMonth"]
 
             if "OneLine" in config["Date"]["MonthAndDayAndYear"]:
                 date = config["Date"]["MonthAndDayAndYear"]["OneLine"]
@@ -191,7 +150,7 @@ def render_date(config, canvas, app):
                     app.get_property("month", 2),
                     app.get_property("day", 15),
                     dot,
-                    twoDMonth, twoDDay
+                    month_leading_zero, day_leading_zero
                 )
 
             if "OneLineWithYear" in config["Date"]["MonthAndDayAndYear"]:
@@ -205,14 +164,14 @@ def render_date(config, canvas, app):
                     app.get_property("month", 2),
                     app.get_property("day", 15),
                     dot,
-                    twoDMonth, twoDDay,
+                    month_leading_zero, day_leading_zero,
                     year=app.get_property("year", 2021)
                 )
 
             if "Separate" in config["Date"]["MonthAndDayAndYear"]:
                 if "Month" in config["Date"]["MonthAndDayAndYear"]["Separate"]:
                     tools.draw_adv_number(app, canvas, config["Date"]["MonthAndDayAndYear"]["Separate"]["Month"],
-                                          value=app.get_property("month", 2), digits=(2 if twoDMonth else 1))
+                                          value=app.get_property("month", 2), digits=(2 if month_leading_zero else 1))
 
                 if "MonthsEN" in config["Date"]["MonthAndDayAndYear"]["Separate"]:
                     tools.draw_static_object(
@@ -223,7 +182,7 @@ def render_date(config, canvas, app):
 
                 if "Day" in config["Date"]["MonthAndDayAndYear"]["Separate"]:
                     tools.draw_adv_number(app, canvas, config["Date"]["MonthAndDayAndYear"]["Separate"]["Day"],
-                                          value=app.get_property("day", 15), digits=(2 if twoDDay else 1))
+                                          value=app.get_property("day", 15), digits=(2 if day_leading_zero else 1))
 
         if "ENWeekDays" in config["Date"] and app.get_property("language", 2) == 2:
             tools.draw_static_object(
@@ -272,22 +231,19 @@ def render_date(config, canvas, app):
 
 
 def render_activity_graph(config, canvas, app):
-    """
-    Render activity graphics
-    :param config: watchface config
-    :param canvas: target canvas
-    :param app: generator app context
-    :return: void
-    """
+    loader_miband4.render_heart(app, canvas, config)
+
     if "StepsProgress" in config:
         steps = app.get_property("steps", 6000)
         target = app.get_property("target_steps", 9000)
+
         if "Linear" in config["StepsProgress"]:
             tools.draw_steps_bar(
                 app, canvas,
                 config["StepsProgress"]["Linear"],
                 min(1, steps / target)
             )
+
         if "LineScale" in config["StepsProgress"]:
             current = int(config["StepsProgress"]["LineScale"]["ImagesCount"] * min(1, steps / target))
             if current >= config["StepsProgress"]["LineScale"]["ImagesCount"]:
@@ -300,6 +256,7 @@ def render_activity_graph(config, canvas, app):
 
     if "HeartProgress" in config:
         current_bpm = app.get_property("heart_rate", 200)
+
         if "Linear" in config["HeartProgress"]:
             index = config["HeartProgress"]["Linear"]["StartImageIndex"]
             segments = config["HeartProgress"]["Linear"]["Segments"]
@@ -310,6 +267,7 @@ def render_activity_graph(config, canvas, app):
                     img = app.get_resource(index + i)
                     xy = (int(item["X"]), int(item["Y"]))
                     tools.add_to_canvas(canvas, img, xy)
+
         if "LineScale" in config["HeartProgress"]:
             count = config["HeartProgress"]["LineScale"]["ImagesCount"]
             current = int(max(0, min(1, current_bpm / 202) * count - 1))
@@ -335,89 +293,8 @@ def render_activity_graph(config, canvas, app):
             )
 
 
-    if "Heart" in config:
-        if "Scale" in config["Heart"]:
-            index = config["Heart"]["Scale"]["StartImageIndex"]
-            segments = config["Heart"]["Scale"]["Segments"]
-            value = app.get_property("heart_rate", 200)
-            i = int(max(0, min(1, value / 202) * len(segments) - 1))
-            if i <= len(segments):
-                img = app.get_resource(index + i)
-                xy = (int(segments[i]["X"]), int(segments[i]["Y"]))
-                tools.add_to_canvas(canvas, img, xy)
-
-
 def render_status_icons(config, canvas, app):
-    """
-    Render status icons
-    :param config: watchface config
-    :param canvas: target canvas
-    :param app: generator app context
-    :return: void
-    """
-    if "Status" in config:
-        if "DoNotDisturb" in config["Status"]:
-            if "ImageIndexOn" in config["Status"]["DoNotDisturb"] and app.get_property("status_mute", 1):
-                tools.add_to_canvas(
-                    canvas,
-                    app.get_resource(config["Status"]["DoNotDisturb"]["ImageIndexOn"]),
-                    (
-                        config["Status"]["DoNotDisturb"]["Coordinates"]["X"],
-                        config["Status"]["DoNotDisturb"]["Coordinates"]["Y"]
-                    )
-                )
-
-            if "ImageIndexOff" in config["Status"]["DoNotDisturb"] and not app.get_property("status_mute", 1):
-                tools.add_to_canvas(
-                    canvas,
-                    app.get_resource(config["Status"]["DoNotDisturb"]["ImageIndexOff"]),
-                    (
-                        config["Status"]["DoNotDisturb"]["Coordinates"]["X"],
-                        config["Status"]["DoNotDisturb"]["Coordinates"]["Y"]
-                    )
-                )
-
-        if "Lock" in config["Status"]:
-            if "ImageIndexOn" in config["Status"]["Lock"] and not app.get_property("status_lock", 1):
-                tools.add_to_canvas(
-                    canvas,
-                    app.get_resource(config["Status"]["Lock"]["ImageIndexOn"]),
-                    (
-                        config["Status"]["Lock"]["Coordinates"]["X"],
-                        config["Status"]["Lock"]["Coordinates"]["Y"]
-                    )
-                )
-
-            if "ImageIndexOff" in config["Status"]["Lock"] and app.get_property("status_lock", 1):
-                tools.add_to_canvas(
-                    canvas,
-                    app.get_resource(config["Status"]["Lock"]["ImageIndexOff"]),
-                    (
-                        config["Status"]["Lock"]["Coordinates"]["X"],
-                        config["Status"]["Lock"]["Coordinates"]["Y"]
-                    )
-                )
-
-        if "Bluetooth" in config["Status"]:
-            if "ImageIndexOn" in config["Status"]["Bluetooth"] and app.get_property("status_bluetooth", 0):
-                tools.add_to_canvas(
-                    canvas,
-                    app.get_resource(config["Status"]["Bluetooth"]["ImageIndexOn"]),
-                    (
-                        config["Status"]["Bluetooth"]["Coordinates"]["X"],
-                        config["Status"]["Bluetooth"]["Coordinates"]["Y"]
-                    )
-                )
-
-            if "ImageIndexOff" in config["Status"]["Bluetooth"] and not app.get_property("status_bluetooth", 0):
-                tools.add_to_canvas(
-                    canvas,
-                    app.get_resource(config["Status"]["Bluetooth"]["ImageIndexOff"]),
-                    (
-                        config["Status"]["Bluetooth"]["Coordinates"]["X"],
-                        config["Status"]["Bluetooth"]["Coordinates"]["Y"]
-                    )
-                )
+    loader_miband4.render_status(app, canvas, config)
 
 
 def render_battery(config, canvas, app):
@@ -451,8 +328,8 @@ def render_battery(config, canvas, app):
             index = config["Battery"]["Linear"]["StartImageIndex"]
             segments = config["Battery"]["Linear"]["Segments"]
             progress = app.get_property("status_battery", 60) / 100
-            curSegment = int(len(segments) * progress)
-            for i in range(curSegment):
+            current = int(len(segments) * progress)
+            for i in range(current):
                 img = app.get_resource(index + i)
                 tools.add_to_canvas(canvas, img, (
                     int(segments[i]["X"]),
@@ -461,43 +338,7 @@ def render_battery(config, canvas, app):
 
 
 def render_time_extra(config, canvas, app):
-    """
-    Render extra time modules
-    :param config: watchface config
-    :param canvas: target canvas
-    :param app: generator app context
-    :return: void
-    """
-    if "AnalogDialFace" in config:
-        hours = app.get_property("hours", 12)
-        minutes = app.get_property("minutes", 30)
-        seconds = app.get_property("seconds", 40)
-        if "Hours" in config["AnalogDialFace"]:
-            tools.draw_analog_dial(canvas, config["AnalogDialFace"]["Hours"], 30 * (hours + minutes / 60))
-
-            if "CenterImage" in config["AnalogDialFace"]["Hours"]:
-                tools.draw_static_object(
-                    app, canvas,
-                    config["AnalogDialFace"]["Hours"]["CenterImage"]
-                )
-
-        if "Minutes" in config["AnalogDialFace"]:
-            tools.draw_analog_dial(canvas, config["AnalogDialFace"]["Minutes"], 30 * minutes)
-
-            if "CenterImage" in config["AnalogDialFace"]["Minutes"]:
-                tools.draw_static_object(
-                    app, canvas,
-                    config["AnalogDialFace"]["Minutes"]["CenterImage"]
-                )
-
-        if "Seconds" in config["AnalogDialFace"]:
-            tools.draw_analog_dial(canvas, config["AnalogDialFace"]["Seconds"], 30 * seconds)
-
-            if "CenterImage" in config["AnalogDialFace"]["Seconds"]:
-                tools.draw_static_object(
-                    app, canvas,
-                    config["AnalogDialFace"]["Seconds"]["CenterImage"]
-                )
+    loader_miband4.render_analog_clock(app, canvas, config)
 
     # Alarm
     if "Alarm" in config:
