@@ -1,5 +1,5 @@
-mibandpreview (0.8.1-1) hirsute; urgency=medium
+mibandpreview (0.8.2-1) hirsute; urgency=medium
 
-  * Fix: analog clock on Mi Band 5/6
+  * Fix: calories and heart LineScale on Mi Band 6
 
  -- MelianMiko <melianmiko@gmail.com>  Wed, 18 Aug 2021 15:29:00 +0700
