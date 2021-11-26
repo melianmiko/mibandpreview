@@ -25,7 +25,7 @@ uninstall:
 windows:
 	rm -rf dist/mibandpreview
 	pyinstaller --name mibandpreview --icon mibandpreview_qt/res/icon.ico -w \
-		--specpath ~/.pyinstaller_specs \
+		--specpath ~ \
 		--hidden-import=certifi \
 		--add-data "mibandpreview/res;mibandpreview/res" \
 		--add-data "mibandpreview_qt/res;mibandpreview_qt/res" \
