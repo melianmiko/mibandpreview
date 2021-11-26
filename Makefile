@@ -24,13 +24,14 @@ uninstall:
 
 windows:
 	rm -rf dist/mibandpreview
+	mv mibandpreview.spec .mibandpreview.spec
 	pyinstaller --name mibandpreview --icon mibandpreview_qt/res/icon.ico -w \
-		--specpath ~ \
 		--hidden-import=certifi \
 		--add-data "mibandpreview/res;mibandpreview/res" \
 		--add-data "mibandpreview_qt/res;mibandpreview_qt/res" \
 		--add-data "mibandpreview_qt/qt;mibandpreview_qt/qt" \
 		scripts/win32-entrypoint.py
+	mv .mibandpreview.spec mibandpreview.spec
 	cp tools/installer.nsi dist/installer.nsi
 	cd dist && makensis installer.nsi
 
