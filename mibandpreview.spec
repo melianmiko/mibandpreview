@@ -1,8 +1,8 @@
 %global srcname copr-tito-quickdoc
 
 Name: mibandpreview
-Version: 0.8.2
-Release: 2
+Version: 0.8.3
+Release: 1
 License: Apache-2.0
 Summary: Mi Band 4/5/6 watchface preview tool
 Url: https://github.com/melianmiko/mibandpreview
@@ -44,6 +44,9 @@ make install DESTDIR=%{buildroot}
 
 #-- CHANGELOG -----------------------------------------------------------------#
 %changelog
+* Fri Nov 26 2021 MelianMiko <melianmiko@gmail.com> 0.8.3-1
+- Fixes 0.8.3 (melianmiko@gmail.com)
+
 * Fri Nov 26 2021 MelianMiko <melianmiko@gmail.com> 0.8.2-2
 - v0.8.2 (melianmiko@gmail.com)
 
