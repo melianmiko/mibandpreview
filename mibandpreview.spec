@@ -1,7 +1,7 @@
 %global srcname copr-tito-quickdoc
 
 Name: mibandpreview
-Version: 0.8.1
+Version: 0.8.2
 Release: 1%{?dist}
 License: Apache-2.0
 Summary: Mi Band 4/5/6 watchface preview tool
@@ -44,6 +44,12 @@ make install DESTDIR=%{buildroot}
 
 #-- CHANGELOG -----------------------------------------------------------------#
 %changelog
+* Fri Nov 26 2021 MelianMiko <melianmiko@gmail.com> 0.8.2-1
+- Code deduplication (melianmiko@gmail.com)
+- Added calories and heart LineScale support (melianmiko@gmail.com)
+- Automatic commit of package [mibandpreview] release [0.8.1-1].
+  (melianmiko@gmail.com)
+
 * Fri Nov 05 2021 MelianMiko <melianmiko@gmail.com> 0.8.1-1
 - new package built with tito
 
