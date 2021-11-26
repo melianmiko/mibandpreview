@@ -45,11 +45,21 @@ dpkg-buildpackage -b
 ```
 
 ## Building for Windows
-Install msys2 and update all packages (`pacman -Suy`). Then, install build and runtime dependsis:
+Requirements:
+- [MSYS2](https://www.msys2.org/)
+- [Visual C++ Redist 2013](https://www.microsoft.com/ru-RU/download/details.aspx?id=40784)
+
+MSYS2 configuration
 ```bash
-pacman -S git mingw-w64-x86_64-python3 mingw-w64-x86_64-python3-pip mingw-w64-x86_64-python-pillow mingw-w64-x86_64-nsis make mingw-w64-x86_64-python-certifi mingw-w64-x86_64-python-pyqt5
-export PATH=$PATH:/mingw64/bin
+# Update everything
+pacman -Suy
+
+# Install dependencies
+pacman -S git mingw-w64-x86_64-python3 mingw-w64-x86_64-python3-pip mingw-w64-x86_64-python-pillow mingw-w64-x86_64-nsis make mingw-w64-x86_64-python-certifi mingw-w64-x86_64-python-pyqt5 mingw-w64-x86_64-qt5-tools
 pip install pyinstaller
+
+# Add MinGW64 tools to path
+echo "export PATH=$PATH:/mingw64/bin" > ~/.bashrc
 ```
 
 Then run build

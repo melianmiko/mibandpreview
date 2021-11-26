@@ -260,6 +260,9 @@ def render_status(app, canvas, config):
                 )
 
 def render_battery(app, canvas, config):
+        if "Status" not in config:
+            return
+
         if "Battery" in config["Status"]:
             if "Text" in config["Status"]["Battery"]:
                 tools.draw_adv_number(app, canvas, config["Status"]["Battery"]["Text"],

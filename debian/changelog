@@ -1,5 +1,6 @@
-mibandpreview (0.8.2-1) hirsute; urgency=medium
+mibandpreview (0.8.3-1) hirsute; urgency=medium
 
   * Fix: calories and heart LineScale on Mi Band 6
+  * Fix: Mi Band 4 crash
 
  -- MelianMiko <melianmiko@gmail.com>  Wed, 18 Aug 2021 15:29:00 +0700
