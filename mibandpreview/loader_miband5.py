@@ -289,27 +289,51 @@ def render_activity_graph(config, canvas, app):
                 min(1, steps / target)
             )
         if "LineScale" in config["StepsProgress"]:
-            curSegment = int(config["StepsProgress"]["LineScale"]["ImagesCount"] * min(1, steps / target))
-            if curSegment >= config["StepsProgress"]["LineScale"]["ImagesCount"]:
-                curSegment = config["StepsProgress"]["LineScale"]["ImagesCount"] - 1
+            current = int(config["StepsProgress"]["LineScale"]["ImagesCount"] * min(1, steps / target))
+            if current >= config["StepsProgress"]["LineScale"]["ImagesCount"]:
+                current = config["StepsProgress"]["LineScale"]["ImagesCount"] - 1
             tools.draw_static_object(
                 app, canvas,
                 config["StepsProgress"]["LineScale"],
-                value=curSegment
+                value=current
             )
 
     if "HeartProgress" in config:
+        current_bpm = app.get_property("heart_rate", 200)
         if "Linear" in config["HeartProgress"]:
             index = config["HeartProgress"]["Linear"]["StartImageIndex"]
             segments = config["HeartProgress"]["Linear"]["Segments"]
-            value = app.get_property("heart_rate", 200)
-            current = int(max(0, min(1, value / 202) * len(segments) - 1))
+            current = int(max(0, min(1, current_bpm / 202) * len(segments) - 1))
             for i in range(0, current):
                 if i <= len(segments):
                     item = segments[i]
                     img = app.get_resource(index + i)
                     xy = (int(item["X"]), int(item["Y"]))
                     tools.add_to_canvas(canvas, img, xy)
+        if "LineScale" in config["HeartProgress"]:
+            count = config["HeartProgress"]["LineScale"]["ImagesCount"]
+            current = int(max(0, min(1, current_bpm / 202) * count - 1))
+            if current >= config["HeartProgress"]["LineScale"]["ImagesCount"]:
+                current = config["HeartProgress"]["LineScale"]["ImagesCount"] - 1
+            tools.draw_static_object(
+                app, canvas,
+                config["HeartProgress"]["LineScale"],
+                value=current
+            )
+
+    if "CaloriesProgress" in config:
+        current_kcal = app.get_property("calories", 500)
+        if "LineScale" in config["CaloriesProgress"]:
+            count = config["CaloriesProgress"]["LineScale"]["ImagesCount"]
+            current = int(max(0, min(1, current_kcal / 1500) * count - 1))
+            if current >= config["CaloriesProgress"]["LineScale"]["ImagesCount"]:
+                current = config["CaloriesProgress"]["LineScale"]["ImagesCount"] - 1
+            tools.draw_static_object(
+                app, canvas,
+                config["CaloriesProgress"]["LineScale"],
+                value=current
+            )
+
 
     if "Heart" in config:
         if "Scale" in config["Heart"]:
