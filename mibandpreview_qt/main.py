@@ -20,6 +20,7 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
     player_toggle = [False, False, False, False, False]
     player_state = [False, False, False, False, False]
     player_started = False
+    angle = 0
 
     rebuild_required = pyqtSignal()
 

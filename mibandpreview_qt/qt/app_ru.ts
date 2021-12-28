@@ -423,94 +423,114 @@
         <translation>Параметры</translation>
     </message>
     <message>
-        <location filename="app.ui" line="901"/>
+        <location filename="app.ui" line="897"/>
+        <source>View</source>
+        <translation>Вид</translation>
+    </message>
+    <message>
+        <location filename="app.ui" line="910"/>
         <source>Open Project....</source>
         <translation>Открыть проект...</translation>
     </message>
     <message>
-        <location filename="app.ui" line="904"/>
+        <location filename="app.ui" line="913"/>
         <source>Ctrl+O</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="912"/>
+        <location filename="app.ui" line="921"/>
         <source>Auto detect device</source>
         <translation>Авто-определение</translation>
     </message>
     <message>
-        <location filename="app.ui" line="920"/>
+        <location filename="app.ui" line="929"/>
         <source>Mi Band 4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="928"/>
+        <location filename="app.ui" line="937"/>
         <source>Mi Band 5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="936"/>
+        <location filename="app.ui" line="945"/>
         <source>Mi Band 6</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="941"/>
+        <location filename="app.ui" line="950"/>
         <source>Resotre defaults</source>
         <translation>Восстановить стандартные</translation>
     </message>
     <message>
-        <location filename="app.ui" line="946"/>
+        <location filename="app.ui" line="955"/>
         <source>Exit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="app.ui" line="949"/>
+        <location filename="app.ui" line="958"/>
         <source>Ctrl+Q</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="954"/>
+        <location filename="app.ui" line="963"/>
         <source>About Mi Band Preview</source>
         <translation>О Mi Band Preview</translation>
     </message>
     <message>
-        <location filename="app.ui" line="959"/>
+        <location filename="app.ui" line="968"/>
         <source>About Qt</source>
         <translation>О Qt</translation>
     </message>
     <message>
-        <location filename="app.ui" line="964"/>
+        <location filename="app.ui" line="973"/>
         <source>Website</source>
         <translation>Сайт программы</translation>
     </message>
     <message>
-        <location filename="app.ui" line="969"/>
+        <location filename="app.ui" line="978"/>
         <source>Github</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="974"/>
+        <location filename="app.ui" line="983"/>
         <source>Refresh preview</source>
         <translation>Обновить предпросмотр</translation>
     </message>
     <message>
-        <location filename="app.ui" line="977"/>
+        <location filename="app.ui" line="986"/>
         <source>Ctrl+R</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="982"/>
+        <location filename="app.ui" line="991"/>
         <source>Save preview image...</source>
         <translation>Сохранить как изображение...</translation>
     </message>
     <message>
-        <location filename="app.ui" line="985"/>
+        <location filename="app.ui" line="994"/>
         <source>Ctrl+S</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="990"/>
+        <location filename="app.ui" line="999"/>
         <source>Configure update checker</source>
         <translation>Настройка проверки обновлений</translation>
+    </message>
+    <message>
+        <location filename="app.ui" line="1007"/>
+        <source>Vertical</source>
+        <translation>Вертикально</translation>
+    </message>
+    <message>
+        <location filename="app.ui" line="1015"/>
+        <source>Rotate to right</source>
+        <translation>Повернуть вправо</translation>
+    </message>
+    <message>
+        <location filename="app.ui" line="1023"/>
+        <source>Rotate to left</source>
+        <translation>Повернуть влево</translation>
     </message>
 </context>
 </TS>

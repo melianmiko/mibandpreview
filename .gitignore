@@ -11,3 +11,6 @@ mibandpreview.egg-info
 *~
 .vscode
 venv
+
+*.autosave
+

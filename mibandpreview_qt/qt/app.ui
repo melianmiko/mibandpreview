@@ -858,7 +858,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>32</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_file">
@@ -892,7 +892,16 @@
     <addaction name="separator"/>
     <addaction name="action_wipe"/>
    </widget>
+   <widget class="QMenu" name="menu_view">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="rotate_0"/>
+    <addaction name="rotate_270"/>
+    <addaction name="rotate_90"/>
+   </widget>
    <addaction name="menu_file"/>
+   <addaction name="menu_view"/>
    <addaction name="menuSettings"/>
    <addaction name="menu_about"/>
   </widget>
@@ -988,6 +997,30 @@
   <action name="action_configure_updater">
    <property name="text">
     <string>Configure update checker</string>
+   </property>
+  </action>
+  <action name="rotate_0">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Vertical</string>
+   </property>
+  </action>
+  <action name="rotate_270">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Rotate to right</string>
+   </property>
+  </action>
+  <action name="rotate_90">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Rotate to left</string>
    </property>
   </action>
  </widget>

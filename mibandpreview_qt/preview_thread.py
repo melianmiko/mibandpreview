@@ -42,7 +42,9 @@ class PreviewThread(QThread):
         try:
             img, state = self.app.loader.render_with_animation_frame(self.app.frames)
             sf = self.get_scale_factor(img.size)
+            angle = self.app.angle
             img = img.resize((round(img.size[0] * sf), round(img.size[1] * sf)), resample=PIL.Image.BOX)
+            img = img.rotate(angle, expand=True)
 
             self.app.player_state = state
             # noinspection PyUnresolvedReferences

@@ -7,7 +7,7 @@ from pathlib import Path
 from PIL import Image
 import os
 
-from . import app_info
+from . import app_info, MainWindow
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 RES_NO_IMAGE = APP_ROOT+"/res/no_file.png"
@@ -33,7 +33,7 @@ class UIHandler:
     preview_ready = False
 
     def __init__(self, context):
-        self.context = context
+        self.context = context          # type: MainWindow
         self._init_qt_connections()
 
     def _init_qt_connections(self):
@@ -45,10 +45,18 @@ class UIHandler:
         self.context.target_mb4.triggered.connect(lambda i: self._on_device_selected("miband4"))
         self.context.target_mb5.triggered.connect(lambda i: self._on_device_selected("miband5"))
         self.context.target_mb6.triggered.connect(lambda i: self._on_device_selected("miband6"))
-        self.context.action_wipe.triggered.connect(self.context.config.wipe)
         self.context.action_exit.triggered.connect(lambda i: self.context.close())
 
-        # About
+        # View menu
+        self.context.menu_view.aboutToShow.connect(self._on_view_menu_open)
+        self.context.rotate_0.triggered.connect(lambda i: self._on_rotate_set(0))
+        self.context.rotate_90.triggered.connect(lambda i: self._on_rotate_set(90))
+        self.context.rotate_270.triggered.connect(lambda i: self._on_rotate_set(270))
+
+        # Settings menu
+        self.context.action_wipe.triggered.connect(self.context.config.wipe)
+
+        # About menu
         self.context.action_about_app.triggered.connect(lambda i: webbrowser.open(app_info.LINK_WEBSITE))
         self.context.action_github.triggered.connect(lambda i: webbrowser.open(app_info.LINK_GITHUB))
 
@@ -262,3 +270,12 @@ class UIHandler:
         self.context.target_mb4.setChecked(device == "miband4")
         self.context.target_mb5.setChecked(device == "miband5")
         self.context.target_mb6.setChecked(device == "miband6")
+
+    def _on_view_menu_open(self):
+        self.context.rotate_0.setChecked(self.context.angle == 0)
+        self.context.rotate_90.setChecked(self.context.angle == 90)
+        self.context.rotate_270.setChecked(self.context.angle == 270)
+
+    def _on_rotate_set(self, angle):
+        self.context.angle = angle
+        self.context.rebuild()
