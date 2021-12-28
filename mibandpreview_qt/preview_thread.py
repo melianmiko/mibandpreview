@@ -4,6 +4,10 @@ import PIL.Image
 from PyQt5.QtCore import QThread, pyqtSignal
 
 
+def create(app):
+    return PreviewThread(app)
+
+
 class PreviewThread(QThread):
     image_ready = pyqtSignal(PIL.Image.Image)
     image_failed = pyqtSignal()

@@ -5,7 +5,7 @@ VERSION = "0.8.3"
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 SETTINGS_PATH = str(Path.home())+"/.mi_band_preview.json"
-SETTINGS_VER = 4
+SETTINGS_VER = 5
 APP_VERSION = "v" + VERSION
 
 LINK_GITHUB = "https://github.com/melianmiko/mibandpreview"

@@ -4,6 +4,10 @@ import os
 from . import app_info
 
 
+def create(app):
+    return ConfigManager(app)
+
+
 class ConfigManager:
     """
     This class contains config read/write handlers
@@ -19,8 +23,6 @@ class ConfigManager:
         with open(app_info.SETTINGS_PATH, "w") as f:
             f.write("{}")
 
-        self.app.app.exit(0)
-
     def save(self):
         """
         Save app info to file
@@ -30,6 +32,7 @@ class ConfigManager:
             settings = {
                 "preview_data": self.app.loader.config_export(),
                 "last_path": self.app.path,
+                "angle": self.app.angle,
                 "version": app_info.SETTINGS_VER,
                 "update_checker_enabled": self.app.updater.update_checker_enabled
             }
@@ -59,7 +62,8 @@ class ConfigManager:
 
             self.app.loader.config_import(data["preview_data"])
             self.app.bind_path(data["last_path"])
-            self.app.handler.load_config()
+            self.app.set_angle(data["angle"])
+            self.app.adapter.load_config()
             self.app.updater.update_checker_enabled = data["update_checker_enabled"]
         except Exception as e:
             print(e)

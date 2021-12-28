@@ -9,6 +9,10 @@ from PyQt5.QtWidgets import QMessageBox
 from . import app_info
 
 
+def create(app):
+    return UpdateCheckerUI(app)
+
+
 class UpdateCheckerUI:
     """
     This class contains all parts of update checker UI.
@@ -34,7 +38,7 @@ class UpdateCheckerUI:
         Start update checker
         :return: void
         """
-        print("-- Checking for new version...")
+        print("Checking for new version...")
         self.thread.start()
 
     def on_update_available(self, url, version):
