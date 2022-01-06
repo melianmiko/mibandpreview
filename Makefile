@@ -6,7 +6,7 @@ all: qt
 
 clean:
 	rm -rf build dist mibandpreview.egg-info .files.txt debian/mibandpreview/
-	rm ../mibandpreview_*
+	rm -f ../mibandpreview_*
 
 # Install commands
 install: qt
@@ -55,10 +55,10 @@ deb: clean qt
 	mkdir -p ${RELEASE_DIR}/deb
 	dpkg-buildpackage -S
 	dpkg-buildpackage -b
-	mv ../mibandpreview_* ${RELEASES_DIR}/deb
+	mv ../mibandpreview_* ${RELEASE_DIR}/deb
 
 exe: clean qt win32_nsis
-	mkdir -p ${RELEASES_DIR}/windows
-	mv dist/*.exe ${RELEASES_DIR}/windows
+	mkdir -p ${RELEASE_DIR}/windows
+	mv dist/*.exe ${RELEASE_DIR}/windows
 
 
