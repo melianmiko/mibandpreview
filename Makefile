@@ -43,7 +43,7 @@ win32_nsis: win32
 # Release commands
 rpm: clean all
 	mkdir -p ${RELEASE_DIR}/rpm
-	tito build --rpm --output=${RELEASE_DIR}/rpm
+	tito build --rpm --test --output=${RELEASE_DIR}/rpm
 	mv ${RELEASE_DIR}/rpm/noarch/mibandpreview-* ${RELEASE_DIR}/rpm
 
 wheel: clean qt
@@ -54,7 +54,7 @@ deb: clean qt
 	mkdir -p ${RELEASE_DIR}/deb
 	dpkg-buildpackage -S
 	dpkg-buildpackage -b
-	mv ../mibandpreview-* ${RELEASES_DIR}/deb
+	mv ../mibandpreview_* ${RELEASES_DIR}/deb
 
 exe: clean qt win32_nsis
 	mkdir -p ${RELEASES_DIR}/windows
