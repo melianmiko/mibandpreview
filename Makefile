@@ -6,6 +6,7 @@ all: qt
 
 clean:
 	rm -rf build dist mibandpreview.egg-info .files.txt debian/mibandpreview/
+	rm ../mibandpreview_*
 
 # Install commands
 install: qt
@@ -43,7 +44,7 @@ win32_nsis: win32
 # Release commands
 rpm: clean all
 	mkdir -p ${RELEASE_DIR}/rpm
-	tito build --rpm --test --output=${RELEASE_DIR}/rpm
+	tito build --rpm --output=${RELEASE_DIR}/rpm
 	mv ${RELEASE_DIR}/rpm/noarch/mibandpreview-* ${RELEASE_DIR}/rpm
 
 wheel: clean qt
