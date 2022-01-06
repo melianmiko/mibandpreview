@@ -62,7 +62,7 @@ class Ui_MainWindowWithSlots(object):
 
     def ui_widget_changed(self):
         if self.interactive:
-            self.handler.read_ui()
+            self.adapter.read_ui()
             self.rebuild()
 
     def ui_gif_settings_changed(self):
