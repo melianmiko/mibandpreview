@@ -28,7 +28,8 @@ def pil_to_qt(img):
 
 class PreviewThread(QThread):
     render_completed = pyqtSignal(QPixmap, bool)
-    
+    angles = [0, 90, 270]
+
     def __init__(self, parent_window):
         super().__init__()
         self.parent_window = parent_window
@@ -58,8 +59,10 @@ class PreviewThread(QThread):
 
         try:
             img, state = self.parent_window.loader.render_with_animation_frame(self.parent_window.frames)
+            rotate_option = pref_storage.get("preview_rotate", 0)
+            angle = self.angles[rotate_option]
             sf = self.get_scale_factor(img.size)
-            angle = pref_storage.get("preview_rotate", 0)
+
             img = img.resize((round(img.size[0] * sf), round(img.size[1] * sf)), resample=PIL.Image.BOX)
             img = img.rotate(angle, expand=True)
             img = pil_to_qt(img)

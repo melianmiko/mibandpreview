@@ -105,6 +105,22 @@ class LoaderUIAdapter:
 
         self.context.interactive = True
 
+    def read_gif_ui(self):
+        self.context.frames = [
+            self.context.anim_frame_0.value(),
+            self.context.anim_frame_1.value(),
+            self.context.anim_frame_2.value(),
+            self.context.anim_frame_3.value(),
+            self.context.anim_frame_4.value()
+        ]
+        self.context.player_toggle = [
+            self.context.anim_play_0.isChecked(),
+            self.context.anim_play_1.isChecked(),
+            self.context.anim_play_2.isChecked(),
+            self.context.anim_play_3.isChecked(),
+            self.context.anim_play_4.isChecked()
+        ]
+
     def setup_gif_ui(self):
         c = self.context.loader.get_animations_count()
         t = self.context.player_toggle

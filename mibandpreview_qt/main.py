@@ -77,9 +77,10 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
 
         # App translator
         translator = QTranslator(self.app)
-        if os.path.isfile(app_info.APP_ROOT+"/qt/app_"+locale_short+".qm"):
-            translator.load(app_info.APP_ROOT+"/qt/app_"+locale_short+".qm")
+        if os.path.isfile(app_info.APP_ROOT + "/qt/app_"+locale_short+".qm"):
+            translator.load(app_info.APP_ROOT + "/qt/app_"+locale_short+".qm")
             self.app.installTranslator(translator)
+        self.retranslateUi(self)
 
         # Update icon, title, current tab
         self.setWindowIcon(QIcon(app_info.APP_ROOT + "/res/mibandpreview-qt.png"))
@@ -236,16 +237,9 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
         self.set_device("miband6")
         self.previewThread.start()
 
-    def set_angle_0(self):
-        self.set_angle(0)
-        self.previewThread.start()
-
-    def set_angle_90(self):
-        self.set_angle(90)
-        self.previewThread.start()
-
-    def set_angle_270(self):
-        self.set_angle(270)
+    def set_rotate_option(self, val):
+        pref_storage.put("preview_rotate", val)
+        self.rotate_settings.setCurrentIndex(val)
         self.previewThread.start()
 
     def wipe_config(self):
@@ -265,20 +259,7 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
             self.previewThread.start()
 
     def ui_gif_settings_changed(self):
-        self.frames = [
-            self.anim_frame_0.value(),
-            self.anim_frame_1.value(),
-            self.anim_frame_2.value(),
-            self.anim_frame_3.value(),
-            self.anim_frame_4.value()
-        ]
-        self.player_toggle = [
-            self.anim_play_0.isChecked(),
-            self.anim_play_1.isChecked(),
-            self.anim_play_2.isChecked(),
-            self.anim_play_3.isChecked(),
-            self.anim_play_4.isChecked()
-        ]
+        self.adapter.read_gif_ui()
         self.previewThread.start()
         self.autoplay_init()
 
