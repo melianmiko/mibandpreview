@@ -56,6 +56,8 @@ class LoaderUIAdapter:
 
         loader.set_property("language", int(self.context.edit_language.currentIndex()))
 
+        return loader.config_export()
+
     def load_config(self):
         self.context.interactive = False
         loader = self.context.loader

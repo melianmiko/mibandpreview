@@ -53,9 +53,11 @@ wheel: clean qt
 
 deb: clean qt
 	mkdir -p ${RELEASE_DIR}/deb
-	dpkg-buildpackage -S
 	dpkg-buildpackage -b
 	mv ../mibandpreview_* ${RELEASE_DIR}/deb
+	mkdir -p ${RELEASE_DIR}/deb_src
+	dpkg-buildpackage -S
+	mv ../mibandpreview_* ${RELEASE_DIR}/deb_src
 
 exe: clean qt win32_nsis
 	mkdir -p ${RELEASE_DIR}/windows

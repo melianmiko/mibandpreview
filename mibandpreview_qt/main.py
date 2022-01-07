@@ -1,5 +1,6 @@
 import os.path
 import threading
+import webbrowser
 from pathlib import Path
 
 from PyQt5 import QtGui
@@ -8,13 +9,14 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog
 from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator, pyqtSignal, QLibraryInfo
 
 import mibandpreview
-from . import ui_adapter, app_info, update_checker, config_manager, preview_thread
-from .main_slots import Ui_MainWindowWithSlots
+from . import ui_adapter, app_info, update_checker, preview_thread, pref_storage
 from .MainWindow import Ui_MainWindow
 
 
 # noinspection PyMethodMayBeStatic
-class MiBandPreviewApp(QMainWindow, Ui_MainWindow, Ui_MainWindowWithSlots):
+class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
+    frames = [0, 0, 0, 0, 0]
+    player_toggle = [False, False, False, False, False]
     player_state = [False, False, False, False, False]
     player_started = False
     interactive = True
@@ -31,37 +33,36 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow, Ui_MainWindowWithSlots):
         """
         super().__init__()
         self.app = context_app
-
-        self.load_translation()
-        self.setupUi(self)
-
-        self.setWindowIcon(QIcon(app_info.APP_ROOT + "/res/mibandpreview-qt.png"))
-        self.setWindowTitle(self.windowTitle() + " ({})".format(app_info.APP_VERSION))
-        self.tabWidget.setCurrentIndex(0)
+        self.init_qt()
 
         self.loader = mibandpreview.MiBandPreview()         # type: mibandpreview.MiBandPreview
         self.watcher = QFileSystemWatcher()                 # type: QFileSystemWatcher
 
         self.updater = update_checker.create(self)
-        self.config = config_manager.create(self)
-        self.generator = preview_thread.create(self)
-
         self.adapter = ui_adapter.create(self)
 
-        self.bind_signals()
-        self.set_angle(0)
+        self.previewThread = preview_thread.create(self)
+        self.previewThread.render_completed.connect(self.set_preview_image)
 
-        self.set_preview_missing()
-        self.config.load()
+        self.bind_signals()
 
         if self.updater.should_check_updates():
             self.updater.start()
 
-    def load_translation(self):
+        if pref_storage.get("loader_data", None) is not None:
+            self.loader.config_import(pref_storage.get("loader_data", None))
+            self.adapter.load_config()
+
+        if pref_storage.get("last_path", "") != "" and pref_storage.get("keep_last_path", True):
+            self.bind_path(pref_storage.get("last_path", ""))
+
+    def init_qt(self):
         """
         Load QT translation file, if available
         :return: void
         """
+        super().setupUi(self)
+
         locale = QLocale.system().name()
         locale_short = locale[0:2]
 
@@ -77,6 +78,11 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow, Ui_MainWindowWithSlots):
             translator.load(app_info.APP_ROOT+"/qt/app_"+locale_short+".qm")
             self.app.installTranslator(translator)
 
+        # Update icon, title, current tab
+        self.setWindowIcon(QIcon(app_info.APP_ROOT + "/res/mibandpreview-qt.png"))
+        self.setWindowTitle(self.windowTitle() + " ({})".format(app_info.APP_VERSION))
+        self.tabWidget.setCurrentIndex(0)
+
     # noinspection PyUnresolvedReferences
     def bind_signals(self):
         """
@@ -85,9 +91,6 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow, Ui_MainWindowWithSlots):
         """
         self.watcher.directoryChanged.connect(self.on_file_change)
         self.watcher.fileChanged.connect(self.on_file_change)
-        self.generator.image_ready.connect(self.set_preview_image)
-        self.generator.image_missing.connect(self.set_preview_missing)
-        self.generator.image_failed.connect(self.set_preview_error)
 
     def save_as_png(self):
         """
@@ -127,7 +130,7 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow, Ui_MainWindowWithSlots):
         :param path: Target path
         :return: void
         """
-        self.path = path
+        self.path = pref_storage.put("last_path", path)
 
         if path == "":
             self.set_preview_missing()
@@ -141,7 +144,7 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow, Ui_MainWindowWithSlots):
         self.loader.bind_path(path)
 
         self.adapter.setup_gif_ui()
-        self.rebuild()
+        self.previewThread.start()
 
     def on_file_change(self):
         """
@@ -150,7 +153,7 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow, Ui_MainWindowWithSlots):
         """
         try:
             self.loader.load_data()
-            self.rebuild()
+            self.previewThread.start()
         except Exception as e:
             print("RELOAD ERROR: " + str(e))
             self.set_preview_error()
@@ -188,11 +191,11 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow, Ui_MainWindowWithSlots):
                 else:
                     self.frames[a] += 1
 
-        self.rebuild()
+        self.previewThread.start()
         threading.Timer(0.05, self.autoplay_handler, args=(self,)).start()
 
     def set_angle(self, angle):
-        self.angle = angle
+        pref_storage.put("preview_rotate", angle)
 
         self.rotate_0.setChecked(angle == 0)
         self.rotate_90.setChecked(angle == 90)
@@ -207,14 +210,13 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow, Ui_MainWindowWithSlots):
         self.target_mb6.setChecked(device == "miband6")
 
     # QT Events
-
     def resizeEvent(self, a0: QtGui.QResizeEvent) -> None:
         """
         Window resized event handler
         :param a0: some argument?
         :return: void
         """
-        self.rebuild()                              # Rebuild with new scale value
+        self.previewThread.start()
         return QMainWindow.resizeEvent(self, a0)
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
@@ -224,9 +226,68 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow, Ui_MainWindowWithSlots):
         :return: void
         """
         self.player_started = False
-        self.config.save()
+        pref_storage.save()
 
         return QMainWindow.closeEvent(self, a0)
 
-    def rebuild(self):
-        self.generator.run()
+    def set_target_mb4(self):
+        self.set_device("miband4")
+        self.previewThread.start()
+
+    def set_target_mb5(self):
+        self.set_device("miband5")
+        self.previewThread.start()
+
+    def set_target_mb6(self):
+        self.set_device("miband6")
+        self.previewThread.start()
+
+    def set_angle_0(self):
+        self.set_angle(0)
+        self.previewThread.start()
+
+    def set_angle_90(self):
+        self.set_angle(90)
+        self.previewThread.start()
+
+    def set_angle_270(self):
+        self.set_angle(270)
+        self.previewThread.start()
+
+    def wipe_config(self):
+        pref_storage.wipe()
+        self.app.exit(0)
+
+    def open_site(self):
+        webbrowser.open(app_info.LINK_WEBSITE)
+
+    def open_github(self):
+        webbrowser.open(app_info.LINK_GITHUB)
+
+    def ui_widget_changed(self):
+        if self.interactive:
+            loader_data = self.adapter.read_ui()
+            pref_storage.put("loader_data", loader_data)
+            self.previewThread.start()
+
+    def ui_gif_settings_changed(self):
+        self.frames = [
+            self.anim_frame_0.value(),
+            self.anim_frame_1.value(),
+            self.anim_frame_2.value(),
+            self.anim_frame_3.value(),
+            self.anim_frame_4.value()
+        ]
+        self.player_toggle = [
+            self.anim_play_0.isChecked(),
+            self.anim_play_1.isChecked(),
+            self.anim_play_2.isChecked(),
+            self.anim_play_3.isChecked(),
+            self.anim_play_4.isChecked()
+        ]
+        self.previewThread.start()
+        self.autoplay_init()
+
+    def set_preview_image(self, img, save_enabled):
+        self.preview_host.setPixmap(img)
+        self.action_save.setEnabled(save_enabled)

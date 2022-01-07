@@ -6,7 +6,9 @@ import webbrowser
 from PyQt5.QtCore import QThread, pyqtSignal, QLocale
 from PyQt5.QtWidgets import QMessageBox
 
-from . import app_info
+from . import app_info, pref_storage
+
+DEFAULT_UPDATE_CHECKER_STATE = True
 
 
 def create(app):
@@ -24,7 +26,6 @@ class UpdateCheckerUI:
         :param app: Main application window
         """
         self.app = app
-        self.update_checker_enabled = True
         self.thread = UpdateCheckerThread(self.app)
 
         # noinspection PyUnresolvedReferences
@@ -77,7 +78,7 @@ class UpdateCheckerUI:
         Clear current settings and show configure dialog
         :return: void
         """
-        self.update_checker_enabled = None
+        pref_storage.put("updater_enabled", None)
         self.should_check_updates()
 
     def should_check_updates(self):
@@ -85,8 +86,8 @@ class UpdateCheckerUI:
         Check, is updater enabled. If prop missing, ask user.
         :return: True, if enabled
         """
-        if self.update_checker_enabled is not None:
-            return self.update_checker_enabled
+        if pref_storage.get("updater_enabled", DEFAULT_UPDATE_CHECKER_STATE) is not None:
+            return pref_storage.get("updater_enabled", DEFAULT_UPDATE_CHECKER_STATE)
 
         qm = QMessageBox()
         qm.setModal(True)
@@ -105,7 +106,7 @@ class UpdateCheckerUI:
         answer = answer == qm.Yes
 
         print("New update checker state: " + str(answer))
-        self.update_checker_enabled = answer
+        pref_storage.put("updater_enabled", answer)
 
         return answer
 
