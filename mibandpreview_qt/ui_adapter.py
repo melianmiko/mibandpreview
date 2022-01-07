@@ -1,5 +1,4 @@
 from PyQt5.QtCore import QTime, QDate
-from . import MainWindow
 
 
 def create(context):
@@ -8,7 +7,8 @@ def create(context):
 
 class LoaderUIAdapter:
     def __init__(self, context):
-        self.context = context          # type: MainWindow
+        self.context = context
+
         self.load_config()
         self.read_ui()
 

@@ -46,7 +46,8 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
         self.previewThread = preview_thread.create(self)
         self.previewThread.render_completed.connect(self.set_preview_image)
 
-        self.bind_signals()
+        if os.path.isfile(app_info.SETTINGS_PATH):
+            os.unlink(app_info.SETTINGS_PATH)
 
         if self.updater.should_check_updates():
             self.updater.start()
