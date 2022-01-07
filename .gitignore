@@ -2,7 +2,7 @@
 debian/mibandpreview*
 debian/.debhelper
 debian/files
-mibandpreview_qt/MainWindow.py
+mibandpreview_qt/ui_frames.py
 build
 dist
 .idea

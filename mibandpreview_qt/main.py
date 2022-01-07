@@ -9,12 +9,11 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog
 from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator, pyqtSignal, QLibraryInfo
 
 import mibandpreview
-from . import ui_adapter, app_info, update_checker, preview_thread, pref_storage
-from .MainWindow import Ui_MainWindow
+from . import ui_adapter, ui_frames, app_info, update_checker, preview_thread, pref_storage
 
 
 # noinspection PyMethodMayBeStatic
-class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
+class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
     frames = [0, 0, 0, 0, 0]
     player_toggle = [False, False, False, False, False]
     player_state = [False, False, False, False, False]
@@ -26,6 +25,7 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
 
     rebuild_required = pyqtSignal()
 
+    # noinspection PyUnresolvedReferences
     def __init__(self, context_app):
         """
         Default constructor
@@ -35,11 +35,13 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
         self.app = context_app
         self.init_qt()
 
-        self.loader = mibandpreview.MiBandPreview()         # type: mibandpreview.MiBandPreview
-        self.watcher = QFileSystemWatcher()                 # type: QFileSystemWatcher
-
+        self.loader = mibandpreview.create()
         self.updater = update_checker.create(self)
         self.adapter = ui_adapter.create(self)
+
+        self.watcher = QFileSystemWatcher()
+        self.watcher.directoryChanged.connect(self.on_file_change)
+        self.watcher.fileChanged.connect(self.on_file_change)
 
         self.previewThread = preview_thread.create(self)
         self.previewThread.render_completed.connect(self.set_preview_image)
@@ -82,15 +84,6 @@ class MiBandPreviewApp(QMainWindow, Ui_MainWindow):
         self.setWindowIcon(QIcon(app_info.APP_ROOT + "/res/mibandpreview-qt.png"))
         self.setWindowTitle(self.windowTitle() + " ({})".format(app_info.APP_VERSION))
         self.tabWidget.setCurrentIndex(0)
-
-    # noinspection PyUnresolvedReferences
-    def bind_signals(self):
-        """
-        Bind signal listeners
-        :return: void
-        """
-        self.watcher.directoryChanged.connect(self.on_file_change)
-        self.watcher.fileChanged.connect(self.on_file_change)
 
     def save_as_png(self):
         """

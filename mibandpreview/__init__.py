@@ -2,6 +2,10 @@
 from .generator import MiBandPreview
 
 
+def create():
+    return MiBandPreview()
+
+
 def open_dir(directory):
     """
     Open project directory
