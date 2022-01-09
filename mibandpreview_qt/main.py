@@ -35,27 +35,37 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
         self.app = context_app
         self.init_qt()
 
+        # Create all submodules
         self.loader = mibandpreview.create()
         self.updater = update_checker.create(self)
         self.adapter = ui_adapter.create(self)
 
+        # Setup FS watcher
         self.watcher = QFileSystemWatcher()
         self.watcher.directoryChanged.connect(self.on_file_change)
         self.watcher.fileChanged.connect(self.on_file_change)
 
+        # Spawn preview thread
         self.previewThread = preview_thread.create(self)
         self.previewThread.render_completed.connect(self.set_preview_image)
 
+        # Load settings
+        self.rotate_settings.setCurrentIndex(pref_storage.get("preview_rotate", 0))
+        self.loader.config_import(pref_storage.get("loader_data", {}))
+
+        # Loader config -> GUI
+        self.adapter.load_config()
+
+        # Remove old settings file, if exists
+        # TODO: Remove this
         if os.path.isfile(app_info.SETTINGS_PATH):
             os.unlink(app_info.SETTINGS_PATH)
 
+        # Start update checker, if enabled
         if self.updater.should_check_updates():
             self.updater.start()
 
-        if pref_storage.get("loader_data", None) is not None:
-            self.loader.config_import(pref_storage.get("loader_data", None))
-            self.adapter.load_config()
-
+        # Restore last path, if saved
         if pref_storage.get("last_path", "") != "" and pref_storage.get("keep_last_path", True):
             self.bind_path(pref_storage.get("last_path", ""))
 
@@ -127,16 +137,13 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
         """
         self.path = pref_storage.put("last_path", path)
 
-        if path == "":
-            self.set_preview_missing()
-            return
-
         for a in self.watcher.directories():
             self.watcher.removePath(a)
 
-        self.watcher.addPath(path)
-        self.set_device("auto")
-        self.loader.bind_path(path)
+        if os.path.isdir(path):
+            self.watcher.addPath(path)
+            self.set_device("auto")
+            self.loader.bind_path(path)
 
         self.adapter.setup_gif_ui()
         self.previewThread.start()
@@ -146,12 +153,8 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
         On file change event handler
         :return:
         """
-        try:
-            self.loader.load_data()
-            self.previewThread.start()
-        except Exception as e:
-            print("RELOAD ERROR: " + str(e))
-            self.set_preview_error()
+        self.loader.load_data()
+        self.previewThread.start()
 
     def autoplay_init(self):
         """
@@ -188,13 +191,6 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
 
         self.previewThread.start()
         threading.Timer(0.05, self.autoplay_handler, args=(self,)).start()
-
-    def set_angle(self, angle):
-        pref_storage.put("preview_rotate", angle)
-
-        self.rotate_0.setChecked(angle == 0)
-        self.rotate_90.setChecked(angle == 90)
-        self.rotate_270.setChecked(angle == 270)
 
     def set_device(self, device):
         self.loader.set_property("device", device)

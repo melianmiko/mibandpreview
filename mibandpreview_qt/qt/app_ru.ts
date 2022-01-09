@@ -383,7 +383,7 @@
         <location filename="app.ui" line="706"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;Animation preview&lt;/span&gt;&lt;/h2&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <oldsource>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;Animation play&lt;/span&gt;&lt;/h2&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
-        <translation>&lt;h2&gt;Просмтори анимации&lt;/h2&gt;</translation>
+        <translation type="unfinished">&lt;h2&gt;Просмтор анимации&lt;/h2&gt;</translation>
     </message>
     <message>
         <source>Others</source>

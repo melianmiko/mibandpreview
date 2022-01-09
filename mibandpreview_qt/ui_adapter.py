@@ -9,9 +9,6 @@ class LoaderUIAdapter:
     def __init__(self, context):
         self.context = context
 
-        self.load_config()
-        self.read_ui()
-
     def read_ui(self):
         loader = self.context.loader
 
