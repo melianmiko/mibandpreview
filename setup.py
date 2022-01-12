@@ -1,20 +1,21 @@
 from setuptools import setup
-
-version = "0.10"
+from mibandpreview_qt.app_info import VERSION, APP_VERSION
 
 setup(
     name='mibandpreview',
-    version=version,
-    packages=['mibandpreview'],
+    version=VERSION,
+    packages=['mibandpreview', 'mibandpreview_qt'],
     url='https://github.com/melianmiko/mibandpreview',
-    download_url="https://github.com/melianmiko/mibandpreview/archive/refs/tags/v" + version + ".tar.gz",
+    download_url="https://github.com/melianmiko/mibandpreview/archive/refs/tags/" + APP_VERSION + ".tar.gz",
     license='Apache 2.0',
     install_requires=[
-        "Pillow",
-        "PyQt5"
+        "Pillow"
     ],
+    extras_require={
+        "qt": ["PyQt5"]
+    },
     author='MelianMiko',
     author_email='melianmiko@gmail.com',
-    description='Mi Band 4-6 watchface preview library',
+    description='Mi Band Preview',
     include_package_data=True
 )

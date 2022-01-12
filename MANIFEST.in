@@ -1,1 +1,3 @@
+include mibandpreview_qt/res/*.png
 include mibandpreview/res/*.png
+include mibandpreview_qt/qt/*.qm

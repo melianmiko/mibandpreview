@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.1
+Type=Application
+Name=Mi Band Preview
+Comment=Tool to preview Mi Band watchfaces
+Icon=/usr/share/icons/hicolor/96x96/apps/mibandpreview-qt.png
+Exec=/usr/bin/env python3 -m mibandpreview_qt
+Actions=
+Categories=Graphics;

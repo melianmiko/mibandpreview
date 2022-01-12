@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+
+override_dh_auto_install:
+	SETUP_PROPS="--install-lib /usr/lib/python3/dist-packages" \
+		    dh_auto_install
+
+%:
+	dh $@
+

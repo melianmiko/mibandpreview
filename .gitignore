@@ -1,4 +1,8 @@
 **__pycache__**
+debian/mibandpreview*
+debian/.debhelper
+debian/files
+mibandpreview_qt/ui_frames.py
 build
 dist
 .idea
@@ -7,5 +11,6 @@ mibandpreview.egg-info
 *~
 .vscode
 venv
+
 *.autosave
 
