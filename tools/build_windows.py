@@ -22,7 +22,7 @@ def make_win32():
     base_wd = os.getcwd()
     args = mk_args(WINDOWS_PYINSTALLER_ARGS)
     path = base_wd + "\\tools\\win32-entrypoint.py"
-    qt_tools = site.getusersitepackages()
+    qt_tools = site.getusersitepackages() + r"\PySide2"
 
     os.environ["PYTHONPATH"] = base_wd
 
