@@ -1,5 +1,6 @@
 import os
 import shutil
+import site
 import subprocess
 
 WINDOWS_PYINSTALLER_ARGS = {
@@ -21,6 +22,7 @@ def make_win32():
     base_wd = os.getcwd()
     args = mk_args(WINDOWS_PYINSTALLER_ARGS)
     path = base_wd + "\\tools\\win32-entrypoint.py"
+    qt_tools = site.getusersitepackages()
 
     os.environ["PYTHONPATH"] = base_wd
 
@@ -35,8 +37,8 @@ def make_win32():
     os.chdir(base_wd + "/mibandpreview_qt")
     subprocess.Popen(["pyside2-uic", "qt/app.ui", "-o", "ui_frames.py"]).wait()
     os.chdir(base_wd + "/mibandpreview_qt/qt")
-    subprocess.Popen(["lupdate", "app.pro"]).wait()
-    subprocess.Popen(["lrelease", "app.pro"]).wait()
+    subprocess.Popen(["pyside2-lupdate", "app.pro"]).wait()
+    subprocess.Popen([qt_tools + r"\lrelease", "app.pro"]).wait()
 
     # Build command and run
     command = ["pyinstaller"] + args + [path]
