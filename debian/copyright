@@ -1,10 +1,10 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: mibandpreview
-Upstream-Contact: MelianMiko <mikigaru@zohomail.com>
+Upstream-Contact: MelianMiko <melianmiko@gmail.com>
 Source: https://github.com/melianmiko/MiBandPreview4Linux
 
 Files: *
-Copyright: 2020 MelianMiko <mikigaru@zohomail.com>
+Copyright: 2020 MelianMiko <melianmiko@gmail.com>
 License: Apache 2.0
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ License: Apache 2.0
  limitations under the License.
 
 Files: debian/*
-Copyright: 2020 MelianMiko <mikigaru@zohomail.com>
+Copyright: 2020 MelianMiko <melianmiko@gmail.com>
 License: GPL-2+
  This package is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
