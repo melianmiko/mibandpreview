@@ -1,6 +1,0 @@
-tar-ignore = "venv"
-tar-ignore = ".git"
-tar-ignore = ".gitignore"
-tar-ignore = ".tito"
-tar-ignore = ".idea"
-

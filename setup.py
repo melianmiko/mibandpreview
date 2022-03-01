@@ -12,7 +12,7 @@ setup(
         "Pillow"
     ],
     extras_require={
-        "qt": ["PySide2"]
+        "qt": ["PyQt5"]
     },
     author='MelianMiko',
     author_email='melianmiko@gmail.com',

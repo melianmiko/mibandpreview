@@ -7,7 +7,7 @@ def start_application():
     :return: void
     """
     import sys
-    from PySide2.QtWidgets import QApplication
+    from PyQt5.QtWidgets import QApplication
     from .main import MiBandPreviewApp
 
     app = QApplication(sys.argv)

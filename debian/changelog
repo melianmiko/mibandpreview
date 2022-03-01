@@ -1,6 +1,7 @@
-mibandpreview (1.0-1) impish; urgency=medium
+mibandpreview (0.9.1-1) impish; urgency=medium
   
-  * Github-independent update checker
-  * Migrated to PySide2
+  * 0.9.1: Fixed app crash on settings change
+  * New: screen rotate option
+  * Small refactor
 
- -- MelianMiko <melianmiko@gmail.com>  Tue, 01 Mar 2022 06:38:59 +0000
+ -- MelianMiko <melianmiko@gmail.com>  Thu, 06 Jan 2022 15:16:00 +0700

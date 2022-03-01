@@ -3,8 +3,8 @@ import platform
 import urllib.request
 import webbrowser
 
-from PySide2.QtCore import QThread, Signal, QLocale
-from PySide2.QtWidgets import QMessageBox
+from PyQt5.QtCore import QThread, pyqtSignal, QLocale
+from PyQt5.QtWidgets import QMessageBox
 
 from . import app_info, pref_storage
 
@@ -116,7 +116,7 @@ class UpdateCheckerThread(QThread):
     """
     Update checker thread
     """
-    has_updates = Signal(str, str)
+    has_updates = pyqtSignal(str, str)
 
     # noinspection PyBroadException
     def run(self):
