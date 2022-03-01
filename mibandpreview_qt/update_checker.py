@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 from . import app_info, pref_storage
 
+
 DEFAULT_UPDATE_CHECKER_STATE = True
 release_url = "https://st.melianmiko.ru/mibandpreview/release.json"
 
