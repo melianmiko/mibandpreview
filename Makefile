@@ -25,7 +25,7 @@ uninstall:
 qt:
 	cd mibandpreview_qt && pyuic5 qt/app.ui -o ui_frames.py
 	cd mibandpreview_qt && sed -i -e 's/PyQt5/PySide2/g' ui_frames.py
-	cd mibandpreview_qt/qt && lupdate app.pro && lrelease app.pro
+	cd mibandpreview_qt/qt && lupdate app.pro
 
 win32:
 	rm -rf dist/mibandpreview
