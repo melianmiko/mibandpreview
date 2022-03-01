@@ -36,9 +36,13 @@ def make_win32():
     print("-- make qt")
     os.chdir(base_wd + "/mibandpreview_qt")
     subprocess.Popen(["pyside2-uic", "qt/app.ui", "-o", "ui_frames.py"]).wait()
+
     os.chdir(base_wd + "/mibandpreview_qt/qt")
     subprocess.Popen(["pyside2-lupdate", "app.pro"]).wait()
-    subprocess.Popen([qt_tools + r"\lrelease", "app.pro"]).wait()
+    for a in os.listdir():
+        if a.endswith(".ts"):
+            print("mk lang " + a)
+            subprocess.Popen([qt_tools + r"\lrelease", a]).wait()
 
     # Build command and run
     command = ["pyinstaller"] + args + [path]
