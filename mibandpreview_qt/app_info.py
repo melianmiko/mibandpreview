@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-VERSION = "0.9.1"
+VERSION = "1.0"
 APP_VERSION = "v" + VERSION
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -10,4 +10,3 @@ SETTINGS_VER = 5
 
 LINK_GITHUB = "https://github.com/melianmiko/mibandpreview"
 LINK_WEBSITE = "https://melianmiko.ru/mibandpreview"
-

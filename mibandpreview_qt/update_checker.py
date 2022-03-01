@@ -10,7 +10,8 @@ from . import app_info, pref_storage
 
 
 DEFAULT_UPDATE_CHECKER_STATE = True
-release_url = "https://st.melianmiko.ru/mibandpreview/release.json"
+# noinspection HttpUrlsUsage
+release_url = "http://st.melianmiko.ru/mibandpreview/release.json"
 
 
 def create(app):
@@ -133,7 +134,7 @@ class UpdateCheckerThread(QThread):
 
         res = json.loads(res.read())
 
-        if res["version"] == app_info.APP_VERSION:
+        if res["version"] == app_info.VERSION:
             print("No updates")
             return
 
@@ -141,7 +142,7 @@ class UpdateCheckerThread(QThread):
         if platform.system() == "Windows" and "windows" in res:
             url = res["windows"][0]["url"]
 
-        print("New version: " + app_info.APP_VERSION + " != " + res["version"])
+        print("New version: " + app_info.VERSION + " != " + res["version"])
         print("Download url: " + url)
 
         # noinspection PyUnresolvedReferences

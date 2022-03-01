@@ -1,4 +1,5 @@
 tar-ignore = "venv"
-tar-ignore = "builddir"
+tar-ignore = "build"
+tar-ignore = "*.egg-info"
+tar-ignore = ".files"
 tar-ignore = "**/__pycache__"
-
