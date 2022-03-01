@@ -5,6 +5,7 @@ venv
 
 mibandpreview_qt/ui_frames.py
 mibandpreview.egg-info
+mibandpreview.spec
 .files.txt
 *.autosave
 *~
