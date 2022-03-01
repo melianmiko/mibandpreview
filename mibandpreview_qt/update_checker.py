@@ -9,6 +9,7 @@ from PySide2.QtWidgets import QMessageBox
 from . import app_info, pref_storage
 
 DEFAULT_UPDATE_CHECKER_STATE = True
+release_url = "https://st.melianmiko.ru/mibandpreview/release.json"
 
 
 def create(app):
@@ -111,21 +112,6 @@ class UpdateCheckerUI:
         return answer
 
 
-def get_exe_url(res):
-    """
-    Get windows installer URL from github response
-    :param res: GitHub releases API response
-    :return: URL
-    """
-    url = app_info.LINK_WEBSITE
-
-    for a in res["assets"]:
-        if a["name"].endswith(".exe"):
-            url = a["browser_download_url"]
-
-    return url
-
-
 class UpdateCheckerThread(QThread):
     """
     Update checker thread
@@ -139,26 +125,23 @@ class UpdateCheckerThread(QThread):
         :return: void
         """
         try:
-            res = urllib.request.urlopen(
-                "https://api.github.com/repos/melianmiko/mibandpreview/releases",
-                timeout=3
-            )
+            res = urllib.request.urlopen(release_url, timeout=3)
         except Exception:
             print("Update check failed", flush=True)
             return
 
-        res = json.loads(res.read())[0]
+        res = json.loads(res.read())
 
-        if not res["tag_name"] == app_info.APP_VERSION:
-            print("New version: " + app_info.APP_VERSION + " != " + res["tag_name"])
-            url = app_info.LINK_WEBSITE
+        if res["version"] == app_info.APP_VERSION:
+            print("No updates")
+            return
 
-            if platform.system() == "Windows":
-                url = get_exe_url(res)
+        url = app_info.LINK_WEBSITE
+        if platform.system() == "Windows" and "windows" in res:
+            url = res["windows"][0]["url"]
 
-            print("Download url: " + url)
+        print("New version: " + app_info.APP_VERSION + " != " + res["version"])
+        print("Download url: " + url)
 
-            # noinspection PyUnresolvedReferences
-            self.has_updates.emit(url, res["tag_name"])
-        else:
-            print("Already latest: " + app_info.APP_VERSION)
+        # noinspection PyUnresolvedReferences
+        self.has_updates.emit(url, res["version"])
