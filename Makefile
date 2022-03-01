@@ -28,14 +28,12 @@ qt:
 
 win32:
 	rm -rf dist/mibandpreview
-	mv mibandpreview.spec .mibandpreview.spec
 	pyinstaller --name mibandpreview --icon mibandpreview_qt/res/icon.ico -w \
 		--hidden-import=certifi \
 		--add-data "mibandpreview/res;mibandpreview/res" \
 		--add-data "mibandpreview_qt/res;mibandpreview_qt/res" \
 		--add-data "mibandpreview_qt/qt;mibandpreview_qt/qt" \
 		scripts/win32-entrypoint.py
-	mv .mibandpreview.spec mibandpreview.spec
 
 win32_nsis: win32
 	cp tools/installer.nsi dist/installer.nsi
