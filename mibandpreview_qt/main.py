@@ -3,10 +3,10 @@ import threading
 import webbrowser
 from pathlib import Path
 
-from PyQt5 import QtGui
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QMainWindow, QFileDialog
-from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator, pyqtSignal, QLibraryInfo
+from PySide2 import QtGui
+from PySide2.QtGui import QIcon
+from PySide2.QtWidgets import QMainWindow, QFileDialog
+from PySide2.QtCore import QFileSystemWatcher, QLocale, QTranslator, Signal, QLibraryInfo
 
 import mibandpreview
 from . import ui_adapter, ui_frames, app_info, update_checker, preview_thread, pref_storage
@@ -23,7 +23,7 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
     angle = 0
     path = ""
 
-    rebuild_required = pyqtSignal()
+    rebuild_required = Signal()
 
     # noinspection PyUnresolvedReferences
     def __init__(self, context_app):
@@ -55,11 +55,6 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
 
         # Loader config -> GUI
         self.adapter.load_config()
-
-        # Remove old settings file, if exists
-        # TODO: Remove this
-        if os.path.isfile(app_info.SETTINGS_PATH):
-            os.unlink(app_info.SETTINGS_PATH)
 
         # Start update checker, if enabled
         if self.updater.should_check_updates():

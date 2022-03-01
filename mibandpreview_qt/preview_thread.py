@@ -2,8 +2,8 @@ import os
 import traceback
 import PIL.Image
 from PIL import Image
-from PyQt5.QtCore import QThread, pyqtSignal
-from PyQt5.QtGui import QImage, QPixmap
+from PySide2.QtCore import QThread, Signal
+from PySide2.QtGui import QImage, QPixmap
 
 from mibandpreview_qt import pref_storage
 
@@ -27,7 +27,7 @@ def pil_to_qt(img):
 
 
 class PreviewThread(QThread):
-    render_completed = pyqtSignal(QPixmap, bool)
+    render_completed = Signal(QPixmap, bool)
     angles = [0, 90, 270]
 
     def __init__(self, parent_window):

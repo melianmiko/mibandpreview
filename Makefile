@@ -23,7 +23,7 @@ uninstall:
 
 # Build commands
 qt:
-	cd mibandpreview_qt && pyuic5 qt/app.ui -o ui_frames.py
+	cd mibandpreview_qt && pyside2-uic qt/app.ui -o ui_frames.py
 	cd mibandpreview_qt/qt && lupdate app.pro && lrelease app.pro
 
 win32:

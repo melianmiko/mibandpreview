@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QTime, QDate
+from PySide2.QtCore import QTime, QDate
 
 
 def create(context):
