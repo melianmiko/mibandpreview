@@ -30,6 +30,14 @@ def make_win32():
     if os.path.isdir("builddir/dist"):
         shutil.rmtree("builddir/dist")
 
+    # Make Qt parts
+    print("-- make qt")
+    os.chdir(base_wd + "/mibandpreview_qt")
+    subprocess.Popen(["pyside2-uic", "qt/app.ui", "-o", "ui_frames.py"]).wait()
+    os.chdir(base_wd + "/mibandpreview_qt/qt")
+    subprocess.Popen(["lupdate", "app.pro"]).wait()
+    subprocess.Popen(["lrelease", "app.pro"]).wait()
+
     # Build command and run
     command = ["pyinstaller"] + args + [path]
     print("-- starting", command)
