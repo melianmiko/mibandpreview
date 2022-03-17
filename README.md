@@ -11,10 +11,10 @@ Mi Band watchface preview generator library and Qt5 GUI written in Python3
 -   [Make a small donation](https://melianmiko.ru/donate)
 
 Features:
--   Preview your Mi Band 4-6 watch faces without building them (Mi Band 5 support is experimental)
+-   Preview your Mi Band 4-6 watch faces without building them
 -   Set custom date/time/activity/status values for preview
 -   Preview updates automatically when some files inside project dir would being changed
--   Opened path and current settings saves automatically
+-   Current path and settings saves automatically
 
 ## Installation
 ### Ubuntu ppa
