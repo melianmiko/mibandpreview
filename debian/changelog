@@ -1,6 +1,6 @@
-mibandpreview (1.0-1) impish; urgency=medium
+mibandpreview (1.1-1) impish; urgency=medium
   
-  * Github-independed updater
-  * Windows: use UPX
+  * Added inputs: Timezone (time + disable checkbox), Alarm Time, Distance unit.
+  * StatusSimplified basic implementation
 
- -- MelianMiko <melianmiko@gmail.com>  Thu, 06 Jan 2022 15:16:00 +0700
+ -- MelianMiko <melianmiko@gmail.com>  Fri, 01 Apr 2022 19:13:32 +0700

@@ -206,17 +206,17 @@
     <message>
         <location filename="app.ui" line="470"/>
         <source>Distance unit</source>
-        <translation type="unfinished"></translation>
+        <translation>Ед. расстояния</translation>
     </message>
     <message>
         <location filename="app.ui" line="478"/>
         <source>Kilometers</source>
-        <translation type="unfinished"></translation>
+        <translation>Километры</translation>
     </message>
     <message>
         <location filename="app.ui" line="483"/>
         <source>Miles</source>
-        <translation type="unfinished"></translation>
+        <translation>Мили</translation>
     </message>
     <message>
         <location filename="app.ui" line="493"/>
@@ -397,7 +397,7 @@
         <location filename="app.ui" line="767"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;Animation preview&lt;/span&gt;&lt;/h2&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <oldsource>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;Animation play&lt;/span&gt;&lt;/h2&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
-        <translation type="unfinished">&lt;h2&gt;Просмтор анимации&lt;/h2&gt;</translation>
+        <translation>&lt;h2&gt;Просмтор анимации&lt;/h2&gt;</translation>
     </message>
     <message>
         <source>Others</source>
@@ -484,27 +484,27 @@
     <message>
         <location filename="app.ui" line="258"/>
         <source>Alarm time</source>
-        <translation type="unfinished"></translation>
+        <translation>Будильник:</translation>
     </message>
     <message>
         <location filename="app.ui" line="268"/>
         <source>No timezone:</source>
-        <translation type="unfinished"></translation>
+        <translation>Скрыть закат\рассвет:</translation>
     </message>
     <message>
         <location filename="app.ui" line="314"/>
         <source>Sunset time:</source>
-        <translation type="unfinished"></translation>
+        <translation>Время заката:</translation>
     </message>
     <message>
         <location filename="app.ui" line="324"/>
         <source>Sunrise time:</source>
-        <translation type="unfinished"></translation>
+        <translation>Время рассвета:</translation>
     </message>
     <message>
         <location filename="app.ui" line="862"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;View settings&lt;/span&gt;&lt;/h2&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;h2&gt;Отображение&lt;/h2&gt;</translation>
+        <translation>&lt;h2&gt;Отображение&lt;/h2&gt;</translation>
     </message>
     <message>
         <location filename="app.ui" line="987"/>
