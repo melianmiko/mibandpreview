@@ -125,36 +125,3 @@ class LoaderUIAdapter:
                     self.loader.get_property(prefix + "minutes", m),
                     self.loader.get_property(prefix + "seconds", s))
         field.setTime(time)
-
-    def read_gif_ui(self):
-        self.context.frames = [
-            self.context.anim_frame_0.value(),
-            self.context.anim_frame_1.value(),
-            self.context.anim_frame_2.value(),
-            self.context.anim_frame_3.value(),
-            self.context.anim_frame_4.value()
-        ]
-        self.context.player_toggle = [
-            self.context.anim_play_0.isChecked(),
-            self.context.anim_play_1.isChecked(),
-            self.context.anim_play_2.isChecked(),
-            self.context.anim_play_3.isChecked(),
-            self.context.anim_play_4.isChecked()
-        ]
-
-    def setup_gif_ui(self):
-        c = self.loader.get_animations_count()
-        t = self.context.player_toggle
-
-        self.context.anim_frame_0.setEnabled(c > 0 and not t[0])
-        self.context.anim_frame_1.setEnabled(c > 1 and not t[1])
-        self.context.anim_frame_2.setEnabled(c > 2 and not t[2])
-        self.context.anim_frame_3.setEnabled(c > 3 and not t[3])
-        self.context.anim_frame_4.setEnabled(c > 4 and not t[4])
-
-        self.context.anim_play_0.setEnabled(c > 0)
-        self.context.anim_play_1.setEnabled(c > 1)
-        self.context.anim_play_2.setEnabled(c > 2)
-        self.context.anim_play_3.setEnabled(c > 3)
-        self.context.anim_play_4.setEnabled(c > 4)
-

@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog
 from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator, pyqtSignal, QLibraryInfo
 
 import mibandpreview
-from . import ui_adapter, ui_frames, app_info, update_checker, preview_thread, pref_storage
+from mibandpreview_qt import ui_adapter, ui_frames, app_info, update_checker, preview_thread, pref_storage
 
 
 class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
@@ -144,7 +144,7 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
             self.set_device("auto")
             self.loader.bind_path(path)
 
-        self.adapter.setup_gif_ui()
+        self.setup_gif_ui()
         self.previewThread.start()
 
     def on_file_change(self):
@@ -160,7 +160,7 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
         Initialize GIF autoplay
         :return:
         """
-        self.adapter.setup_gif_ui()
+        self.setup_gif_ui()
         if self.player_started and True in self.player_toggle:
             # Already started, ignoring
             return
@@ -256,10 +256,43 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
             self.previewThread.start()
 
     def ui_gif_settings_changed(self):
-        self.adapter.read_gif_ui()
+        self.read_gif_ui()
         self.previewThread.start()
         self.autoplay_init()
 
     def set_preview_image(self, img, save_enabled):
         self.preview_host.setPixmap(img)
         self.action_save.setEnabled(save_enabled)
+
+    def read_gif_ui(self):
+        self.frames = [
+            self.anim_frame_0.value(),
+            self.anim_frame_1.value(),
+            self.anim_frame_2.value(),
+            self.anim_frame_3.value(),
+            self.anim_frame_4.value()
+        ]
+        self.player_toggle = [
+            self.anim_play_0.isChecked(),
+            self.anim_play_1.isChecked(),
+            self.anim_play_2.isChecked(),
+            self.anim_play_3.isChecked(),
+            self.anim_play_4.isChecked()
+        ]
+
+    def setup_gif_ui(self):
+        c = self.loader.get_animations_count()
+        t = self.player_toggle
+
+        self.anim_frame_0.setEnabled(c > 0 and not t[0])
+        self.anim_frame_1.setEnabled(c > 1 and not t[1])
+        self.anim_frame_2.setEnabled(c > 2 and not t[2])
+        self.anim_frame_3.setEnabled(c > 3 and not t[3])
+        self.anim_frame_4.setEnabled(c > 4 and not t[4])
+
+        self.anim_play_0.setEnabled(c > 0)
+        self.anim_play_1.setEnabled(c > 1)
+        self.anim_play_2.setEnabled(c > 2)
+        self.anim_play_3.setEnabled(c > 3)
+        self.anim_play_4.setEnabled(c > 4)
+
