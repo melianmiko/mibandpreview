@@ -102,8 +102,10 @@ def render_activity(config, canvas, app):
             value = app.get_property("distance", 14.2)
             dist = config["Activity"]["Distance"]
             posix = -1
-            if "KmSuffixImageIndex" in dist:
+            if "KmSuffixImageIndex" in dist and not app.get_property("use_mil", 0):
                 posix = dist["KmSuffixImageIndex"]
+            if "MilesSuffixImageIndex" in dist and app.get_property("use_mil", 0):
+                posix = dist["MilesSuffixImageIndex"]
 
             tools.draw_adv_number(app, canvas, dist["Number"],
                                   value=round(value, 2),
