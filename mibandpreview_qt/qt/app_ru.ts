@@ -155,27 +155,27 @@
         <translation>Будильник:</translation>
     </message>
     <message>
-        <location filename="app.ui" line="310"/>
+        <location filename="app.ui" line="320"/>
         <source>Data and weather</source>
         <translation>Активность и погода</translation>
     </message>
     <message>
-        <location filename="app.ui" line="316"/>
+        <location filename="app.ui" line="326"/>
         <source>&lt;h2&gt;Activity&lt;/h2&gt;</source>
         <translation>&lt;h2&gt;Активность&lt;/h2&gt;</translation>
     </message>
     <message>
-        <location filename="app.ui" line="328"/>
+        <location filename="app.ui" line="338"/>
         <source>Steps:</source>
         <translation>Шаги:</translation>
     </message>
     <message>
-        <location filename="app.ui" line="348"/>
+        <location filename="app.ui" line="358"/>
         <source>Steps target:</source>
         <translation>Шаги (цель):</translation>
     </message>
     <message>
-        <location filename="app.ui" line="362"/>
+        <location filename="app.ui" line="372"/>
         <source>Distance</source>
         <translation>Расстояние</translation>
     </message>
@@ -184,217 +184,217 @@
         <translation type="vanished"> км</translation>
     </message>
     <message>
-        <location filename="app.ui" line="382"/>
+        <location filename="app.ui" line="392"/>
         <source>Calories</source>
         <translation>Калории</translation>
     </message>
     <message>
-        <location filename="app.ui" line="389"/>
+        <location filename="app.ui" line="399"/>
         <source> kcal</source>
         <translation> ккал</translation>
     </message>
     <message>
-        <location filename="app.ui" line="399"/>
+        <location filename="app.ui" line="409"/>
         <source>BPM:</source>
         <translation>Пульс:</translation>
     </message>
     <message>
-        <location filename="app.ui" line="416"/>
+        <location filename="app.ui" line="426"/>
         <source>PAI:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="430"/>
+        <location filename="app.ui" line="440"/>
         <source>Distance unit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="app.ui" line="438"/>
+        <location filename="app.ui" line="448"/>
         <source>Kilometers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="app.ui" line="443"/>
+        <location filename="app.ui" line="453"/>
         <source>Miles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="app.ui" line="453"/>
+        <location filename="app.ui" line="463"/>
         <source>&lt;h2&gt;Weather&lt;/h2&gt;</source>
         <translation>&lt;h2&gt;Погода&lt;/h2&gt;</translation>
     </message>
     <message>
-        <location filename="app.ui" line="467"/>
+        <location filename="app.ui" line="477"/>
         <source>Night, C</source>
         <translation>Ночь, C</translation>
     </message>
     <message>
-        <location filename="app.ui" line="474"/>
+        <location filename="app.ui" line="484"/>
         <source>Current, C</source>
         <translation>Сейчас, C</translation>
     </message>
     <message>
-        <location filename="app.ui" line="481"/>
+        <location filename="app.ui" line="491"/>
         <source>Day, C</source>
         <translation>День, С</translation>
     </message>
     <message>
-        <location filename="app.ui" line="528"/>
+        <location filename="app.ui" line="538"/>
         <source>Weather icon:</source>
         <translation>Значок погоды:</translation>
     </message>
     <message>
-        <location filename="app.ui" line="536"/>
+        <location filename="app.ui" line="546"/>
         <source>Unknown</source>
         <translation>Неизвестно</translation>
     </message>
     <message>
-        <location filename="app.ui" line="541"/>
+        <location filename="app.ui" line="551"/>
         <source>Partaly Cloud</source>
         <translation>Частичная облачность</translation>
     </message>
     <message>
-        <location filename="app.ui" line="546"/>
+        <location filename="app.ui" line="556"/>
         <source>Cloudy And Rain</source>
         <translation>Облачно, дождь</translation>
     </message>
     <message>
-        <location filename="app.ui" line="551"/>
+        <location filename="app.ui" line="561"/>
         <source>Cloudy And Snow</source>
         <translation>Облачно, снег</translation>
     </message>
     <message>
-        <location filename="app.ui" line="556"/>
+        <location filename="app.ui" line="566"/>
         <source>Sunny</source>
         <translation>Солнечно</translation>
     </message>
     <message>
-        <location filename="app.ui" line="561"/>
+        <location filename="app.ui" line="571"/>
         <source>Cloudy</source>
         <translation>Пасмурно</translation>
     </message>
     <message>
-        <location filename="app.ui" line="566"/>
+        <location filename="app.ui" line="576"/>
         <source>Light Rain</source>
         <translation>Лёгкий дождь</translation>
     </message>
     <message>
-        <location filename="app.ui" line="571"/>
+        <location filename="app.ui" line="581"/>
         <source>Light Snow</source>
         <translation>Лёгкий снег</translation>
     </message>
     <message>
-        <location filename="app.ui" line="576"/>
+        <location filename="app.ui" line="586"/>
         <source>Rain</source>
         <translation>Дождь</translation>
     </message>
     <message>
-        <location filename="app.ui" line="581"/>
+        <location filename="app.ui" line="591"/>
         <source>Snow</source>
         <translation>Снег</translation>
     </message>
     <message>
-        <location filename="app.ui" line="586"/>
+        <location filename="app.ui" line="596"/>
         <source>Heavy Snow</source>
         <translation>Сильный снег</translation>
     </message>
     <message>
-        <location filename="app.ui" line="591"/>
+        <location filename="app.ui" line="601"/>
         <source>Heavy Rain</source>
         <translation>Сильный дождь</translation>
     </message>
     <message>
-        <location filename="app.ui" line="596"/>
+        <location filename="app.ui" line="606"/>
         <source>Sand Storm</source>
         <translation>Пасчаная буря</translation>
     </message>
     <message>
-        <location filename="app.ui" line="601"/>
+        <location filename="app.ui" line="611"/>
         <source>Snow And Rain</source>
         <translation>Снег с дождём</translation>
     </message>
     <message>
-        <location filename="app.ui" line="606"/>
+        <location filename="app.ui" line="616"/>
         <source>Fog</source>
         <translation>Густой туман</translation>
     </message>
     <message>
-        <location filename="app.ui" line="611"/>
+        <location filename="app.ui" line="621"/>
         <source>Haze</source>
         <translation>Туман</translation>
     </message>
     <message>
-        <location filename="app.ui" line="616"/>
+        <location filename="app.ui" line="626"/>
         <source>Storm</source>
         <translation>Шторм</translation>
     </message>
     <message>
-        <location filename="app.ui" line="621"/>
+        <location filename="app.ui" line="631"/>
         <source>Very Heavy Snow</source>
         <translation>Снегопад</translation>
     </message>
     <message>
-        <location filename="app.ui" line="626"/>
+        <location filename="app.ui" line="636"/>
         <source>Floating Dust</source>
         <translation>Пыль</translation>
     </message>
     <message>
-        <location filename="app.ui" line="631"/>
+        <location filename="app.ui" line="641"/>
         <source>Downpour</source>
         <translation>Ливень</translation>
     </message>
     <message>
-        <location filename="app.ui" line="636"/>
+        <location filename="app.ui" line="646"/>
         <source>Hail</source>
         <translation>Град</translation>
     </message>
     <message>
-        <location filename="app.ui" line="641"/>
+        <location filename="app.ui" line="651"/>
         <source>Hail Storm</source>
         <translation>Гроза с градом</translation>
     </message>
     <message>
-        <location filename="app.ui" line="646"/>
+        <location filename="app.ui" line="656"/>
         <source>Heavy Downpour</source>
         <translation>Сильный ливень</translation>
     </message>
     <message>
-        <location filename="app.ui" line="651"/>
+        <location filename="app.ui" line="661"/>
         <source>Blowing Dust</source>
         <translation>Песчаная буря</translation>
     </message>
     <message>
-        <location filename="app.ui" line="656"/>
+        <location filename="app.ui" line="666"/>
         <source>Tornado</source>
         <translation>Торнадо</translation>
     </message>
     <message>
-        <location filename="app.ui" line="661"/>
+        <location filename="app.ui" line="671"/>
         <source>Very Heavy Downpour</source>
         <translation>Очень сильный ливень</translation>
     </message>
     <message>
-        <location filename="app.ui" line="669"/>
+        <location filename="app.ui" line="679"/>
         <source>Humidity:</source>
         <translation>Влажность:</translation>
     </message>
     <message>
-        <location filename="app.ui" line="679"/>
+        <location filename="app.ui" line="689"/>
         <source>UV Index</source>
         <translation>Индекс УФ</translation>
     </message>
     <message>
-        <location filename="app.ui" line="689"/>
+        <location filename="app.ui" line="699"/>
         <source>Wind speed:</source>
         <translation>Скорость вертра:</translation>
     </message>
     <message>
-        <location filename="app.ui" line="696"/>
+        <location filename="app.ui" line="706"/>
         <source> m/s</source>
         <translation> м/с</translation>
     </message>
     <message>
-        <location filename="app.ui" line="727"/>
+        <location filename="app.ui" line="737"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;Animation preview&lt;/span&gt;&lt;/h2&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <oldsource>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;Animation play&lt;/span&gt;&lt;/h2&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
         <translation type="unfinished">&lt;h2&gt;Просмтор анимации&lt;/h2&gt;</translation>
@@ -408,186 +408,191 @@
         <translation type="vanished">&lt;h2&gt;Анимации&lt;/h2&gt;</translation>
     </message>
     <message>
-        <location filename="app.ui" line="737"/>
+        <location filename="app.ui" line="747"/>
         <source>Anim. 0</source>
         <translation>Анимация. 0</translation>
     </message>
     <message>
-        <location filename="app.ui" line="744"/>
+        <location filename="app.ui" line="754"/>
         <source>Anim. 1</source>
         <translation>Анимация. 1</translation>
     </message>
     <message>
-        <location filename="app.ui" line="751"/>
-        <location filename="app.ui" line="758"/>
-        <location filename="app.ui" line="778"/>
-        <location filename="app.ui" line="795"/>
-        <location filename="app.ui" line="812"/>
+        <location filename="app.ui" line="761"/>
+        <location filename="app.ui" line="768"/>
+        <location filename="app.ui" line="788"/>
+        <location filename="app.ui" line="805"/>
+        <location filename="app.ui" line="822"/>
         <source>Auto</source>
         <translation>Авто</translation>
     </message>
     <message>
-        <location filename="app.ui" line="771"/>
+        <location filename="app.ui" line="781"/>
         <source>Anim. 2</source>
         <translation>Анимация. 2</translation>
     </message>
     <message>
-        <location filename="app.ui" line="788"/>
+        <location filename="app.ui" line="798"/>
         <source>Anim. 3</source>
         <translation>Анимация. 3</translation>
     </message>
     <message>
-        <location filename="app.ui" line="805"/>
+        <location filename="app.ui" line="815"/>
         <source>Anim. 4</source>
         <translation>Анимация. 4</translation>
     </message>
     <message>
-        <location filename="app.ui" line="832"/>
+        <location filename="app.ui" line="842"/>
         <source>Rotate preview</source>
         <translation>Поворот экрана</translation>
     </message>
     <message>
-        <location filename="app.ui" line="840"/>
+        <location filename="app.ui" line="850"/>
         <source>Disable</source>
         <translation>Отключить</translation>
     </message>
     <message>
-        <location filename="app.ui" line="845"/>
+        <location filename="app.ui" line="855"/>
         <source>Horizontal, left hand</source>
         <translation>Горизонтально, левая</translation>
     </message>
     <message>
-        <location filename="app.ui" line="850"/>
+        <location filename="app.ui" line="860"/>
         <source>Horizontal, right hand</source>
         <translation>Горизонтально, правая</translation>
     </message>
     <message>
-        <location filename="app.ui" line="912"/>
+        <location filename="app.ui" line="922"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="app.ui" line="928"/>
+        <location filename="app.ui" line="938"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="app.ui" line="935"/>
+        <location filename="app.ui" line="945"/>
         <source>Settings</source>
         <translation>Параметры</translation>
     </message>
     <message>
-        <location filename="app.ui" line="721"/>
+        <location filename="app.ui" line="731"/>
         <source>View</source>
         <translation>Вид</translation>
     </message>
     <message>
-        <location filename="app.ui" line="822"/>
+        <location filename="app.ui" line="294"/>
+        <source>Alarm time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="app.ui" line="832"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;View settings&lt;/span&gt;&lt;/h2&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished">&lt;h2&gt;Отображение&lt;/h2&gt;</translation>
     </message>
     <message>
-        <location filename="app.ui" line="947"/>
+        <location filename="app.ui" line="957"/>
         <source>Open Project....</source>
         <translation>Открыть проект...</translation>
     </message>
     <message>
-        <location filename="app.ui" line="950"/>
+        <location filename="app.ui" line="960"/>
         <source>Ctrl+O</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="958"/>
+        <location filename="app.ui" line="968"/>
         <source>Auto detect device</source>
         <translation>Авто-определение</translation>
     </message>
     <message>
-        <location filename="app.ui" line="966"/>
+        <location filename="app.ui" line="976"/>
         <source>Mi Band 4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="974"/>
+        <location filename="app.ui" line="984"/>
         <source>Mi Band 5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="982"/>
+        <location filename="app.ui" line="992"/>
         <source>Mi Band 6</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="987"/>
+        <location filename="app.ui" line="997"/>
         <source>Resotre defaults</source>
         <translation>Восстановить стандартные</translation>
     </message>
     <message>
-        <location filename="app.ui" line="992"/>
+        <location filename="app.ui" line="1002"/>
         <source>Exit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="app.ui" line="995"/>
+        <location filename="app.ui" line="1005"/>
         <source>Ctrl+Q</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="1000"/>
+        <location filename="app.ui" line="1010"/>
         <source>About Mi Band Preview</source>
         <translation>О Mi Band Preview</translation>
     </message>
     <message>
-        <location filename="app.ui" line="1005"/>
+        <location filename="app.ui" line="1015"/>
         <source>About Qt</source>
         <translation>О Qt</translation>
     </message>
     <message>
-        <location filename="app.ui" line="1010"/>
+        <location filename="app.ui" line="1020"/>
         <source>Website</source>
         <translation>Сайт программы</translation>
     </message>
     <message>
-        <location filename="app.ui" line="1015"/>
+        <location filename="app.ui" line="1025"/>
         <source>Github</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="1020"/>
+        <location filename="app.ui" line="1030"/>
         <source>Refresh preview</source>
         <translation>Обновить предпросмотр</translation>
     </message>
     <message>
-        <location filename="app.ui" line="1023"/>
+        <location filename="app.ui" line="1033"/>
         <source>Ctrl+R</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="1028"/>
+        <location filename="app.ui" line="1038"/>
         <source>Save preview image...</source>
         <translation>Сохранить как изображение...</translation>
     </message>
     <message>
-        <location filename="app.ui" line="1031"/>
+        <location filename="app.ui" line="1041"/>
         <source>Ctrl+S</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="app.ui" line="1036"/>
+        <location filename="app.ui" line="1046"/>
         <source>Configure update checker</source>
         <translation>Настройка проверки обновлений</translation>
     </message>
     <message>
-        <location filename="app.ui" line="1044"/>
+        <location filename="app.ui" line="1054"/>
         <source>Vertical</source>
         <translation>Вертикально</translation>
     </message>
     <message>
-        <location filename="app.ui" line="1052"/>
+        <location filename="app.ui" line="1062"/>
         <source>Rotate to right</source>
         <translation>Повернуть вправо</translation>
     </message>
     <message>
-        <location filename="app.ui" line="1060"/>
+        <location filename="app.ui" line="1070"/>
         <source>Rotate to left</source>
         <translation>Повернуть влево</translation>
     </message>

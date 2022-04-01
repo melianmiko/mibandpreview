@@ -56,7 +56,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab_base">
          <attribute name="title">
@@ -116,14 +116,14 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
+            <item row="3" column="0">
              <widget class="QLabel" name="aMPMLabel">
               <property name="text">
                <string>AM/PM:</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
+            <item row="3" column="1">
              <widget class="QComboBox" name="edit_am_pm">
               <item>
                <property name="text">
@@ -142,24 +142,24 @@
               </item>
              </widget>
             </item>
-            <item row="3" column="0">
+            <item row="4" column="0">
              <widget class="QLabel" name="dateLabel">
               <property name="text">
                <string>Date:</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
+            <item row="4" column="1">
              <widget class="QDateEdit" name="edit_date"/>
             </item>
-            <item row="4" column="0">
+            <item row="5" column="0">
              <widget class="QLabel" name="dayOfWeekLabel">
               <property name="text">
                <string>Day of week:</string>
               </property>
              </widget>
             </item>
-            <item row="4" column="1">
+            <item row="5" column="1">
              <widget class="QComboBox" name="edit_weekday">
               <item>
                <property name="text">
@@ -198,14 +198,14 @@
               </item>
              </widget>
             </item>
-            <item row="5" column="0">
+            <item row="6" column="0">
              <widget class="QLabel" name="weekdaysLangLabel">
               <property name="text">
                <string>Display language:</string>
               </property>
              </widget>
             </item>
-            <item row="5" column="1">
+            <item row="6" column="1">
              <widget class="QComboBox" name="edit_language">
               <item>
                <property name="text">
@@ -224,7 +224,7 @@
               </item>
              </widget>
             </item>
-            <item row="6" column="0">
+            <item row="7" column="0">
              <widget class="QLabel" name="label_2">
               <property name="text">
                <string>&lt;h2&gt;Device state&lt;/h2&gt;</string>
@@ -234,59 +234,69 @@
               </property>
              </widget>
             </item>
-            <item row="7" column="0">
+            <item row="8" column="0">
              <widget class="QLabel" name="batteryLabel">
               <property name="text">
                <string>Battery</string>
               </property>
              </widget>
             </item>
-            <item row="7" column="1">
+            <item row="8" column="1">
              <widget class="QSpinBox" name="edit_battery">
               <property name="maximum">
                <number>100</number>
               </property>
              </widget>
             </item>
-            <item row="8" column="0">
+            <item row="9" column="0">
              <widget class="QLabel" name="bluetoothLabel">
               <property name="text">
                <string>Bluetooth:</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="1">
+            <item row="9" column="1">
              <widget class="QCheckBox" name="edit_bluetooth"/>
             </item>
-            <item row="9" column="0">
+            <item row="10" column="0">
              <widget class="QLabel" name="doNotDisturbLabel">
               <property name="text">
                <string>Do not disturb:</string>
               </property>
              </widget>
             </item>
-            <item row="9" column="1">
+            <item row="10" column="1">
              <widget class="QCheckBox" name="edit_mute"/>
             </item>
-            <item row="10" column="0">
+            <item row="11" column="0">
              <widget class="QLabel" name="screenLockLabel">
               <property name="text">
                <string>Screen lock:</string>
               </property>
              </widget>
             </item>
-            <item row="10" column="1">
+            <item row="11" column="1">
              <widget class="QCheckBox" name="edit_lock"/>
             </item>
-            <item row="11" column="0">
+            <item row="12" column="0">
              <widget class="QLabel" name="alarmEnabledLabel">
               <property name="text">
                <string>Alarm enabled:</string>
               </property>
              </widget>
             </item>
-            <item row="11" column="1">
+            <item row="12" column="1">
              <widget class="QCheckBox" name="edit_alarm"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="alarmTimeLabel">
+              <property name="text">
+               <string>Alarm time</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QTimeEdit" name="edit_alarm_time"/>
             </item>
            </layout>
           </item>
@@ -1776,6 +1786,22 @@
     <hint type="sourcelabel">
      <x>304</x>
      <y>338</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>edit_alarm_time</sender>
+   <signal>userTimeChanged(QTime)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ui_widget_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>343</x>
+     <y>168</y>
     </hint>
     <hint type="destinationlabel">
      <x>399</x>

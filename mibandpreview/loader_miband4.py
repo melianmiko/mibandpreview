@@ -259,25 +259,26 @@ def render_status(app, canvas, config):
                     )
                 )
 
+
 def render_battery(app, canvas, config):
-        if "Status" not in config:
-            return
+    if "Status" not in config:
+        return
 
-        if "Battery" in config["Status"]:
-            if "Text" in config["Status"]["Battery"]:
-                tools.draw_adv_number(app, canvas, config["Status"]["Battery"]["Text"],
-                                      value=app.get_property("status_battery", 60))
+    if "Battery" in config["Status"]:
+        if "Text" in config["Status"]["Battery"]:
+            tools.draw_adv_number(app, canvas, config["Status"]["Battery"]["Text"],
+                                  value=app.get_property("status_battery", 60))
 
-            if "Icon" in config["Status"]["Battery"]:
-                value = app.get_property("status_battery", 60)
-                value = int(config["Status"]["Battery"]["Icon"]["ImagesCount"] * (value / 100))
-                if value >= config["Status"]["Battery"]["Icon"]["ImagesCount"]:
-                    value = config["Status"]["Battery"]["Icon"]["ImagesCount"] - 1
-                tools.draw_static_object(
-                    app, canvas,
-                    config["Status"]["Battery"]["Icon"],
-                    value=value
-                )
+        if "Icon" in config["Status"]["Battery"]:
+            value = app.get_property("status_battery", 60)
+            value = int(config["Status"]["Battery"]["Icon"]["ImagesCount"] * (value / 100))
+            if value >= config["Status"]["Battery"]["Icon"]["ImagesCount"]:
+                value = config["Status"]["Battery"]["Icon"]["ImagesCount"] - 1
+            tools.draw_static_object(
+                app, canvas,
+                config["Status"]["Battery"]["Icon"],
+                value=value
+            )
 
 
 def render_analog_clock(app, canvas, config):
@@ -311,7 +312,6 @@ def render_analog_clock(app, canvas, config):
                     app, canvas,
                     config["AnalogDialFace"]["Seconds"]["CenterImage"]
                 )
-
 
 
 def render_other(app, canvas, config):

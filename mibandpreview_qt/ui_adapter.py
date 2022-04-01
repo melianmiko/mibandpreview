@@ -17,6 +17,9 @@ class LoaderUIAdapter:
         loader.set_property("hours", time.hour())
         loader.set_property("minutes", time.minute())
         loader.set_property("seconds", time.second())
+        alarm_time = self.context.edit_alarm_time.time()        # type: QTime
+        loader.set_property("alarm_hours", alarm_time.hour())
+        loader.set_property("alarm_minutes", alarm_time.minute())
         date = self.context.edit_date.date()        # type: QDate
         loader.set_property("year", date.year())
         loader.set_property("month", date.month())
@@ -65,6 +68,9 @@ class LoaderUIAdapter:
         time.setHMS(loader.get_property("hours", 12), loader.get_property("minutes", 30),
                     loader.get_property("seconds", 45))
         self.context.edit_time.setTime(time)
+        alarm_time = QTime()
+        alarm_time.setHMS(loader.get_property("alarm_hours", 12), loader.get_property("alarm_minutes", 30), 0)
+        self.context.edit_alarm_time.setTime(alarm_time)
         date = QDate()
         date.setDate(loader.get_property("year", 2021), loader.get_property("month", 2), loader.get_property("day", 12))
         self.context.edit_date.setDate(date)
