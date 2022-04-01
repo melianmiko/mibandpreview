@@ -36,6 +36,7 @@ class LoaderUIAdapter:
         loader.set_property("status_mute", 1 if self.context.edit_mute.isChecked() else 0)
         loader.set_property("status_bluetooth", 1 if self.context.edit_bluetooth.isChecked() else 0)
         loader.set_property("status_alarm", 1 if self.context.edit_alarm.isChecked() else 0)
+        loader.set_property("status_timezone", 0 if self.context.edit_no_timezone.isChecked() else 1)
 
         # Activity
         loader.set_property("steps", self.context.edit_steps.value())
