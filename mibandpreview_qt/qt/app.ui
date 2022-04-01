@@ -198,14 +198,98 @@
               </item>
              </widget>
             </item>
-            <item row="6" column="0">
+            <item row="10" column="0">
+             <widget class="QLabel" name="batteryLabel">
+              <property name="text">
+               <string>Battery</string>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="1">
+             <widget class="QSpinBox" name="edit_battery">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+             </widget>
+            </item>
+            <item row="11" column="0">
+             <widget class="QLabel" name="bluetoothLabel">
+              <property name="text">
+               <string>Bluetooth:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="11" column="1">
+             <widget class="QCheckBox" name="edit_bluetooth"/>
+            </item>
+            <item row="12" column="0">
+             <widget class="QLabel" name="doNotDisturbLabel">
+              <property name="text">
+               <string>Do not disturb:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="1">
+             <widget class="QCheckBox" name="edit_mute"/>
+            </item>
+            <item row="13" column="0">
+             <widget class="QLabel" name="screenLockLabel">
+              <property name="text">
+               <string>Screen lock:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="13" column="1">
+             <widget class="QCheckBox" name="edit_lock"/>
+            </item>
+            <item row="14" column="0">
+             <widget class="QLabel" name="alarmEnabledLabel">
+              <property name="text">
+               <string>Alarm enabled:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="14" column="1">
+             <widget class="QCheckBox" name="edit_alarm"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="alarmTimeLabel">
+              <property name="text">
+               <string>Alarm time</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QTimeEdit" name="edit_alarm_time"/>
+            </item>
+            <item row="15" column="0">
+             <widget class="QLabel" name="noTimezoneLabel">
+              <property name="text">
+               <string>No timezone:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="15" column="1">
+             <widget class="QCheckBox" name="edit_no_timezone"/>
+            </item>
+            <item row="8" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>&lt;h2&gt;Device state&lt;/h2&gt;</string>
+              </property>
+              <property name="textFormat">
+               <enum>Qt::RichText</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="0">
              <widget class="QLabel" name="weekdaysLangLabel">
               <property name="text">
                <string>Display language:</string>
               </property>
              </widget>
             </item>
-            <item row="6" column="1">
+            <item row="9" column="1">
              <widget class="QComboBox" name="edit_language">
               <item>
                <property name="text">
@@ -224,89 +308,25 @@
               </item>
              </widget>
             </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="sunsetTimeLabel">
+              <property name="text">
+               <string>Sunset time:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QTimeEdit" name="edit_tz1"/>
+            </item>
             <item row="7" column="0">
-             <widget class="QLabel" name="label_2">
+             <widget class="QLabel" name="sunriseTimeLabel">
               <property name="text">
-               <string>&lt;h2&gt;Device state&lt;/h2&gt;</string>
-              </property>
-              <property name="textFormat">
-               <enum>Qt::RichText</enum>
+               <string>Sunrise time:</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="0">
-             <widget class="QLabel" name="batteryLabel">
-              <property name="text">
-               <string>Battery</string>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="1">
-             <widget class="QSpinBox" name="edit_battery">
-              <property name="maximum">
-               <number>100</number>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="0">
-             <widget class="QLabel" name="bluetoothLabel">
-              <property name="text">
-               <string>Bluetooth:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="1">
-             <widget class="QCheckBox" name="edit_bluetooth"/>
-            </item>
-            <item row="10" column="0">
-             <widget class="QLabel" name="doNotDisturbLabel">
-              <property name="text">
-               <string>Do not disturb:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="10" column="1">
-             <widget class="QCheckBox" name="edit_mute"/>
-            </item>
-            <item row="11" column="0">
-             <widget class="QLabel" name="screenLockLabel">
-              <property name="text">
-               <string>Screen lock:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="11" column="1">
-             <widget class="QCheckBox" name="edit_lock"/>
-            </item>
-            <item row="12" column="0">
-             <widget class="QLabel" name="alarmEnabledLabel">
-              <property name="text">
-               <string>Alarm enabled:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="12" column="1">
-             <widget class="QCheckBox" name="edit_alarm"/>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="alarmTimeLabel">
-              <property name="text">
-               <string>Alarm time</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QTimeEdit" name="edit_alarm_time"/>
-            </item>
-            <item row="13" column="0">
-             <widget class="QLabel" name="noTimezoneLabel">
-              <property name="text">
-               <string>No timezone:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="13" column="1">
-             <widget class="QCheckBox" name="edit_no_timezone"/>
+            <item row="7" column="1">
+             <widget class="QTimeEdit" name="edit_tz2"/>
             </item>
            </layout>
           </item>
@@ -1828,6 +1848,38 @@
     <hint type="sourcelabel">
      <x>343</x>
      <y>530</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>edit_tz1</sender>
+   <signal>userTimeChanged(QTime)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ui_widget_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>343</x>
+     <y>314</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>edit_tz2</sender>
+   <signal>userTimeChanged(QTime)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ui_widget_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>343</x>
+     <y>351</y>
     </hint>
     <hint type="destinationlabel">
      <x>399</x>

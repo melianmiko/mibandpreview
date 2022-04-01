@@ -1,25 +1,27 @@
 from PyQt5.QtCore import QTime, QDate
+from PyQt5.QtWidgets import QTimeEdit
+
+from mibandpreview import MiBandPreview
+from mibandpreview_qt import ui_frames
 
 
 def create(context):
-    return LoaderUIAdapter(context)
+    return LoaderUIAdapter(context, context.loader)
 
 
 class LoaderUIAdapter:
-    def __init__(self, context):
+    def __init__(self, context: ui_frames.Ui_MainWindow, loader: MiBandPreview):
         self.context = context
+        self.loader = loader
 
     def read_ui(self):
-        loader = self.context.loader
+        loader = self.loader
 
         # Date-time
-        time = self.context.edit_time.time()        # type: QTime
-        loader.set_property("hours", time.hour())
-        loader.set_property("minutes", time.minute())
-        loader.set_property("seconds", time.second())
-        alarm_time = self.context.edit_alarm_time.time()        # type: QTime
-        loader.set_property("alarm_hours", alarm_time.hour())
-        loader.set_property("alarm_minutes", alarm_time.minute())
+        self._read_time(self.context.edit_time, "")
+        self._read_time(self.context.edit_alarm_time, "alarm_")
+        self._read_time(self.context.edit_tz1, "tz1_")
+        self._read_time(self.context.edit_tz2, "tz2_")
         date = self.context.edit_date.date()        # type: QDate
         loader.set_property("year", date.year())
         loader.set_property("month", date.month())
@@ -62,18 +64,17 @@ class LoaderUIAdapter:
 
     def load_config(self):
         self.context.interactive = False
-        loader = self.context.loader
+        loader = self.loader
 
         # Date-time
-        time = QTime()
-        time.setHMS(loader.get_property("hours", 12), loader.get_property("minutes", 30),
-                    loader.get_property("seconds", 45))
-        self.context.edit_time.setTime(time)
-        alarm_time = QTime()
-        alarm_time.setHMS(loader.get_property("alarm_hours", 12), loader.get_property("alarm_minutes", 30), 0)
-        self.context.edit_alarm_time.setTime(alarm_time)
+        self._update_time(self.context.edit_time, "", 12, 30, 45)
+        self._update_time(self.context.edit_alarm_time, "alarm_", 7, 30, 0)
+        self._update_time(self.context.edit_tz1, "tz1_", 22, 00, 0)
+        self._update_time(self.context.edit_tz2, "tz2_", 6, 30, 0)
         date = QDate()
-        date.setDate(loader.get_property("year", 2021), loader.get_property("month", 2), loader.get_property("day", 12))
+        date.setDate(loader.get_property("year", 2021),
+                     loader.get_property("month", 2),
+                     loader.get_property("day", 12))
         self.context.edit_date.setDate(date)
 
         # Date-time (extra)
@@ -90,6 +91,7 @@ class LoaderUIAdapter:
         self.context.edit_lock.setChecked(loader.get_property("status_lock", 1) == 1)
         self.context.edit_mute.setChecked(loader.get_property("status_mute", 1) == 1)
         self.context.edit_alarm.setChecked(loader.get_property("status_alarm", 1) == 1)
+        self.context.edit_no_timezone.setChecked(loader.get_property("status_timezone", 1) == 0)
 
         # Activity
         self.context.edit_steps.setValue(loader.get_property("steps", 6000))
@@ -111,6 +113,19 @@ class LoaderUIAdapter:
 
         self.context.interactive = True
 
+    def _read_time(self, field: QTimeEdit, prefix: str):
+        time = field.time()
+        self.loader.set_property(prefix + "hours", time.hour())
+        self.loader.set_property(prefix + "minutes", time.minute())
+        self.loader.set_property(prefix + "seconds", time.second())
+
+    def _update_time(self, field: QTimeEdit, prefix: str, h: int, m: int, s: int):
+        time = QTime()
+        time.setHMS(self.loader.get_property(prefix + "hours", h),
+                    self.loader.get_property(prefix + "minutes", m),
+                    self.loader.get_property(prefix + "seconds", s))
+        field.setTime(time)
+
     def read_gif_ui(self):
         self.context.frames = [
             self.context.anim_frame_0.value(),
@@ -128,7 +143,7 @@ class LoaderUIAdapter:
         ]
 
     def setup_gif_ui(self):
-        c = self.context.loader.get_animations_count()
+        c = self.loader.get_animations_count()
         t = self.context.player_toggle
 
         self.context.anim_frame_0.setEnabled(c > 0 and not t[0])

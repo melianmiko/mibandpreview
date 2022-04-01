@@ -51,7 +51,7 @@ def render_time(config, canvas, app):
 
     if "Time" in config:
         if "TimeZone1" in config["Time"] and app.get_property("status_timezone", 1) == 1:
-            a = round(app.get_property("hours", 12) + app.get_property("minutes", 30) / 100, 2)
+            a = round(app.get_property("tz1_hours", 22) + app.get_property("tz1_minutes", 00) / 100, 2)
             tools.draw_adv_number(app, canvas, config["Time"]["TimeZone1"], value=a, digits=2,
                                   dot=config["Time"]["TimeZone1DelimiterImage"])
 
@@ -59,7 +59,7 @@ def render_time(config, canvas, app):
             tools.draw_static_object(app, canvas, config["Time"]["TimeZone1NoTime"])
 
         if "TimeZone2" in config["Time"] and app.get_property("status_timezone", 1) == 1:
-            a = round(app.get_property("hours", 12) + app.get_property("minutes", 30) / 100, 2)
+            a = round(app.get_property("tz2_hours", 6) + app.get_property("tz2_minutes", 30) / 100, 2)
             tools.draw_adv_number(app, canvas, config["Time"]["TimeZone2"], value=a, digits=2,
                                   dot=config["Time"]["TimeZone1DelimiterImage"])
 
@@ -348,7 +348,7 @@ def render_time_extra(config, canvas, app):
         if "Text" in config["Alarm"] and alarm_enabled:
             value = round(app.get_property("alarm_hours", 12) +
                           app.get_property("alarm_minutes", 30) / 100, 2)
-            
+
             tools.draw_adv_number(app, canvas, config["Alarm"]["Text"], value=value, digits=2,
                                   dot=config["Alarm"]["DelimiterImageIndex"])
 

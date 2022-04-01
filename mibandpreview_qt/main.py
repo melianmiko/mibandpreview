@@ -12,7 +12,6 @@ import mibandpreview
 from . import ui_adapter, ui_frames, app_info, update_checker, preview_thread, pref_storage
 
 
-# noinspection PyMethodMayBeStatic
 class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
     frames = [0, 0, 0, 0, 0]
     player_toggle = [False, False, False, False, False]
@@ -242,10 +241,12 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
         pref_storage.wipe()
         self.app.exit(0)
 
-    def open_site(self):
+    @staticmethod
+    def open_site():
         webbrowser.open(app_info.LINK_WEBSITE)
 
-    def open_github(self):
+    @staticmethod
+    def open_github():
         webbrowser.open(app_info.LINK_GITHUB)
 
     def ui_widget_changed(self):
