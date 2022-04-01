@@ -194,70 +194,31 @@ def render_date(app, canvas, config):
             )
 
 
-def render_status(app, canvas, config):
-    if "Status" in config:
-        if "DoNotDisturb" in config["Status"]:
-            if "ImageIndexOn" in config["Status"]["DoNotDisturb"] and app.get_property("status_mute", 1):
-                tools.add_to_canvas(
-                    canvas,
-                    app.get_resource(config["Status"]["DoNotDisturb"]["ImageIndexOn"]),
-                    (
-                        config["Status"]["DoNotDisturb"]["Coordinates"]["X"],
-                        config["Status"]["DoNotDisturb"]["Coordinates"]["Y"]
-                    )
-                )
+def render_status(app, canvas, config, cords_tag="Coordinates", root_tag="Status"):
+    icons = {
+        "DoNotDisturb": "status_mute",
+        "Lock": "status_lock",
+        "Bluetooth": "status_bluetooth"
+    }
 
-            if "ImageIndexOff" in config["Status"]["DoNotDisturb"] and not app.get_property("status_mute", 1):
-                tools.add_to_canvas(
-                    canvas,
-                    app.get_resource(config["Status"]["DoNotDisturb"]["ImageIndexOff"]),
-                    (
-                        config["Status"]["DoNotDisturb"]["Coordinates"]["X"],
-                        config["Status"]["DoNotDisturb"]["Coordinates"]["Y"]
-                    )
-                )
+    if root_tag not in config:
+        return
 
-        if "Lock" in config["Status"]:
-            if "ImageIndexOn" in config["Status"]["Lock"] and app.get_property("status_lock", 1):
-                tools.add_to_canvas(
-                    canvas,
-                    app.get_resource(config["Status"]["Lock"]["ImageIndexOn"]),
-                    (
-                        config["Status"]["Lock"]["Coordinates"]["X"],
-                        config["Status"]["Lock"]["Coordinates"]["Y"]
-                    )
-                )
+    for icon in icons:
+        image_prop = "ImageIndexOn" if app.get_property(icons[icon], 1) == 1 else "ImageIndexOff"
 
-            if "ImageIndexOff" in config["Status"]["Lock"] and not app.get_property("status_lock", 1):
-                tools.add_to_canvas(
-                    canvas,
-                    app.get_resource(config["Status"]["Lock"]["ImageIndexOff"]),
-                    (
-                        config["Status"]["Lock"]["Coordinates"]["X"],
-                        config["Status"]["Lock"]["Coordinates"]["Y"]
-                    )
-                )
+        if icon not in config[root_tag]:
+            continue
 
-        if "Bluetooth" in config["Status"]:
-            if "ImageIndexOn" in config["Status"]["Bluetooth"] and app.get_property("status_bluetooth", 1):
-                tools.add_to_canvas(
-                    canvas,
-                    app.get_resource(config["Status"]["Bluetooth"]["ImageIndexOn"]),
-                    (
-                        config["Status"]["Bluetooth"]["Coordinates"]["X"],
-                        config["Status"]["Bluetooth"]["Coordinates"]["Y"]
-                    )
-                )
+        if image_prop not in config[root_tag][icon]:
+            continue
 
-            if "ImageIndexOff" in config["Status"]["Bluetooth"] and not app.get_property("status_bluetooth", 1):
-                tools.add_to_canvas(
-                    canvas,
-                    app.get_resource(config["Status"]["Bluetooth"]["ImageIndexOff"]),
-                    (
-                        config["Status"]["Bluetooth"]["Coordinates"]["X"],
-                        config["Status"]["Bluetooth"]["Coordinates"]["Y"]
-                    )
-                )
+        image_id = config[root_tag][icon][image_prop]
+        coordinates = config[root_tag][icon][cords_tag]
+        asset = app.get_resource(image_id)
+        xy = (coordinates["X"], coordinates["Y"])
+
+        tools.add_to_canvas(canvas, asset, xy)
 
 
 def render_battery(app, canvas, config):

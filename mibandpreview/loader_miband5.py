@@ -297,6 +297,9 @@ def render_activity_graph(config, canvas, app):
 
 def render_status_icons(config, canvas, app):
     loader_miband4.render_status(app, canvas, config)
+    loader_miband4.render_status(app, canvas, config,
+                                 root_tag="StatusSimplified",
+                                 cords_tag="StatusImage")
 
 
 def render_battery(config, canvas, app):
