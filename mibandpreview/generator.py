@@ -3,7 +3,7 @@ import os
 import string
 from PIL import Image
 
-from . import loader_miband4
+from . import loader_miband4, tools
 from . import loader_miband5
 from . import loader_miband6
 
@@ -47,9 +47,9 @@ class MiBandPreview:
 
         for f in os.listdir(self.path):
             if os.path.splitext(self.path + "/" + f)[1] == ".json":
-                with open(self.path + "/" + f, "r") as jsf:
-                    self.config = json.load(jsf)
-                    break
+                data = tools.json_file_read(self.path + "/" + f)
+                self.config = json.loads(data)
+                break
 
         for a in os.listdir(self.path):
             aa = a.split(".")

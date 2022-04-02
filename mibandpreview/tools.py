@@ -301,3 +301,21 @@ def radian_cos(angle):
 
 def get_root():
     return os.path.dirname(os.path.abspath(__file__))
+
+
+def json_file_read(file_path):
+    contents = ""
+    with open(file_path) as f:
+        lines = f.read().split("\n")
+
+    for line in lines:
+        line_clearned = line.split("//", 1)[0]
+        if len(line_clearned) > 0 and line.endswith("\n") and "\n" not in line_clearned:
+            line_clearned += "\n"
+        contents += line_clearned
+
+    while "/*" in contents:
+        pre, post = contents.split("/*", 1)
+        contents = pre + post.split("*/", 1)[1]
+
+    return contents

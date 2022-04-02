@@ -14,6 +14,7 @@ import mibandpreview
 from mibandpreview_qt import ui_adapter, ui_frames, app_info, update_checker, preview_thread, pref_storage
 
 logging.basicConfig(level=logging.DEBUG)
+logging.getLogger("PIL.PngImagePlugin").disabled = True
 log = logging.getLogger("PreviewQT")
 
 
