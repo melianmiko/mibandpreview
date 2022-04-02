@@ -1,15 +1,10 @@
-import json
-import platform
-import urllib.request
-import webbrowser
-
-from PyQt5.QtCore import QThread, pyqtSignal, QLocale
+from PyQt5.QtCore import QLocale
 from PyQt5.QtWidgets import QMessageBox
 
-from . import app_info, pref_storage
-
+from . import app_info, pref_storage, mmk_updater
 
 DEFAULT_UPDATE_CHECKER_STATE = True
+
 # noinspection HttpUrlsUsage
 release_url = "http://st.melianmiko.ru/mibandpreview/release.json"
 
@@ -29,13 +24,7 @@ class UpdateCheckerUI:
         :param app: Main application window
         """
         self.app = app
-        self.thread = UpdateCheckerThread(self.app)
-
-        # noinspection PyUnresolvedReferences
-        self.thread.has_updates.connect(self.on_update_available)
-
-        # Bind QT actions
-        self.app.action_configure_updater.triggered.connect(self.reconfigure)
+        self.tool = mmk_updater.UpdaterTool(release_url, app_info.VERSION)
 
     def start(self):
         """
@@ -43,38 +32,7 @@ class UpdateCheckerUI:
         :return: void
         """
         print("Checking for new version...")
-        self.thread.start()
-
-    def on_update_available(self, url, version):
-        """
-        On update available handler
-        :param url: download URL, or homepage url
-        :param version: version name
-        :return: void
-        """
-        qm = QMessageBox()
-        qm.setModal(True)
-
-        # Get localized message
-        # TODO: Use locale module
-        locale = QLocale.system().name()[0:2]
-        message = "New version available {}. Download now?"
-        if locale == "ru":
-            message = "Доступна новая версия {}. Скачать?"
-
-        # Spawn question
-        r = qm.question(self.app,
-                        'Update checker',
-                        message.replace("{}", version),
-                        qm.Yes | qm.No | qm.Ignore)
-
-        # If user select "Ignore" button, show settings dialog
-        if r == qm.Ignore:
-            self.reconfigure()
-
-        # If user accepted update, open browser
-        if r == qm.Yes:
-            webbrowser.open(url)
+        self.tool.start()
 
     def reconfigure(self):
         """
@@ -112,38 +70,3 @@ class UpdateCheckerUI:
         pref_storage.put("updater_enabled", answer)
 
         return answer
-
-
-class UpdateCheckerThread(QThread):
-    """
-    Update checker thread
-    """
-    has_updates = pyqtSignal(str, str)
-
-    # noinspection PyBroadException
-    def run(self):
-        """
-        Check updates via GitHub API
-        :return: void
-        """
-        try:
-            res = urllib.request.urlopen(release_url, timeout=3)
-        except Exception:
-            print("Update check failed", flush=True)
-            return
-
-        res = json.loads(res.read())
-
-        if res["version"] == app_info.VERSION:
-            print("No updates")
-            return
-
-        url = app_info.LINK_WEBSITE
-        if platform.system() == "Windows" and "windows" in res:
-            url = res["windows"][0]["url"]
-
-        print("New version: " + app_info.VERSION + " != " + res["version"])
-        print("Download url: " + url)
-
-        # noinspection PyUnresolvedReferences
-        self.has_updates.emit(url, res["version"])
