@@ -1,4 +1,3 @@
-import json.decoder
 import logging
 import os.path
 import threading
@@ -300,4 +299,3 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
         self.anim_play_2.setEnabled(c > 2)
         self.anim_play_3.setEnabled(c > 3)
         self.anim_play_4.setEnabled(c > 4)
-

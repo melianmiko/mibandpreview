@@ -1,3 +1,5 @@
+import logging
+
 from . import tools, loader_miband4
 from PIL import Image, ImageDraw
 

@@ -1,3 +1,5 @@
+import logging
+
 from PyQt5.QtCore import QLocale
 from PyQt5.QtWidgets import QMessageBox
 
@@ -7,6 +9,7 @@ DEFAULT_UPDATE_CHECKER_STATE = True
 
 # noinspection HttpUrlsUsage
 release_url = "http://st.melianmiko.ru/mibandpreview/release.json"
+log = logging.getLogger("UpdateChecker")
 
 
 def create(app):
@@ -31,7 +34,7 @@ class UpdateCheckerUI:
         Start update checker
         :return: void
         """
-        print("Checking for new version...")
+        log.info("Checking for new version...")
         self.tool.start()
 
     def reconfigure(self):
@@ -66,7 +69,7 @@ class UpdateCheckerUI:
 
         answer = answer == qm.Yes
 
-        print("New update checker state: " + str(answer))
+        log.info("New update checker state: " + str(answer))
         pref_storage.put("updater_enabled", answer)
 
         return answer

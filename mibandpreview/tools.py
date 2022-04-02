@@ -1,3 +1,4 @@
+import logging
 import math
 import os
 from PIL import Image, ImageDraw
@@ -27,6 +28,20 @@ def draw_static_object(app, canvas, obj, value=0):
 
 
 def draw_adv_number(app, canvas, obj, value=0, digits=1, dot=-1, posix=-1, prefix=-1, minus=-1):
+    """
+    Draw advanced numeric value to canvas.
+
+    :param app: Generator class
+    :param canvas: PIL image
+    :param obj: Object to draw
+    :param value: Value number
+    :param digits: Count of digits to show
+    :param dot: ImageIndex of dot
+    :param posix: ImageIndex of suffix
+    :param prefix: ImageIndex of prefix
+    :param minus: ImageIndex of minus
+    :return: void
+    """
     images = []
     if prefix > -1:
         images.append(app.get_resource(prefix))
@@ -36,22 +51,24 @@ def draw_adv_number(app, canvas, obj, value=0, digits=1, dot=-1, posix=-1, prefi
         if minus > -1:
             images.append(app.get_resource(minus))
 
-    if isinstance(value, int):
-        images += split_number_to_images(app, obj, value, digits)
-    else:
-        images += split_number_to_images(app, obj, math.floor(value), digits)
-        if dot > -1:
-            dot_img = app.get_resource(dot)
-            device = app.get_property("device", "miband4")
-            if device == "miband5" or device == "miband6":
-                if dot_img.size[1] < images[0].size[1]:
-                    new_image = Image.new("RGBA", (dot_img.size[0], images[0].size[1]))
-                    new_image.paste(dot_img, (0, images[0].size[1] - dot_img.size[1]))
-                    dot_img = new_image
-            images.append(dot_img)
+    images += split_number_to_images(app, obj, math.floor(value), digits)
+
+    # Render dot image
+    if isinstance(value, float) and dot > -1:
+        dot_img = app.get_resource(dot)
+        if app.get_property("device", "miband4") != "miband4":
+            if dot_img.size[1] < images[0].size[1]:
+                new_image = Image.new("RGBA", (dot_img.size[0], images[0].size[1]))
+                new_image.paste(dot_img, (0, images[0].size[1] - dot_img.size[1]))
+                dot_img = new_image
+        images.append(dot_img)
+
+    # Render float value part
+    if isinstance(value, float):
         after_dot = str(value).split(".")[1]
-        after_dot_len = max(digits, len(after_dot))
-        images += split_number_to_images(app, obj, int(after_dot), after_dot_len)
+        if len(after_dot) < digits:
+            after_dot += "0" * (digits - len(after_dot))
+        images += split_number_to_images(app, obj, int(after_dot), digits)
 
     if posix > -1:
         images.append(app.get_resource(posix))
@@ -62,13 +79,10 @@ def draw_adv_number(app, canvas, obj, value=0, digits=1, dot=-1, posix=-1, prefi
     y1 = int(obj["TopLeftY"])
     y2 = int(obj["BottomRightY"])
 
-    ox = 0
-    oy = 0
-
-    if "Spacing" in obj:
-        ox = obj["Spacing"]
-    elif "SpacingX" in obj:
-        ox = obj["SpacingX"]
+    ox, oy = 0, 0
+    for tag in ["Spacing", "SpacingX"]:
+        if tag in obj:
+            ox = obj[tag]
 
     if "SpacingY" in obj:
         oy = obj["SpacingY"]
@@ -128,10 +142,10 @@ def draw_date(app, canvas, obj, month, day, split, month_digits, day_digits, yea
 def draw_steps_bar(app, canvas, config, progress):
     index = config["StartImageIndex"]
     segments = config["Segments"]
-    curSegment = int(len(segments) * progress)
+    current_segment = int(len(segments) * progress)
     x = y = 1024
     x2 = y2 = 0
-    for i in range(curSegment):
+    for i in range(current_segment):
         img = app.get_resource(index + i)
         xy = (int(segments[i]["X"]), int(segments[i]["Y"]))
         add_to_canvas(canvas, img, xy)
@@ -287,7 +301,7 @@ def calculate_adv_position(data, size, fix_y=False):
     elif align == "Center":
         return [cx, cy + y_offset]
     else:
-        print("Align mode unsupported!!!!!")
+        logging.warning("unknown align mode: " + str(align))
         return [x1, y1]
 
 
