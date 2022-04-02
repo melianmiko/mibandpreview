@@ -11,7 +11,7 @@ from . import loader_miband6
 class MiBandPreview:
     config = {}
     images = {}
-    dir = ""
+    path = ""
     target = ""
 
     def __init__(self, target="", device="auto", fix_missing=False, no_mask=False):
@@ -31,9 +31,13 @@ class MiBandPreview:
             self.bind_path(target)
 
     def bind_path(self, target):
-        self.dir = target
-        self.load_data()
+        self.path = target
+        if not os.path.isdir(target) or target == "":
+            # Unbind path
+            self.config = {}
+            self.images = {}
 
+        self.load_data()
         if self.get_property("device", "auto") == "auto":
             self.detect_device()
 
@@ -41,19 +45,19 @@ class MiBandPreview:
         self.config = {}
         self.images = {}
 
-        for f in os.listdir(self.dir):
-            if os.path.splitext(self.dir + "/" + f)[1] == ".json":
-                with open(self.dir + "/" + f, "r") as jsf:
+        for f in os.listdir(self.path):
+            if os.path.splitext(self.path + "/" + f)[1] == ".json":
+                with open(self.path + "/" + f, "r") as jsf:
                     self.config = json.load(jsf)
                     break
 
-        for a in os.listdir(self.dir):
+        for a in os.listdir(self.path):
             aa = a.split(".")
             if len(aa) > 1:
                 if aa[1] == "png":
                     fn = a.split(".")[0]
                     if len(fn) == 4 and all(c in string.digits for c in fn):
-                        img = Image.open(self.dir + "/" + fn + ".png")
+                        img = Image.open(self.path + "/" + fn + ".png")
                         img = img.convert("RGBA")
                         self.images[int(fn)] = img
 

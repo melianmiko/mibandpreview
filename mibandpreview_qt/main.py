@@ -1,3 +1,5 @@
+import json.decoder
+import logging
 import os.path
 import threading
 import webbrowser
@@ -10,6 +12,9 @@ from PyQt5.QtCore import QFileSystemWatcher, QLocale, QTranslator, pyqtSignal, Q
 
 import mibandpreview
 from mibandpreview_qt import ui_adapter, ui_frames, app_info, update_checker, preview_thread, pref_storage
+
+logging.basicConfig(level=logging.DEBUG)
+log = logging.getLogger("PreviewQT")
 
 
 class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
@@ -54,11 +59,6 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
 
         # Loader config -> GUI
         self.adapter.load_config()
-
-        # Remove old settings file, if exists
-        # TODO: Remove this
-        if os.path.isfile(app_info.SETTINGS_PATH):
-            os.unlink(app_info.SETTINGS_PATH)
 
         # Start update checker, if enabled
         if self.updater.should_check_updates():
@@ -128,6 +128,7 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
 
         self.bind_path(path)
 
+    # noinspection PyBroadException
     def bind_path(self, path):
         """
         Bind project path to application
@@ -139,10 +140,13 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
         for a in self.watcher.directories():
             self.watcher.removePath(a)
 
-        if os.path.isdir(path):
+        if os.path.isdir(path) and not path == "":
             self.watcher.addPath(path)
-            self.set_device("auto")
-            self.loader.bind_path(path)
+
+        self.set_device("auto")
+        if not self.previewThread.bind_path(path):
+            self.path = ""
+            return
 
         self.setup_gif_ui()
         self.previewThread.start()
@@ -260,7 +264,7 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
         self.previewThread.start()
         self.autoplay_init()
 
-    def set_preview_image(self, img, save_enabled):
+    def set_preview_image(self, img, save_enabled: bool):
         self.preview_host.setPixmap(img)
         self.action_save.setEnabled(save_enabled)
 

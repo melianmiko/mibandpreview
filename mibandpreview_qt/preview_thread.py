@@ -1,5 +1,5 @@
+import logging
 import os
-import traceback
 import PIL.Image
 from PIL import Image
 from PyQt5.QtCore import QThread, pyqtSignal
@@ -10,6 +10,8 @@ from mibandpreview_qt import pref_storage
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 RES_NO_IMAGE = APP_ROOT+"/res/no_file.png"
 RES_ERROR_IMAGE = APP_ROOT+"/res/error.png"
+
+log = logging.getLogger("RenderThread")
 
 
 def create(window):
@@ -46,13 +48,33 @@ class PreviewThread(QThread):
         ratio = round(ratio, 1)
         return ratio
 
-    # noinspection PyUnresolvedReferences
+    # noinspection PyUnresolvedReferences,PyBroadException
+    def bind_path(self, path):
+        if not os.path.isdir(path):
+            log.debug("bind failed, not a dir: " + path)
+            missing_img = pil_to_qt(Image.open(RES_NO_IMAGE))
+            self.render_completed.emit(missing_img, False)
+            return False
+
+        try:
+            self.parent_window.loader.bind_path(path)
+            return True
+        except Exception:
+            log.exception("Can't bind this path")
+            error_img = pil_to_qt(Image.open(RES_ERROR_IMAGE))
+            self.render_completed.emit(error_img, False)
+            return False
+
+    # noinspection PyUnresolvedReferences,PyBroadException
     def run(self):
         """
         Render image and send result with signal
         :return: void
         """
-        if self.parent_window.path == "" or not os.path.isdir(self.parent_window.path):
+        current_path = self.parent_window.loader.path
+        log.debug("rendering for path " + current_path)
+
+        if current_path == "" or not os.path.isdir(current_path):
             missing_img = pil_to_qt(Image.open(RES_NO_IMAGE))
             self.render_completed.emit(missing_img, False)
             return
@@ -69,8 +91,7 @@ class PreviewThread(QThread):
 
             self.parent_window.player_state = state
             self.render_completed.emit(img, True)
-        except Exception as e:
-            print("RENDER ERROR: "+str(e))
-            traceback.print_exc()
+        except Exception:
+            log.exception("render failed")
             error_img = pil_to_qt(Image.open(RES_ERROR_IMAGE))
             self.render_completed.emit(error_img, False)
