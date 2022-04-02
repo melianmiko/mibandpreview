@@ -259,6 +259,12 @@ def render_activity_graph(config, canvas, app):
                 value=current
             )
 
+        if "GoalImage" in config["StepsProgress"] and steps >= target:
+            tools.draw_static_object(
+                app, canvas,
+                config["StepsProgress"]["GoalImage"]
+            )
+
     if "HeartProgress" in config:
         current_bpm = app.get_property("heart_rate", 200)
 
