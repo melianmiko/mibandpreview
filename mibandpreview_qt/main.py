@@ -1,3 +1,4 @@
+import base64
 import logging
 import os.path
 import threading
@@ -95,6 +96,12 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
         self.setWindowIcon(QIcon(app_info.APP_ROOT + "/res/mibandpreview-qt.png"))
         self.setWindowTitle(self.windowTitle() + " ({})".format(app_info.APP_VERSION))
         self.tabWidget.setCurrentIndex(0)
+
+        # Restore geometry
+        geometry = base64.b64decode(pref_storage.get("main_geometry", "").encode("ascii"))
+        # state = base64.b64decode(pref_storage.get("main_state", "").encode("ascii"))
+        self.restoreGeometry(geometry)
+        # self.restoreState(state)
 
     def save_as_png(self):
         """
@@ -220,6 +227,13 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
         :return: void
         """
         self.player_started = False
+        pref_storage.save()
+
+        # Save geometry
+        geometry = base64.b64encode(self.saveGeometry()).decode("ascii")
+        # state = base64.b64encode(self.saveState()).decode("ascii")
+        pref_storage.put("main_geometry", geometry)
+        # pref_storage.put("main_state", state)
         pref_storage.save()
 
         return QMainWindow.closeEvent(self, a0)
