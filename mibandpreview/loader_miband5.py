@@ -1,4 +1,5 @@
 import logging
+import math
 
 from . import tools, loader_miband4
 from PIL import Image, ImageDraw
@@ -321,10 +322,9 @@ def render_battery(config, canvas, app):
                                   value=app.get_property("status_battery", 60), posix=posix)
 
         if "BatteryIcon" in config["Battery"]:
-            value = app.get_property("status_battery", 60)
-            value = int(config["Battery"]["BatteryIcon"]["ImagesCount"] * (value / 100))
-            if value >= config["Battery"]["BatteryIcon"]["ImagesCount"]:
-                value = config["Battery"]["BatteryIcon"]["ImagesCount"] - 1
+            count = config["Battery"]["BatteryIcon"]["ImagesCount"]
+            battery_level = app.get_property("status_battery", 60) / 100
+            value = math.floor((count - 1) * battery_level) + 1 if battery_level != 1 else count
             tools.draw_static_object(
                 app, canvas,
                 config["Battery"]["BatteryIcon"],
@@ -335,7 +335,7 @@ def render_battery(config, canvas, app):
             index = config["Battery"]["Linear"]["StartImageIndex"]
             segments = config["Battery"]["Linear"]["Segments"]
             progress = app.get_property("status_battery", 60) / 100
-            current = int(len(segments) * progress)
+            current = math.floor((len(segments) - 1) * progress) + 1 if progress != 1 else len(segments)
             for i in range(current):
                 img = app.get_resource(index + i)
                 tools.add_to_canvas(canvas, img, (
