@@ -1,4 +1,4 @@
-# melianmiko.ru updater, v0.10
+# melianmiko.ru updater, v0.10.1
 
 import glob
 import io
@@ -14,6 +14,7 @@ import tkinter
 import tkinter.font
 import tkinter.messagebox
 import urllib.request
+import urllib.error
 import webbrowser
 from pathlib import Path
 from tkinter import ttk
@@ -26,6 +27,7 @@ BASE_LOCALE = {
     "downloading": "Downloading file {}...",
     "downloading_run_after": "Installation will be started automatically after download",
     "download_btn": "Update now",
+    "dl_error": "ERROR: Download failed",
     "close_btn": "Close",
     "site_btn": "View in web browser",
     "repo_install": "Install it via system package manager.",
@@ -40,6 +42,7 @@ L18N = {
         "downloading": "Загружаем файл {}...",
         "downloading_run_after": "Установка начнётся сразу после загрузки",
         "download_btn": "Обновить",
+        "dl_error": "ОШИБКА: Не удалось скачать файл",
         "site_btn": "Перейти на веб-сайт программы",
         "close_btn": "Закрыть",
         "repo_install": "Установите обновление ч-з системный пакетный менеджер",
@@ -122,6 +125,11 @@ class TkinterUiMod:
         if self.percent >= 100:
             log.debug("download complete, closing self window")
             self.close_download_bar()
+            return
+        if self.percent < 0:
+            font = tkinter.font.Font(weight="bold")
+            tkinter.Label(self.tk_dl_root, text=t("dl_error"), font=font)\
+                .pack(padx=16, pady=16)
             return
         self.tk_dl_root.after(1000, self._progress_auto_close)
 
@@ -332,8 +340,12 @@ class UpdaterTool:
         # Download file
         self.ui_mod.show_download()
         log.debug("downloading {}".format(url))
-        buff = self._download_with_progress(url)
-        self.ui_mod.percent = 100
+        try:
+            buff = self._download_with_progress(url)
+            self.ui_mod.percent = 100
+        except urllib.error.URLError:
+            self.ui_mod.percent = -1
+            return
 
         # Trigger download stats
         log.debug("trigger download stats")
