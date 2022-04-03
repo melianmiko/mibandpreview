@@ -8,4 +8,4 @@ mibandpreview (1.2-1) impish; urgency=medium
   * Fix: invalid Mi Band 5/6 battery indicator scaling
   * Fix: invalid align of some DelimiterImage's
 
- -- MelianMiko <melianmiko@gmail.com>  Fri, 01 Apr 2022 19:13:32 +0700
+ -- MelianMiko <melianmiko@gmail.com>  Sun, 03 Apr 2022 12:49:23 +0700
