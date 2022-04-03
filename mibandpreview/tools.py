@@ -27,10 +27,11 @@ def draw_static_object(app, canvas, obj, value=0):
     )
 
 
-def draw_adv_number(app, canvas, obj, value=0, digits=1, dot=-1, posix=-1, prefix=-1, minus=-1):
+def draw_adv_number(app, canvas, obj, value=0, digits=1, dot=-1, posix=-1, prefix=-1, minus=-1, bottom_fix=True):
     """
     Draw advanced numeric value to canvas.
 
+    :param bottom_fix: Use bottom align for miband 5+
     :param app: Generator class
     :param canvas: PIL image
     :param obj: Object to draw
@@ -56,7 +57,7 @@ def draw_adv_number(app, canvas, obj, value=0, digits=1, dot=-1, posix=-1, prefi
     # Render dot image
     if isinstance(value, float) and dot > -1:
         dot_img = app.get_resource(dot)
-        if app.get_property("device", "miband4") != "miband4":
+        if app.get_property("device", "miband4") != "miband4" and bottom_fix:
             if dot_img.size[1] < images[0].size[1]:
                 new_image = Image.new("RGBA", (dot_img.size[0], images[0].size[1]))
                 new_image.paste(dot_img, (0, images[0].size[1] - dot_img.size[1]))
