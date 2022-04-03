@@ -1,6 +1,11 @@
-mibandpreview (1.1-1) impish; urgency=medium
+mibandpreview (1.2-1) impish; urgency=medium
   
-  * Added inputs: Timezone (time + disable checkbox), Alarm Time, Distance unit.
-  * StatusSimplified basic implementation
+  * New updater: now app can automatically install updates for windows version
+  * Added support of GoalImage, TimeDelimiterImage
+  * Keep and restore window geometry
+  * Fix: crash at startup if saved project was removed
+  * Fix: broken minutes render in TimeZone1/2, AlarmTime
+  * Fix: invalid Mi Band 5/6 battery indicator scaling
+  * Fix: invalid align of some DelimiterImage's
 
  -- MelianMiko <melianmiko@gmail.com>  Fri, 01 Apr 2022 19:13:32 +0700

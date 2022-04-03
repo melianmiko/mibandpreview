@@ -1,4 +1,4 @@
-# MelianMiko.ru updater, v0.9
+# melianmiko.ru updater, v0.10
 
 import glob
 import io
@@ -21,12 +21,13 @@ from tkinter import ttk
 log = logging.getLogger("mmk-update")
 
 BASE_LOCALE = {
-    "has_update_title": "New version is available",
+    "has_update_title": "New version of {} is available",
     "file_pattern": "File: {} ({})",
     "downloading": "Downloading file {}...",
+    "downloading_run_after": "Installation will be started automatically after download",
     "download_btn": "Update now",
     "close_btn": "Close",
-    "site_btn": "Website",
+    "site_btn": "View in web browser",
     "repo_install": "Install it via system package manager.",
     "manual_install": "Update downloaded, but we can't install it automatically.\nFile "
                       "was saved to {}.\nPlease install it after app close."
@@ -34,11 +35,12 @@ BASE_LOCALE = {
 
 L18N = {
     "ru_RU": {
-        "has_update_title": "Доступна новая версия",
+        "has_update_title": "Доступна новая версия {}",
         "file_pattern": "Будет загружен: {} ({})",
         "downloading": "Загружаем файл {}...",
+        "downloading_run_after": "Установка начнётся сразу после загрузки",
         "download_btn": "Обновить",
-        "site_btn": "Сайт программы",
+        "site_btn": "Перейти на веб-сайт программы",
         "close_btn": "Закрыть",
         "repo_install": "Установите обновление ч-з системный пакетный менеджер",
         "manual_install": "Обновление загружено, но мы не можем установить его автоматически.\nФайл"
@@ -61,8 +63,9 @@ class TkinterUiMod:
     def __init__(self, parent):
         self.updater = parent
         self.tk_ask_root = None         # type: tkinter.Tk
-        self.tk_dl_root = None         # type: tkinter.Tk
-        self.tk_progress = None     # type: ttk.Progressbar
+        self.tk_dl_root = None          # type: tkinter.Tk
+        self.tk_msg_root = None         # type: tkinter.Tk
+        self.tk_progress = None         # type: ttk.Progressbar
         self._window_ready = threading.Event()
         self.percent = 0
 
@@ -75,12 +78,12 @@ class TkinterUiMod:
 
         self._add_base_update_info(root, 1)
 
-        ttk.Label(root, text=t("repo_install"),
-                  justify=tkinter.LEFT,
-                  padding=4).grid(column=0, row=3)
-        ttk.Button(root, text=t("close_btn"),
-                   padding=4,
-                   command=root.destroy).grid(column=0, row=4, padx=8, pady=8)
+        ttk.Label(root, text=t("repo_install"), justify=tkinter.LEFT)\
+            .grid(column=0, row=4, columnspan=3, padx=16, pady=4, sticky=tkinter.NW)
+
+        ttk.Button(root, text=t("close_btn"), command=root.destroy)\
+            .grid(column=0, row=5, padx=4, pady=4, sticky=tkinter.NW)
+
         root.mainloop()
 
     def on_progress(self, percent):
@@ -95,17 +98,20 @@ class TkinterUiMod:
 
     def _show_download(self):
         root = tkinter.Tk()
-        root.title = "Updater"
+        root.wm_title(self.updater.release_data["app"])
         self.tk_dl_root = root
 
         d = self.updater.get_download_data()
         fn = d[0].split("/")[-1]
-        ttk.Label(root, text=t("downloading").format(fn),
-                  justify=tkinter.LEFT,
-                  padding=4).pack(expand=True, fill="both")
+        label = t("downloading").format(fn)
+        if platform.system() == "Windows":
+            label += "\n" + t("downloading_run_after")
+
+        ttk.Label(root, text=label, justify=tkinter.LEFT)\
+            .pack(expand=True, fill="both", padx=16, pady=16)
 
         progress = ttk.Progressbar(root, length=350)
-        progress.pack(expand=True, fill="both")
+        progress.pack(expand=True, fill="both", padx=16, pady=16)
         self.tk_progress = progress
 
         root.after(1000, self._progress_auto_close)
@@ -119,6 +125,16 @@ class TkinterUiMod:
             return
         self.tk_dl_root.after(1000, self._progress_auto_close)
 
+    def close_download_bar(self):
+        try:
+            log.debug("close dl box from " + str(threading.get_ident()))
+            self.tk_dl_root.destroy()
+            self.tk_dl_root = None
+            self.tk_progress = None
+            time.sleep(1)
+        except tkinter.TclError:
+            pass
+
     def ask_download(self):
         self._window_ready = threading.Event()
         threading.Thread(target=self._ask_download).start()
@@ -130,41 +146,25 @@ class TkinterUiMod:
         size = sizeof_fmt(size)
 
         root = tkinter.Tk()
-        root.title = "Updater"
+        root.wm_title(self.updater.release_data["app"])
+
         self.tk_ask_root = root
         self._add_base_update_info(root, 3)
+        root.grid_columnconfigure(2, weight=1)
 
-        ttk.Label(root, text=t("file_pattern").format(fn, size),
-                  justify=tkinter.LEFT,
-                  padding=4).grid(column=0, row=3, columnspan=3)
+        ttk.Label(root, text=t("file_pattern").format(fn, size), justify=tkinter.LEFT)\
+            .grid(column=0, row=4, columnspan=3, padx=16, pady=4, sticky=tkinter.NW)
 
-        ttk.Button(root, text=t("download_btn"),
-                   padding=4,
-                   command=self.updater.on_download_confirm).grid(column=0, row=4, padx=8, pady=8)
-        ttk.Button(root, text=t("close_btn"),
-                   padding=4,
-                   command=self.updater.on_download_cancel).grid(column=2, row=4, padx=8, pady=8)
+        ttk.Button(root, text=t("download_btn"), command=self.updater.on_download_confirm)\
+            .grid(column=0, row=5, padx=4, pady=4, sticky=tkinter.NW)
 
-        if "website" in self.updater.release_data:
-            ttk.Button(root, text=t("site_btn"),
-                       command=self._open_site,
-                       padding=4).grid(column=1, row=4, padx=8, pady=8)
+        ttk.Button(root, text=t("close_btn"), command=self.updater.on_download_cancel)\
+            .grid(column=2, row=5, padx=4, pady=4, sticky=tkinter.NW)
 
         self._close_event = threading.Event()
         root.protocol("WM_DELETE_WINDOW", self.updater.on_download_cancel)
         self._window_ready.set()
         root.mainloop()
-
-    def _open_site(self):
-        webbrowser.open(self.updater.release_data["website"])
-
-    def close_download_bar(self):
-        try:
-            self.tk_dl_root.destroy()
-            self.tk_dl_root = None
-            time.sleep(1)
-        except tkinter.TclError:
-            pass
 
     def close_ask_box(self):
         try:
@@ -180,18 +180,23 @@ class TkinterUiMod:
     def _message_user_install(self):
         path = self.updater.file_path
         root = tkinter.Tk()
+        root.wm_title(self.updater.release_data["app"])
 
-        ttk.Label(root, text=t("manual_install").format(path),
-                  padding=16).grid(column=0, row=0)
-        ttk.Button(root, text="OK",
-                   command=root.destroy).grid(column=0, row=1, padx=8, pady=8)
+        self.tk_msg_root = root
+
+        ttk.Label(root, text=t("manual_install").format(path), padding=16).grid(column=0, row=0)
+        ttk.Button(root, text="OK", command=self._message_user_install_ok)\
+            .grid(column=0, row=1, padx=4, pady=4, sticky=tkinter.NW)
         root.mainloop()
 
+    def _message_user_install_ok(self):
+        self.tk_msg_root.destroy()
+        self.tk_msg_root = None
+
     def _add_base_update_info(self, root, columns):
-        ttk.Label(root, text=t("has_update_title"),
-                  justify=tkinter.LEFT,
-                  font=tkinter.font.Font(size=16, weight="bold"),
-                  padding=4).grid(column=0, row=0, columnspan=columns)
+        ttk.Label(root, text=t("has_update_title").format(self.updater.release_data["app"]),
+                  justify=tkinter.LEFT, font=tkinter.font.Font(weight="bold"))\
+            .grid(column=0, row=0, padx=16, pady=8, columnspan=columns, sticky=tkinter.NW)
 
         rel_data = self.updater.release_data
         rel_title = rel_data["version"] + ": " + rel_data["title"]
@@ -200,12 +205,21 @@ class TkinterUiMod:
             rel_changes += a + "\n"
         rel_changes = rel_changes[:-1:]
 
-        ttk.Label(root, text=rel_title,
-                  justify=tkinter.LEFT,
-                  padding=4).grid(column=0, row=1, columnspan=columns)
-        ttk.Label(root, text=rel_changes,
-                  justify=tkinter.LEFT,
-                  padding=4).grid(column=0, row=2, columnspan=columns)
+        ttk.Label(root, text=rel_title, justify=tkinter.LEFT, font=tkinter.font.Font(size=16))\
+            .grid(column=0, row=1, padx=16, pady=4, columnspan=columns, sticky=tkinter.NW)
+        ttk.Label(root, text=rel_changes, justify=tkinter.LEFT)\
+            .grid(column=0, row=2, padx=16, pady=4, columnspan=columns, sticky=tkinter.NW)
+
+        if "website" in self.updater.release_data:
+            link = ttk.Label(root, text=t("site_btn"),
+                             foreground="#04F",
+                             cursor="hand2")
+            link.bind("<Button-1>", self._open_site)
+            link.grid(column=0, row=3, padx=16, pady=4, columnspan=columns, sticky=tkinter.NW)
+
+    # noinspection PyUnusedLocal
+    def _open_site(self, ev):
+        webbrowser.open(self.updater.release_data["website"])
 
 
 # -------------------------------------------------------------------------------------
@@ -368,7 +382,6 @@ class UpdaterTool:
                 downloaded += len(part)
                 if length:
                     perc = int((downloaded / length) * 100)
-                    log.debug("downloaded {}".format(perc))
                     self.ui_mod.on_progress(perc)
 
         return buffer

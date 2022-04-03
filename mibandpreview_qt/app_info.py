@@ -1,6 +1,6 @@
 import os
 
-VERSION = "1.1"
+VERSION = "1.2"
 APP_VERSION = "v" + VERSION
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
