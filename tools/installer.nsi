@@ -40,6 +40,9 @@ RequestExecutionLevel admin
 
 Section "Dummy Section" SecDummy
 
+  ; Kill running process
+  nsExec::ExecToStack "C:\Windows\System32\taskkill.exe /f /im:mibandpreview.exe"
+
   SetOutPath "$INSTDIR"
   File /r "mibandpreview\"
   
@@ -63,6 +66,9 @@ SectionEnd
 ;Uninstaller Section
 
 Section "Uninstall"
+
+  ; Kill running process
+  nsExec::ExecToStack "C:\Windows\System32\taskkill.exe /f /im:mibandpreview.exe"
 
   Delete "$INSTDIR\Uninstall.exe"
   Delete "$DESKTOP\Mi Band Preview.lnk"
