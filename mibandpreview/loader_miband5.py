@@ -53,6 +53,12 @@ def render_time(config, canvas, app):
     loader_miband4.render_time(app, canvas, config)
 
     if "Time" in config:
+        if "TimeDelimiterImage" in config["Time"]:
+            tools.draw_static_object(
+                app, canvas,
+                config["Time"]["TimeDelimiterImage"]
+            )
+
         if "TimeZone1" in config["Time"] and app.get_property("status_timezone", 1) == 1:
             a = round(app.get_property("tz1_hours", 22) + app.get_property("tz1_minutes", 00) / 100, 2)
             tools.draw_adv_number(app, canvas, config["Time"]["TimeZone1"], value=a, digits=2,
