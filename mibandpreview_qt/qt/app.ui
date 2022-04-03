@@ -406,7 +406,7 @@
             <item row="2" column="1">
              <widget class="QDoubleSpinBox" name="edit_distance">
               <property name="suffix">
-               <string> </string>
+               <string/>
               </property>
               <property name="maximum">
                <double>40.000000000000000</double>
@@ -1887,6 +1887,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_configure_updater</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setup_updater()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>set_target_mb4()</slot>
@@ -1902,5 +1918,6 @@
   <slot>ui_widget_changed()</slot>
   <slot>ui_gif_settings_changed()</slot>
   <slot>set_rotate_option(int)</slot>
+  <slot>setup_updater()</slot>
  </slots>
 </ui>
