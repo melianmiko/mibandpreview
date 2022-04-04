@@ -59,6 +59,7 @@ class LoaderUIAdapter:
         loader.set_property("weather_wind", int(self.context.edit_wind.value()))
 
         loader.set_property("language", int(self.context.edit_language.currentIndex()))
+        loader.set_property("mask_type", self.context.view_mask_type.currentIndex())
 
         return loader.config_export()
 
@@ -110,6 +111,9 @@ class LoaderUIAdapter:
         self.context.edit_humidity.setValue(loader.get_property("weather_humidity", 40))
         self.context.edit_uv_index.setValue(loader.get_property("weather_uv", 10))
         self.context.edit_wind.setValue(loader.get_property("weather_wind", 25))
+
+        # Other
+        self.context.view_mask_type.setCurrentIndex(loader.get_property("mask_type", 1))
 
         self.context.interactive = True
 

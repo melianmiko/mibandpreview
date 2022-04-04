@@ -1,6 +1,8 @@
 import json
 import os
 import string
+
+import PIL.Image
 from PIL import Image
 
 from . import loader_miband4, tools
@@ -9,23 +11,28 @@ from . import loader_miband6
 
 
 class MiBandPreview:
-    config = {}
-    images = {}
-    path = ""
-    target = ""
+    MASK_TYPE_NONE = 0
+    MASK_TYPE_PERFECT = 1
+    MASK_TYPE_SIMPLE = 2
 
-    def __init__(self, target="", device="auto", fix_missing=False, no_mask=False):
+    def __init__(self, target="", device="auto", fix_missing=False):
         """
         Default constructor
         :param target: target watchface DIR path
         :param device: device, auto detect by default
         :param fix_missing: ignore missing files flag
-        :param no_mask: don't use Mi Band 6 maask flag
         """
         self.fix_missing = fix_missing
-        self.no_mask = no_mask
-        self.properties = {"device": device}
+        self.config = {}
+        self.images = {}
+        self.path = ""
+        self.target = ""
+
         self.placeholder = Image.new("RGBA", (0, 0))
+        self.properties = {
+            "device": device,
+            "mask_type": self.MASK_TYPE_PERFECT
+        }
 
         if not target == "":
             self.bind_path(target)
@@ -71,6 +78,15 @@ class MiBandPreview:
 
     def config_export(self):
         return self.properties
+
+    def get_mask(self):
+        mask_type = self.get_property("mask_type", self.MASK_TYPE_PERFECT)
+        if mask_type == self.MASK_TYPE_PERFECT:
+            return Image.open(tools.get_root() + "/res/mb6_mask.png").convert("L")
+        elif mask_type == self.MASK_TYPE_SIMPLE:
+            return Image.open(tools.get_root() + "/res/mb6_mask_lite.png").convert("L")
+
+        return None
 
     def config_import(self, p):
         for a in p:

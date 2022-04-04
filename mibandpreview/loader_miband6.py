@@ -23,8 +23,8 @@ def render(app):
     loader_miband5.render_animation(config, canvas, app)
     loader_miband5.render_time_extra(config, canvas, app)
 
-    if not app.no_mask:
-        m = Image.open(tools.get_root()+"/res/mb6_mask.png").convert("L")
-        canvas.putalpha(m)
+    mask = app.get_mask()
+    if mask is not None:
+        canvas.putalpha(mask)
 
     return canvas

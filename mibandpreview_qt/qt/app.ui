@@ -56,7 +56,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="tab_base">
          <attribute name="title">
@@ -760,139 +760,169 @@
          <attribute name="title">
           <string>View</string>
          </attribute>
-         <layout class="QFormLayout" name="formLayout_5">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;Animation preview&lt;/span&gt;&lt;/h2&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="textFormat">
-             <enum>Qt::RichText</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_11">
-            <property name="text">
-             <string>Anim. 0</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_12">
-            <property name="text">
-             <string>Anim. 1</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QCheckBox" name="anim_play_1">
-            <property name="text">
-             <string>Auto</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="anim_play_0">
-            <property name="text">
-             <string>Auto</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QSpinBox" name="anim_frame_0"/>
-          </item>
-          <item row="4" column="1">
-           <widget class="QSpinBox" name="anim_frame_1"/>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="label_13">
-            <property name="text">
-             <string>Anim. 2</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QCheckBox" name="anim_play_2">
-            <property name="text">
-             <string>Auto</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QSpinBox" name="anim_frame_2"/>
-          </item>
-          <item row="7" column="0">
-           <widget class="QLabel" name="label_14">
-            <property name="text">
-             <string>Anim. 3</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0">
-           <widget class="QCheckBox" name="anim_play_3">
-            <property name="text">
-             <string>Auto</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="1">
-           <widget class="QSpinBox" name="anim_frame_3"/>
-          </item>
-          <item row="9" column="0">
-           <widget class="QLabel" name="label_15">
-            <property name="text">
-             <string>Anim. 4</string>
-            </property>
-           </widget>
-          </item>
-          <item row="10" column="0">
-           <widget class="QCheckBox" name="anim_play_4">
-            <property name="text">
-             <string>Auto</string>
-            </property>
-           </widget>
-          </item>
-          <item row="10" column="1">
-           <widget class="QSpinBox" name="anim_frame_4"/>
-          </item>
-          <item row="11" column="0">
-           <widget class="QLabel" name="label_7">
-            <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;View settings&lt;/span&gt;&lt;/h2&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="textFormat">
-             <enum>Qt::RichText</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="0">
-           <widget class="QLabel" name="label_16">
-            <property name="text">
-             <string>Rotate preview</string>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="1">
-           <widget class="QComboBox" name="rotate_settings">
-            <item>
-             <property name="text">
-              <string>Disable</string>
-             </property>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <layout class="QFormLayout" name="formLayout_4">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;Animation preview&lt;/span&gt;&lt;/h2&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="textFormat">
+               <enum>Qt::RichText</enum>
+              </property>
+             </widget>
             </item>
-            <item>
-             <property name="text">
-              <string>Horizontal, left hand</string>
-             </property>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>Anim. 0</string>
+              </property>
+             </widget>
             </item>
-            <item>
-             <property name="text">
-              <string>Horizontal, right hand</string>
-             </property>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_12">
+              <property name="text">
+               <string>Anim. 1</string>
+              </property>
+             </widget>
             </item>
-           </widget>
+            <item row="4" column="0">
+             <widget class="QCheckBox" name="anim_play_1">
+              <property name="text">
+               <string>Auto</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QSpinBox" name="anim_frame_1"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QCheckBox" name="anim_play_0">
+              <property name="text">
+               <string>Auto</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QSpinBox" name="anim_frame_0"/>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_13">
+              <property name="text">
+               <string>Anim. 2</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QCheckBox" name="anim_play_2">
+              <property name="text">
+               <string>Auto</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QSpinBox" name="anim_frame_2"/>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="label_14">
+              <property name="text">
+               <string>Anim. 3</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QCheckBox" name="anim_play_3">
+              <property name="text">
+               <string>Auto</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="1">
+             <widget class="QSpinBox" name="anim_frame_3"/>
+            </item>
+            <item row="9" column="0">
+             <widget class="QLabel" name="label_15">
+              <property name="text">
+               <string>Anim. 4</string>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="0">
+             <widget class="QCheckBox" name="anim_play_4">
+              <property name="text">
+               <string>Auto</string>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="1">
+             <widget class="QSpinBox" name="anim_frame_4"/>
+            </item>
+            <item row="11" column="0">
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;View settings&lt;/span&gt;&lt;/h2&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="textFormat">
+               <enum>Qt::RichText</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="0">
+             <widget class="QLabel" name="label_16">
+              <property name="text">
+               <string>Rotate preview</string>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="1">
+             <widget class="QComboBox" name="rotate_settings">
+              <item>
+               <property name="text">
+                <string>Disable</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Horizontal, left hand</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Horizontal, right hand</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="13" column="0">
+             <widget class="QLabel" name="maskTypeLabel">
+              <property name="text">
+               <string>Image crop mode</string>
+              </property>
+             </widget>
+            </item>
+            <item row="13" column="1">
+             <widget class="QComboBox" name="view_mask_type">
+              <item>
+               <property name="text">
+                <string>Disabled</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Perfect</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Simplified</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
           </item>
-          <item row="13" column="0">
+          <item>
            <spacer name="verticalSpacer_2">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -900,7 +930,7 @@
             <property name="sizeHint" stdset="0">
              <size>
               <width>20</width>
-              <height>40</height>
+              <height>150</height>
              </size>
             </property>
            </spacer>
@@ -1896,6 +1926,22 @@
     <hint type="sourcelabel">
      <x>-1</x>
      <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>view_mask_type</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ui_widget_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>366</x>
+     <y>502</y>
     </hint>
     <hint type="destinationlabel">
      <x>399</x>
