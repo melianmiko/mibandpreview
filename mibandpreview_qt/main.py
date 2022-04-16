@@ -66,8 +66,8 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
             self.updater.start()
 
         # Restore last path, if saved
-        if pref_storage.get("last_path", "") != "" and pref_storage.get("keep_last_path", True):
-            self.bind_path(pref_storage.get("last_path", ""))
+        if pref_storage.get("last_project_file", "") != "" and pref_storage.get("keep_last_path", True):
+            self.bind_json_path(pref_storage.get("last_project_file", ""))
 
     def init_qt(self):
         """
@@ -94,7 +94,7 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
 
         # Update icon, title, current tab
         self.setWindowIcon(QIcon(app_info.APP_ROOT + "/res/mibandpreview-qt.png"))
-        self.setWindowTitle(self.windowTitle() + " ({})".format(app_info.APP_VERSION))
+        self.update_window_title()
         self.tabWidget.setCurrentIndex(0)
 
         # Restore geometry
@@ -102,6 +102,12 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
         # state = base64.b64decode(pref_storage.get("main_state", "").encode("ascii"))
         self.restoreGeometry(geometry)
         # self.restoreState(state)
+
+    def update_window_title(self):
+        title = "Mi Band Preview | " + app_info.APP_VERSION
+        if self.path != "":
+            title = os.path.basename(self.path) + " | " + title
+        self.setWindowTitle(title)
 
     def save_as_png(self):
         """
@@ -121,6 +127,21 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
         data = self.loader.render_with_animation_frame(self.frames)
         data[0].save(path)
 
+    def open_project_json(self):
+        """
+        Show project open dialog (JSON file select)
+        :return: void
+        """
+        files, _ = QFileDialog.getOpenFileNames(None, "Select watchface JSON file",
+                                                str(Path.home()))
+
+        if len(files) > 0:
+            path = files[0]
+            if not path.endswith(".json") or os.path.isdir(path):
+                log.debug("Invalid select, ignored")
+                return
+            self.bind_json_path(path)
+
     def open_project(self):
         """
         Show project open dialog
@@ -133,25 +154,33 @@ class MiBandPreviewApp(QMainWindow, ui_frames.Ui_MainWindow):
         if path == "":
             return
 
-        self.bind_path(path)
+        json_path = ""
+        for f in os.listdir(path):
+            if os.path.splitext(path + "/" + f)[1] == ".json":
+                json_path = path + "/" + f
+                break
 
-    # noinspection PyBroadException
-    def bind_path(self, path):
+        self.bind_json_path(json_path)
+
+    def bind_json_path(self, json_path):
         """
-        Bind project path to application
-        :param path: Target path
+        Bind project JSOn file path to application
+        :param json_path: Target JSON file path
         :return: void
         """
-        self.path = pref_storage.put("last_path", path)
+        log.debug("Change project path to " + json_path)
+        self.path = pref_storage.put("last_project_file", json_path)
+        self.update_window_title()
 
         for a in self.watcher.directories():
             self.watcher.removePath(a)
 
-        if os.path.isdir(path) and not path == "":
-            self.watcher.addPath(path)
+        dir_path = os.path.dirname(json_path)
+        if os.path.isdir(dir_path) and not dir_path == "":
+            self.watcher.addPath(dir_path)
 
         self.set_device("auto")
-        if not self.previewThread.bind_path(path):
+        if not self.previewThread.bind_json(json_path):
             self.path = ""
             return
 

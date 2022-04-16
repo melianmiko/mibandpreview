@@ -26,6 +26,7 @@ class MiBandPreview:
         self.config = {}
         self.images = {}
         self.path = ""
+        self.path_json = ""
         self.target = ""
 
         self.placeholder = Image.new("RGBA", (0, 0))
@@ -37,8 +38,21 @@ class MiBandPreview:
         if not target == "":
             self.bind_path(target)
 
+    def bind_json(self, file):
+        self.path = os.path.dirname(file)
+        self.path_json = file
+        if not os.path.isfile(file) or file == "":
+            # Unbind path
+            self.config = {}
+            self.images = {}
+
+        self.load_data()
+        if self.get_property("device", "auto") == "auto":
+            self.detect_device()
+
     def bind_path(self, target):
         self.path = target
+        self.find_json()
         if not os.path.isdir(target) or target == "":
             # Unbind path
             self.config = {}
@@ -48,15 +62,22 @@ class MiBandPreview:
         if self.get_property("device", "auto") == "auto":
             self.detect_device()
 
+    def find_json(self):
+        self.path_json = ""
+        for f in os.listdir(self.path):
+            if os.path.splitext(self.path + "/" + f)[1] == ".json":
+                self.path_json = self.path + "/" + f
+                break
+
+    def load_json(self):
+        data = tools.json_file_read(self.path_json)
+        self.config = json.loads(data)
+
     def load_data(self):
         self.config = {}
         self.images = {}
 
-        for f in os.listdir(self.path):
-            if os.path.splitext(self.path + "/" + f)[1] == ".json":
-                data = tools.json_file_read(self.path + "/" + f)
-                self.config = json.loads(data)
-                break
+        self.load_json()
 
         for a in os.listdir(self.path):
             aa = a.split(".")

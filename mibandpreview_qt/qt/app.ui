@@ -56,7 +56,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab_base">
          <attribute name="title">
@@ -982,6 +982,7 @@
      <string>File</string>
     </property>
     <addaction name="action_open"/>
+    <addaction name="action_open_json"/>
     <addaction name="action_save"/>
     <addaction name="separator"/>
     <addaction name="action_refresh"/>
@@ -1128,6 +1129,14 @@
    </property>
    <property name="text">
     <string>Rotate to left</string>
+   </property>
+  </action>
+  <action name="action_open_json">
+   <property name="text">
+    <string>Open JSON...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+O</string>
    </property>
   </action>
  </widget>
@@ -1949,6 +1958,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_open_json</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>open_project_json()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>set_target_mb4()</slot>
@@ -1965,5 +1990,6 @@
   <slot>ui_gif_settings_changed()</slot>
   <slot>set_rotate_option(int)</slot>
   <slot>setup_updater()</slot>
+  <slot>open_project_json()</slot>
  </slots>
 </ui>

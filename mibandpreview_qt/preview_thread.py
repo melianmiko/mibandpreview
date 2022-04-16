@@ -49,15 +49,15 @@ class PreviewThread(QThread):
         return ratio
 
     # noinspection PyUnresolvedReferences,PyBroadException
-    def bind_path(self, path):
-        if not os.path.isdir(path):
-            log.debug("bind failed, not a dir: " + path)
+    def bind_json(self, json_path):
+        if not os.path.isfile(json_path):
+            log.debug("bind failed, not a file: " + json_path)
             missing_img = pil_to_qt(Image.open(RES_NO_IMAGE))
             self.render_completed.emit(missing_img, False)
             return False
 
         try:
-            self.parent_window.loader.bind_path(path)
+            self.parent_window.loader.bind_json(json_path)
             return True
         except Exception:
             log.exception("Can't bind this path")
