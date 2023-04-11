@@ -1,3 +1,9 @@
+mibandpreview (1.2-1) bookworm jammy kinetic lunar; urgency=medium
+
+  * Build for fresh distributions
+
+ -- MelianMiko <melianmiko@gmail.com>  Fri, 07 Apr 2023 15:38:45 +0700
+
 mibandpreview (1.2-1) impish; urgency=medium
   
   * New updater: now app can automatically install updates for windows version
@@ -9,3 +15,4 @@ mibandpreview (1.2-1) impish; urgency=medium
   * Fix: invalid align of some DelimiterImage's
 
  -- MelianMiko <melianmiko@gmail.com>  Sun, 03 Apr 2022 12:49:23 +0700
+

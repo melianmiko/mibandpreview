@@ -53,6 +53,21 @@ def render_time(config, canvas, app):
     loader_miband4.render_time(app, canvas, config)
 
     if "Time" in config:
+        if "Seconds" in config["Time"]:
+            if "Tens" in config["Time"]["Seconds"]:
+                tools.draw_static_object(
+                    app, canvas,
+                    config["Time"]["Seconds"]["Tens"],
+                    value=app.get_property("seconds", 45) // 10
+                )
+
+            if "Ones" in config["Time"]["Seconds"]:
+                tools.draw_static_object(
+                    app, canvas,
+                    config["Time"]["Seconds"]["Ones"],
+                    value=app.get_property("seconds", 45) % 10
+                )
+
         if "TimeDelimiterImage" in config["Time"]:
             tools.draw_static_object(
                 app, canvas,
