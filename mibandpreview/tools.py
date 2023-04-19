@@ -6,14 +6,7 @@ from PIL import Image, ImageDraw
 
 def add_to_canvas(target, img, xy):
     x, y = xy
-    sx = sy = 0
-    if x < 0:
-        sx = -x
-        x = 0
-    if y < 0:
-        sy = -y
-        y = 0
-    target.alpha_composite(img, (x, y), (sx, sy))
+    target.alpha_composite(img, (x, y))
 
 
 def draw_static_object(app, canvas, obj, value=0):
